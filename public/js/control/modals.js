@@ -83887,13 +83887,15 @@ function requireRoleKey(username, role, login, callback) {
     if (session && session.account.keys[role]) {
       callback(session.account.keys[role].prv, session.account.username);
     } else {
-      creaEvents.on('crea.auth.role.' + id, function (roleKey, username) {
+      var listener = function listener(roleKey, username) {
         if (callback) {
           callback(roleKey, username);
         }
 
-        creaEvents.off('crea.auth.role.' + id);
-      });
+        creaEvents.off('crea.auth.role.' + id, listener);
+      };
+
+      creaEvents.on('crea.auth.role.' + id, listener);
       creaEvents.emit('crea.auth.role', username, role, login, id);
     }
   }
@@ -83995,10 +83997,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _common_conf__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/conf */ "./resources/js/common/conf.js");
 /* harmony import */ var _lib_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/util */ "./resources/js/lib/util.js");
-/* harmony import */ var _common_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../common/common */ "./resources/js/common/common.js");
+/* harmony import */ var _lib_session__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/session */ "./resources/js/lib/session.js");
+/* harmony import */ var _common_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../common/common */ "./resources/js/common/common.js");
 /**
  * Created by ander on 21/12/18.
  */
+
 
 
 
@@ -84114,9 +84118,9 @@ __webpack_require__.r(__webpack_exports__);
               var username = this.inputs.username.value.split('/')[0];
               var role = this.role;
               var password = this.inputs.password.value;
-              var s = Session.create(username, password, role);
+              var s = _lib_session__WEBPACK_IMPORTED_MODULE_3__["default"].create(username, password, role);
               s.login(function (err, result) {
-                if (!_common_common__WEBPACK_IMPORTED_MODULE_3__["catchError"](err)) {
+                if (!Object(_common_common__WEBPACK_IMPORTED_MODULE_4__["catchError"])(err)) {
                   if (that.login) {
                     s.save();
                   }

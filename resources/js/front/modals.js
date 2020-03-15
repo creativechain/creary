@@ -4,7 +4,8 @@
 import Vue from 'vue';
 import { crea } from '../common/conf';
 import { clone, linkfy, cancelEventPropagation } from '../lib/util';
-import * as Common from '../common/common';
+import Session from "../lib/session";
+import { catchError } from "../common/common";
 
 (function () {
     let roleModal;
@@ -118,7 +119,7 @@ import * as Common from '../common/common';
                             let password = this.inputs.password.value;
                             let s = Session.create(username, password, role);
                             s.login(function (err, result) {
-                                if (!Common.catchError(err)) {
+                                if (!catchError(err)) {
                                     if (that.login) {
                                         s.save();
                                     }

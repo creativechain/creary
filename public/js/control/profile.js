@@ -85031,13 +85031,15 @@ function requireRoleKey(username, role, login, callback) {
     if (session && session.account.keys[role]) {
       callback(session.account.keys[role].prv, session.account.username);
     } else {
-      creaEvents.on('crea.auth.role.' + id, function (roleKey, username) {
+      var listener = function listener(roleKey, username) {
         if (callback) {
           callback(roleKey, username);
         }
 
-        creaEvents.off('crea.auth.role.' + id);
-      });
+        creaEvents.off('crea.auth.role.' + id, listener);
+      };
+
+      creaEvents.on('crea.auth.role.' + id, listener);
       creaEvents.emit('crea.auth.role', username, role, login, id);
     }
   }
