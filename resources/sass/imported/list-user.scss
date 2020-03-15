@@ -1,0 +1,62 @@
+@import "color";
+
+.row-list-user {
+  border-bottom: solid 1px $borde-dropdown-price;
+  .row-list-user-display {
+    display: flex;
+  }
+  .title-certificate {
+    padding: 20px 13px 0;
+    color: $border-btn-transparent;
+  }
+  .avatare-list {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    img {
+      border-radius: 20px;
+    }
+  }
+  .list-data-user {
+    width: 90%;
+    margin: 0 5px;
+    padding: 10px 0;
+    p:nth-child(1) {
+      font-size: 14px;
+      font-weight: 600;
+      span {
+        font-size:12px;
+        color: $grey-light;
+        font-weight: normal;
+      }
+    }
+    p {
+      margin-bottom: 0;
+    }
+    a {
+      text-decoration: none;
+    }
+  }
+  .list-amount {
+    font-weight: 600;
+    position: relative;
+    top: 24px;
+    right: 10px;
+  }
+  .user-avatar {
+    height: 40px;
+    width: 40px;
+    overflow: hidden;
+    min-height: 40px;
+    min-width: 40px;
+    border-radius: 50px;
+    margin: 10px auto;
+  }
+  .img-user-avatar {
+    background-image: url("/img/crea-web/publish/demo-vertical.jpg");
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    background-position: 50% 50%;
+  }
+}

@@ -1,0 +1,34 @@
+let LIKE_STATE = {
+    LIKE_OP: 0,
+    NO_LIKE: 1,
+    LIKED: 2,
+    NO_LIKE_END: 3,
+    LIKED_END: 4
+};
+
+let WITNESS_STATE = {
+    VOTE_OP: 0,
+    NO_VOTE: 1,
+    VOTED: 2,
+    NO_VOTE_END: 3,
+    VOTED_END: 4
+};
+
+let RECOMMEND_STATE = {
+    RECOMMEND_OP: 0,
+    RECOMMENDED: 1,
+    NO_RECOMMENDED: 2
+};
+
+let FOLLOW_STATE = {
+    NO_FOLLOWING: 0,
+    UNFOLLOWED: 1,
+    FOLLOWING: 2,
+    FOLLOWED: 3,
+    UNFOLLOWING_OP: 4,
+    FOLLOWING_OP: 5
+};
+
+module.exports =  {
+    LIKE_STATE, WITNESS_STATE, RECOMMEND_STATE, FOLLOW_STATE
+};
