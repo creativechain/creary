@@ -3,7 +3,6 @@
  */
 
 import Session from '../lib/session';
-import { crea } from './conf';
 import { catchError } from "./common";
 
 function startLogin() {

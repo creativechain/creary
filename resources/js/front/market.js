@@ -1,14 +1,10 @@
 
-import Vue from 'vue';
 import RpcWsClient from "../lib/rpcwsclient";
-import { crea } from '../common/conf';
 import { Asset } from '../lib/amount';
 import { cancelEventPropagation, toLocaleDate, isEqual, mixToArray, randomNumber } from '../lib/util';
-import { moment, requireRoleKey, updateUserSession, catchError } from '../common/common';
-import VueLazyload from "vue-lazyload";
+import { requireRoleKey, updateUserSession, catchError } from '../common/common';
 
 (function () {
-    Vue.use(VueLazyload);
 
     let marketContainer;
     let tablesInitiated, buyTable, buyAllTable, sellTable, sellAllTable, userOrdersTable, marketHistoryTable;

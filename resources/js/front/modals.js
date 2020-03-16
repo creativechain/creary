@@ -1,8 +1,6 @@
 /**
  * Created by ander on 21/12/18.
  */
-import Vue from 'vue';
-import { crea } from '../common/conf';
 import { clone, linkfy, cancelEventPropagation } from '../lib/util';
 import Session from "../lib/session";
 import { catchError } from "../common/common";

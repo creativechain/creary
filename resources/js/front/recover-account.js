@@ -1,7 +1,6 @@
 /**
  * Created by ander on 30/12/18.
  */
-import Vue from 'vue';
 
 (function () {
     let recoverContainer;

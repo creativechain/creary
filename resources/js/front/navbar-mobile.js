@@ -1,7 +1,5 @@
 
-import Vue from 'vue';
 import R from '../lib/resources';
-import { crea } from '../common/conf';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, cancelEventPropagation } from '../lib/util';
 import { catchError, goTo, isInHome, resolveFilter, updateUrl, refreshAccessToken } from "../common/common";

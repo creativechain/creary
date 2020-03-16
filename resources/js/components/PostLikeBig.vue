@@ -10,10 +10,9 @@
 
 <script>
     import { LIKE_STATE } from './states';
-    import { moment, requireRoleKey } from '../common/common';
+    import { requireRoleKey } from '../common/common';
     import { toLocaleDate } from '../lib/util';
     import R from '../lib/resources';
-    import { crea } from '../common/conf';
 
     export default {
         props: {

@@ -2,21 +2,17 @@
  * Created by ander on 12/10/18.
  */
 
-import Vue from 'vue';
-import { crea } from '../common/conf';
 import Session from "../lib/session";
 import { Asset } from '../lib/amount';
 import { License, LICENSE } from '../lib/license';
 import { jsonify, jsonstring, getParameterByName, humanFileSize, cancelEventPropagation, cleanArray,
     removeEmojis } from '../lib/util';
 import { catchError, CONSTANTS, uploadToIpfs, resizeImage, parsePost } from "../common/common";
-import VueLazyload from "vue-lazyload";
 
 //Import components
 import CKEditor from "../components/CKEditor";
 
 (function () {
-    Vue.use(VueLazyload);
 
     //Load components
     Vue.component('ckeditor', CKEditor);

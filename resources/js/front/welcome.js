@@ -1,15 +1,11 @@
 /**
  * Created by ander on 11/10/18.
  */
-import Vue from 'vue';
-import { crea, apiOptions } from '../common/conf';
 import HttpClient from '../lib/http';
 import { jsonify, copyToClipboard, validateEmail, getParameterByName } from '../lib/util';
-import * as Common from '../common/common';
-import VueLazyload from "vue-lazyload";
+import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from "../common/common";
 
 (function () {
-    Vue.use(VueLazyload);
 
     let welcomeVue;
     let emailCallback;
@@ -131,7 +127,7 @@ import VueLazyload from "vue-lazyload";
         console.log("Checking mail", email, validateEmail(email));
 
         if (validateEmail(email)) {
-            Common.refreshAccessToken(function (accessToken) {
+            refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + '/validateAccount';
                 let http = new HttpClient(url);
 
@@ -174,7 +170,7 @@ import VueLazyload from "vue-lazyload";
             let phone = welcomeVue.country_code + welcomeVue.phone;
             phone = phone.replace(' ', '').replace('+', '');
             globalLoading.show = true;
-            Common.refreshAccessToken(function (accessToken) {
+            refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + `/validation-phone/${token}`;
                 let http = new HttpClient(url);
                 http.setHeaders({
@@ -203,7 +199,7 @@ import VueLazyload from "vue-lazyload";
     function verifyPhone() {
         let token = getParameterByName('token'); //console.log('Token', token);
 
-        Common.refreshAccessToken(function (accessToken) {
+        refreshAccessToken(function (accessToken) {
             let url = apiOptions.apiUrl + `/validate-phone/${token}`;
             let http = new HttpClient(url);
             http.setHeaders({
@@ -256,7 +252,7 @@ import VueLazyload from "vue-lazyload";
     function sendConfirmationMail(callback) {
         if (!welcomeVue.error.email) {
             globalLoading.show = true;
-            Common.refreshAccessToken(function (accessToken) {
+            refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + '/crearySignUp';
                 let http = new HttpClient(url);
                 http.setHeaders({
@@ -282,7 +278,7 @@ import VueLazyload from "vue-lazyload";
             globalLoading.show = true;
             let username = welcomeVue.username;
             let password = welcomeVue.password;
-            Common.createBlockchainAccount(username, password, function (err, result) {
+            createBlockchainAccount(username, password, function (err, result) {
                 globalLoading.show = false;
 
                 if (!catchError(err)) {
@@ -303,7 +299,7 @@ import VueLazyload from "vue-lazyload";
 
         if (token) {
             globalLoading.show = true;
-            Common.refreshAccessToken(function (accessToken) {
+            refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + `/validation/${token}`;
                 let http = new HttpClient(url);
                 http.setHeaders({
@@ -317,7 +313,7 @@ import VueLazyload from "vue-lazyload";
                 }).when('fail', function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR, textStatus, errorThrown);
                     //TODO: SHOW ERROR
-                    Common.goTo('/' + jqXHR.status);
+                    goTo('/' + jqXHR.status);
                 });
             });
         } else {

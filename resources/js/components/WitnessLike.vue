@@ -13,7 +13,6 @@
     import { WITNESS_STATE } from './states';
     import { requireRoleKey } from '../common/common';
     import R from '../lib/resources';
-    import { crea } from '../common/conf';
 
     export default {
         props: {

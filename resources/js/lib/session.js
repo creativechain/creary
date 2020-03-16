@@ -2,7 +2,6 @@
  * Created by ander on 27/09/18.
  */
 
-import { crea } from '../common/conf';
 import { parseAccount } from "../common/common";
 import { Account, DEFAULT_ROLES} from "./account";
 import Errors from "./error";

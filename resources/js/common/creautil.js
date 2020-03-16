@@ -3,7 +3,6 @@
  */
 
 import { Asset } from '../lib/amount';
-import { apiOptions } from "./conf";
 
 /**
  *

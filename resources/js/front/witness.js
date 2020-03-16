@@ -1,16 +1,12 @@
 /**
  * Created by ander on 7/11/18.
  */
-import Vue from 'vue';
-import { crea } from '../common/conf';
 import { updateUserSession, catchError } from "../common/common";
-import VueLazyload from "vue-lazyload";
 
 //Import components
 import WitnessLike from "../components/WitnessLike";
 
 (function () {
-    Vue.use(VueLazyload);
 
     Vue.component('witness-like', WitnessLike);
     let witnessContainer;

@@ -1,4 +1,3 @@
-import 'jquery';
 
 $(document).ready(function () {
     let navbarC = $('#navbar-container');

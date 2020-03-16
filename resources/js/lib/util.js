@@ -1,5 +1,3 @@
-import { moment } from '../common/common';
-
 /**
  * Created by ander on 29/09/18.
  */
@@ -76,23 +74,6 @@ function getParameterByName(name, url) {
 
 /**
  *
- * @param base64
- * @returns {ArrayBuffer}
- */
-function base64ToBuffer(base64) {
-    let binary_string = window.atob(base64);
-    let len = binary_string.length;
-    let bytes = new Uint8Array(len);
-
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-
-    return bytes.buffer;
-}
-
-/**
- *
  * @param {string} str
  * @returns {string}
  */
@@ -150,17 +131,6 @@ function toLocaleDate(date) {
 
 /**
  *
- * @param {Date} date
- * @returns {moment}
- */
-function toUTCDate(date) {
-    let dateString = date.toISOString();
-    console.log('Date tot utc', date, dateString);
-    return moment(dateString, 'YYYY-MM-DDTHH:mm:ss.SZ');
-}
-
-/**
- *
  * @param src
  * @returns {*}
  */
@@ -179,8 +149,7 @@ function humanFileSize(size) {
  * @param {string} username
  * @returns {boolean}
  */
-function isUserFeed() {
-    let username = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+function isUserFeed(username) {
     let path = currentPage ? currentPage.pathname : window.location.pathname;
     let regexp = '(\/@[a-zA-Z0-9]+\/feed)';
 
@@ -403,8 +372,8 @@ function makeMentions(comment, state) {
 }
 
 export {
-    cancelEventPropagation, isJSON, jsonify, jsonstring, validateEmail, getParameterByName, base64ToBuffer, toPermalink,
-    createAuth, copyToClipboard, randomNumber, toLocaleDate, toUTCDate, clone, humanFileSize, isUserFeed, toUrl, getPathPart,
+    cancelEventPropagation, isJSON, jsonify, jsonstring, validateEmail, getParameterByName, toPermalink, createAuth,
+    copyToClipboard, randomNumber, toLocaleDate, clone, humanFileSize, isUserFeed, toUrl, getPathPart,
     getNavigatorLanguage, cleanArray, isSmallScreen, removeEmojis, NaNOr, isEqual, mixToArray, normalizeTag, linkfy,
     uniqueId, makeMentions
 };

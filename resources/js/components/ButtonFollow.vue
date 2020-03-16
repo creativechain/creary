@@ -16,7 +16,6 @@
 <script>
     import { FOLLOW_STATE } from './states';
     import { requireRoleKey } from '../common/common';
-    import { crea } from '../common/conf';
     import { jsonstring } from "../lib/util";
     import Errors from '../lib/error';
 

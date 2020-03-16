@@ -2,17 +2,14 @@
  * Created by ander on 18/10/18.
  */
 
-import Vue from 'vue';
 import R from '../lib/resources';
-import { crea, apiOptions } from '../common/conf';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, clone, humanFileSize, toLocaleDate, makeMentions, cancelEventPropagation, randomNumber,
     NaNOr } from '../lib/util';
-import { moment, catchError, CONSTANTS, showPost, goTo, makeComment, makeDownload, deleteComment, ignoreUser,
+import { catchError, CONSTANTS, showPost, goTo, makeComment, makeDownload, deleteComment, ignoreUser,
     requireRoleKey, updateUserSession, hideModal, showModal, refreshAccessToken, parseAccount, parsePost } from "../common/common";
-import VueLazyload from "vue-lazyload";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -28,7 +25,6 @@ import CommentLike from "../components/CommentLike";
 import ButtonFollow from "../components/ButtonFollow";
 
 (function () {
-    Vue.use(VueLazyload);
 
     //Load Vue components
     Vue.component('avatar', Avatar);

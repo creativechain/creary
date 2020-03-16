@@ -1,11 +1,51 @@
 /**
  * Created by ander on 7/12/18.
  */
-
+import $ from 'jquery';
 import * as Cookies from 'js-cookie';
 import * as EventEmitter from 'events';
+import * as crea from '@creativechain-fdn/crea-js';
 import Vue from "vue";
 import VueLazyload from "vue-lazyload";
+import Compressor from 'compressorjs';
+import moment from "moment";
+import { Buffer } from 'buffer';
+
+
+Vue.use(VueLazyload);
+moment.locale($('html').attr('lang'));
+window.apiOptions = {
+    nodes: ['https://nodes.creary.net'],
+    apiUrl: 'https://api.creary.net',
+    ipfs: 'https://ipfs.creary.net/ipfs/',
+    ipfsd: 'https://api.creary.net/ipfs',
+    addressPrefix: 'CREA',
+    symbol: {
+        CREA: 'CREA',
+        CGY: 'CGY',
+        CBD: 'CBD',
+        VESTS: 'VESTS'
+    },
+    nai: {
+        CREA: '@@000000021',
+        CBD: '@@000000013',
+        VESTS: '@@000000037',
+        CGY: '@@000000005'
+    },
+    chainId: '0000000000000000000000000000000000000000000000000000000000000000'
+};
+
+localStorage.debug = 'crea:*';
+crea.api.setOptions(apiOptions);
+crea.config.set('address_prefix', apiOptions.addressPrefix);
+crea.config.set('chain_id', apiOptions.chainId);
+
+window.$ = window.jQuery = $;
+window.Vue = Vue;
+window.crea = crea;
+window.moment = moment;
+window.Buffer = Buffer;
+window.Compressor = Compressor;
 
 if (!String.format) {
     /**
@@ -80,7 +120,7 @@ if (!Date.fromUTCString) {
 
 window.creaEvents = new EventEmitter();
 window.creaEvents.setMaxListeners(20);
-window.jQuery = window.$ = require('jquery');
+
 $.holdReady(true);
 
 /**
@@ -125,6 +165,8 @@ function createCookieInstance(attributes) {
 window.CreaCookies = createCookieInstance({
     domain: window.location.hostname
 });
+
+window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-test-2', 'exratesfull', 'skytali7'];
 
 window.currentPage = null;
 

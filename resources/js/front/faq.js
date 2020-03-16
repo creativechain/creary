@@ -1,7 +1,6 @@
 /**
  * Created by ander on 28/12/18.
  */
-import Vue from 'vue';
 import { linkfy, toPermalink } from "../lib/util";
 
 (function () {

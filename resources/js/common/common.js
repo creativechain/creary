@@ -1,9 +1,6 @@
 
 import HttpClient from '../lib/http';
-import moment from 'moment';
-import Compressor from 'compressorjs';
 import Session from "../lib/session";
-import { crea, apiOptions } from './conf';
 import * as CREARY from "../common/ls";
 import { Asset } from '../lib/amount';
 import { clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
@@ -23,7 +20,6 @@ class IpfsFile  {
     }
 }
 
-moment.locale($('html').attr('lang'));
 let CONSTANTS = {
     ACCOUNT: {
         UPDATE_THRESHOLD: 1000 * 60 * 60
@@ -928,7 +924,7 @@ function requireRoleKey(username, role, login, callback) {
 }
 
 export {
-    moment, CONSTANTS, showBanner, goTo, showPost, showProfile, updateUrl, toHome, resolveFilter, isInHome, showModal, hideModal,
+    CONSTANTS, showBanner, goTo, showPost, showProfile, updateUrl, toHome, resolveFilter, isInHome, showModal, hideModal,
     createBlockchainAccount, removeBlockedContents, parseAccount, parsePost, getAccounts, getDiscussion, recommendPost,
     ignoreUser, makeComment, deleteComment, editComment, makeDownload, updateUserSession, refreshAccessToken, resizeImage,
     uploadToIpfs, downloadFile, performSearch, catchError, showAlert, requireRoleKey

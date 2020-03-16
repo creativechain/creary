@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import { crea } from '../common/conf';
-import * as Common from '../common/common';
+import { catchError } from "../common/common";
 
 (function () {
     let tagsContainer;
@@ -27,7 +25,7 @@ import * as Common from '../common/common';
 
     function fetchTags(session, account) {
         crea.api.getState('/tags', function (err, result) {
-            if (!Common.catchError(err)) {
+            if (!catchError(err)) {
                 setUp(result, session, account);
             }
         });

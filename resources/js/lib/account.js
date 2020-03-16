@@ -2,7 +2,6 @@
  * Created by ander on 27/09/18.
  */
 
-import { crea } from '../common/conf';
 const DEFAULT_ROLES = ['posting', 'active', 'owner', 'memo'];
 
 class Account {

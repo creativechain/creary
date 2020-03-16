@@ -1,17 +1,13 @@
 /**
  * Created by ander on 9/10/18.
  */
-import Vue from 'vue';
 import R from '../lib/resources';
-import { crea } from '../common/conf';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, getParameterByName, toLocaleDate, NaNOr } from '../lib/util';
-import { apiOptions } from '../common/conf';
 import { catchError, parseAccount, parsePost, resolveFilter, removeBlockedContents, updateUserSession, showModal,
-    getDiscussion, moment, refreshAccessToken, showProfile, performSearch, getAccounts } from "../common/common";
-import VueLazyload from "vue-lazyload";
+    getDiscussion, refreshAccessToken, showProfile, performSearch, getAccounts } from "../common/common";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -21,8 +17,6 @@ import LinkName from "../components/LinkName";
 import ButtonFollow from "../components/ButtonFollow";
 
 (function () {
-    Vue.use(VueLazyload);
-
     //Load Vue components
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);

@@ -2,25 +2,17 @@
  * Created by ander on 25/09/18.
  */
 
-import Vue from 'vue';
 import R from '../lib/resources';
-import { crea, apiOptions } from '../common/conf';
 import Session from "../lib/session";
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, isSmallScreen, cancelEventPropagation } from '../lib/util';
 import { login, logout } from '../common/login';
 import { catchError, performSearch, isInHome, hideModal, goTo, resolveFilter, updateUrl, parsePost,
     refreshAccessToken} from "../common/common";
-import VueLazyload from "vue-lazyload";
 
 import Avatar from "../components/Avatar";
-/*import Recommend from "../components/Recommend";
-import NewLike from "../components/NewLike";
-import LinkName from "../components/LinkName";
-import ButtonFollow from "../components/ButtonFollow";*/
 
 (function () {
-    Vue.use(VueLazyload);
 
     Vue.component('avatar', Avatar);
 

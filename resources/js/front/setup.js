@@ -1,11 +1,10 @@
 /**
  * Created by ander on 11/10/18.
  */
-import { crea } from '../common/conf';
 import Errors from "../lib/error";
 import Session from "../lib/session";
 import { cancelEventPropagation } from '../lib/util';
-import * as Common from '../common/common';
+import { catchError } from "../common/common";
 
 (function () {
 
@@ -43,7 +42,7 @@ import * as Common from '../common/common';
                     let followings = [];
                     let blockeds = [];
                     crea.api.getFollowing(session.account.username, '', 'blog', 1000, function (err, result) {
-                        if (!Common.catchError(err)) {
+                        if (!catchError(err)) {
                             result.following.forEach(function (f) {
                                 followings.push(f.following);
                             });
@@ -53,7 +52,7 @@ import * as Common from '../common/common';
                     });
 
                     crea.api.getFollowing(session.account.username, '', 'ignore', 1000, function (err, result) {
-                        if (!Common.catchError(err)) {
+                        if (!catchError(err)) {
                             result.following.forEach(function (f) {
                                 blockeds.push(f.following);
                             });

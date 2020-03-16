@@ -3,8 +3,6 @@
  * Created by ander on 10/10/18.
  */
 
-import { apiOptions } from '../common/conf';
-
 let ASSET_CREA = {
     exponent: 3,
     symbol: apiOptions.symbol.CREA
