@@ -26,8 +26,8 @@ class ResourceConfig {
 }
 
 const JS_CONTROL_CONFIG = new ResourceConfig('js', 'resources/js/front/', 'public/js/control/', ['required', 'components'], true);
-const JS_FAQ_ES_CONFIG = new ResourceConfig('js', 'resources/js/faq/es', 'public/js/faq/es', ['required', 'components'], true);
-const JS_FAQ_EN_CONFIG = new ResourceConfig('js', 'resources/js/faq/en', 'public/js/faq/en', ['required', 'components'], true);
+const JS_FAQ_ES_CONFIG = new ResourceConfig('js', 'resources/js/faq/es/', 'public/js/faq/es/', ['required', 'components'], true);
+const JS_FAQ_EN_CONFIG = new ResourceConfig('js', 'resources/js/faq/en/', 'public/js/faq/en/', ['required', 'components'], true);
 
 const SASS_CONFIG = new ResourceConfig('sass', 'resources/sass/', 'public/css/custom/', ['imported']);
 

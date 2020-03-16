@@ -17,3 +17,5 @@ yarn-error.log
 localfiles
 .DS_Store
 webconfig.json
+/public/js/control
+/public/js/faq
