@@ -71,9 +71,9 @@
     </script>
 
     <script>
-        window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('public/isolangs.json') !!};
+        window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
         window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/es/lang.json') !!};
-        window.countryCodes = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('public/country_codes.json') !!};
+        window.countryCodes = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('country_codes.json') !!};
     </script>
 
     <script src="{{ asset('js/control/start.js') }}"></script>

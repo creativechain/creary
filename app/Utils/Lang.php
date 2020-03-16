@@ -19,7 +19,7 @@ class Lang
      * @return mixed
      */
     public static function getAvailableLangs() {
-        $isoLangs = Storage::disk('public')->get('isolangs.json');
+        $isoLangs = Storage::disk('local')->get('isolangs.json');
         return json_decode($isoLangs, true);
     }
 
