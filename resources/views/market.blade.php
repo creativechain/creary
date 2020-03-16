@@ -64,7 +64,7 @@
                                 <ul class="tabs w-100 ul-market-buy-sell mb-0">
                                     <li class="active">
                                         <div class="tab__title text-center">
-                                            <img src="/img/exchange/all.svg" alt="">
+                                            <img v-lazy="'{{ asset('img/exchange/all.svg') }}'" alt="">
                                         </div>
                                         <div class="tab__content">
 
@@ -126,7 +126,7 @@
                                     </li>
                                     <li>
                                         <div class="tab__title text-center">
-                                            <img src="/img/exchange/buy.svg" alt="">
+                                            <img v-lazy="'{{ asset('img/exchange/buy.svg') }}'" alt="">
                                         </div>
                                         <div class="tab__content">
                                             <table id="buy-left" class="display table-buy-sell-market mb-0">
@@ -172,7 +172,7 @@
                                     </li>
                                     <li>
                                         <div class="tab__title text-center">
-                                            <img src="/img/exchange/sell.svg" alt="">
+                                            <img v-lazy="'{{ asset('img/exchange/sell.svg') }}'" alt="">
                                         </div>
                                         <div class="tab__content">
                                             <table id="sell-all-orders" class="display table-buy-sell-market">

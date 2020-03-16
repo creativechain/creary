@@ -8,8 +8,11 @@ import { crea, apiOptions } from '../common/conf';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
 import HttpClient from '../lib/http';
-import { jsonify, getPathPart, clone, humanFileSize, toLocaleDate, makeMentions, cancelEventPropagation, randomNumber, NaNOr } from '../lib/util';
-import * as Common from '../common/common';
+import { jsonify, getPathPart, clone, humanFileSize, toLocaleDate, makeMentions, cancelEventPropagation, randomNumber,
+    NaNOr } from '../lib/util';
+import { moment, catchError, CONSTANTS, showPost, goTo, makeComment, makeDownload, deleteComment, ignoreUser,
+    requireRoleKey, updateUserSession, hideModal, showModal, refreshAccessToken, parseAccount, parsePost } from "../common/common";
+import VueLazyload from "vue-lazyload";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -25,6 +28,8 @@ import CommentLike from "../components/CommentLike";
 import ButtonFollow from "../components/ButtonFollow";
 
 (function () {
+    Vue.use(VueLazyload);
+
     //Load Vue components
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);
@@ -61,7 +66,7 @@ import ButtonFollow from "../components/ButtonFollow";
                 el: '#post-view',
                 data: {
                     lang: lang,
-                    CONSTANTS: Common.CONSTANTS,
+                    CONSTANTS: CONSTANTS,
                     session: session,
                     user: userAccount ? userAccount.user : false,
                     state: state,
@@ -71,14 +76,14 @@ import ButtonFollow from "../components/ButtonFollow";
                     active_comment_edit: null,
                     active_response: null,
                     active_response_edit: null,
-                    comments_shown: Common.CONSTANTS.POST.MAX_COMMENT_SHOWN,
+                    comments_shown: CONSTANTS.POST.MAX_COMMENT_SHOWN,
                     navigation: false
                 },
                 mounted: function mounted() {
                     onVueReady();
                 },
                 methods: {
-                    showPost: Common.showPost,
+                    showPost: showPost,
                     humanFileSize: humanFileSize,
                     getBuzzClass: function getBuzzClass(account) {
                         let buzzClass = {};
@@ -115,12 +120,12 @@ import ButtonFollow from "../components/ButtonFollow";
                         return toLocaleDate(date).fromNow();
                     },
                     formatDate: function formatDate(date) {
-                        return Common.moment(date + 'Z').format('LLLL');
+                        return moment(date + 'Z').format('LLLL');
                     },
                     hasPaid: function hasPaid(post) {
                         post = post || this.state.post;
 
-                        let now = Common.moment();
+                        let now = moment();
                         let payout = toLocaleDate(post.cashout_time);
                         return now.isAfter(payout);
                     },
@@ -209,7 +214,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         }
                     },
                     showMoreComments: function() {
-                        this.comments_shown += Common.CONSTANTS.POST.COMMENT_SHOW_INTERVAL;
+                        this.comments_shown += CONSTANTS.POST.COMMENT_SHOW_INTERVAL;
                         this.$forceUpdate();
                     },
                     getFeaturedImage: function getFeaturedImage(post) {
@@ -251,16 +256,16 @@ import ButtonFollow from "../components/ButtonFollow";
                     },
                     editPost: function editPost() {
                         let route = this.state.post.author + '/' + this.state.post.permlink;
-                        Common.goTo('/publish?edit=' + encodeURIComponent(route));
+                        goTo('/publish?edit=' + encodeURIComponent(route));
                     },
                     addComment: function (parentPost, commentReply, editingResponse) {
                         let that = this;
 
                         let post = editingResponse;
                         let comment = commentReply ? this.response_comment : this.comment;
-                        Common.makeComment(comment, post, parentPost, function (err, result) {
+                        makeComment(comment, post, parentPost, function (err, result) {
                             globalLoading.show = false;
-                            if (!Common.catchError(err)) {
+                            if (!catchError(err)) {
 
                                 if (commentReply) {
                                     that.cleanMakeResponse();
@@ -304,11 +309,11 @@ import ButtonFollow from "../components/ButtonFollow";
                         this.response_comment = '';
                         this.$forceUpdate();
                     },
-                    makeDownload: Common.makeDownload,
+                    makeDownload: makeDownload,
                     removeComment: function(comment) {
                         let that = this;
-                        Common.deleteComment(comment, this.session, function (err, result) {
-                            if (!Common.catchError(err)) {
+                        deleteComment(comment, this.session, function (err, result) {
+                            if (!catchError(err)) {
                                 globalLoading.show = false;
                                 fetchContent();
                             }
@@ -329,7 +334,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         return ignoreUser;
                     }(function () {
-                        Common.ignoreUser(this.state.post.author, true, function (err, result) {
+                        ignoreUser(this.state.post.author, true, function (err, result) {
                             fetchContent();
                         });
                     }),
@@ -338,23 +343,23 @@ import ButtonFollow from "../components/ButtonFollow";
                         if (this.session) {
                             let that = this;
                             let username = this.session.account.username;
-                            Common.requireRoleKey(username, 'posting', function (postingKey) {
+                            requireRoleKey(username, 'posting', function (postingKey) {
                                 globalLoading.show = true;
                                 crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
                                     globalLoading.show = false;
-                                    Common.catchError(err);
+                                    catchError(err);
                                     fetchContent();
                                 });
                             });
                         }
                     },
                     onVote: function onVote(err) {
-                        Common.catchError(err);
-                        Common.updateUserSession();
+                        catchError(err);
+                        updateUserSession();
                     },
                     onFollow: function onFollow(err, result) {
-                        Common.catchError(err);
-                        Common.updateUserSession();
+                        catchError(err);
+                        updateUserSession();
                     }
                 }
             });
@@ -381,7 +386,7 @@ import ButtonFollow from "../components/ButtonFollow";
                     methods: {
                         hideModalPromote: function hideModalPromote(event) {
                             cancelEventPropagation(event);
-                            Common.hideModal('#modal-promote');
+                            hideModal('#modal-promote');
                         },
                         makePromotion: function makePromotion(event) {
                             cancelEventPropagation(event);
@@ -396,14 +401,14 @@ import ButtonFollow from "../components/ButtonFollow";
                             }).toFriendlyString(null, false);
                             console.log(amount);
                             let that = this;
-                            Common.requireRoleKey(from, 'active', function (activeKey) {
+                            requireRoleKey(from, 'active', function (activeKey) {
                                 globalLoading.show = true;
                                 crea.broadcast.transfer(activeKey, from, to, amount, memo, function (err, result) {
                                     globalLoading.show = false;
 
-                                    if (!Common.catchError(err)) {
+                                    if (!catchError(err)) {
                                         that.hideModalPromote();
-                                        Common.updateUserSession();
+                                        updateUserSession();
                                     }
                                 });
                             });
@@ -452,7 +457,7 @@ import ButtonFollow from "../components/ButtonFollow";
                             },
                             confirmDownload: function confirmDownload() {
                                 if (this.modal.alreadyPayed || this.modal.confirmed) {
-                                    Common.makeDownload(null, session, this.user, this.state.post, fetchContent);
+                                    makeDownload(null, session, this.user, this.state.post, fetchContent);
                                 } else {
                                     this.modal.confirmed = true;
                                 }
@@ -488,11 +493,11 @@ import ButtonFollow from "../components/ButtonFollow";
                             if (this.session) {
                                 let that = this;
                                 let username = this.session.account.username;
-                                Common.requireRoleKey(username, 'posting', function (postingKey) {
+                                requireRoleKey(username, 'posting', function (postingKey) {
                                     globalLoading.show = true;
                                     crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
                                         globalLoading.show = false;
-                                        Common.catchError(err);
+                                        catchError(err);
                                         fetchContent();
                                     });
                                 });
@@ -526,11 +531,11 @@ import ButtonFollow from "../components/ButtonFollow";
                             if (this.session) {
                                 let that = this;
                                 let username = this.session.account.username;
-                                Common.requireRoleKey(username, 'posting', function (postingKey) {
+                                requireRoleKey(username, 'posting', function (postingKey) {
                                     globalLoading.show = true;
                                     crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
                                         globalLoading.show = false;
-                                        Common.catchError(err);
+                                        catchError(err);
                                         fetchContent();
 
                                     });
@@ -608,7 +613,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         state.discussion_idx[discuss].more_projects = moreProjects;
                         creaEvents.emit('navigation.post.data', post, postContainer.state, discuss, 'more_projects', moreProjects.indexOf(post.link));
-                        Common.showModal('#modal-post');
+                        showModal('#modal-post');
                     },
                     getFeaturedImage: function getFeaturedImage(post) {
                         let featuredImage = post.metadata.featuredImage;
@@ -636,7 +641,7 @@ import ButtonFollow from "../components/ButtonFollow";
             before_date: date,
             author: author
         }, function (err, result) {
-            if (!Common.catchError(err)) {
+            if (!catchError(err)) {
                 let discussions = [];
                 result.discussions.forEach(function (d) {
                     d.metadata = jsonify(d.json_metadata);
@@ -669,9 +674,9 @@ import ButtonFollow from "../components/ButtonFollow";
             let fetchContentState = function fetchContentState(finalUrl) {
 
                 crea.api.getState(finalUrl, function (err, result) {
-                    if (!Common.catchError(err)) {
+                    if (!catchError(err)) {
 
-                        Common.refreshAccessToken(function (accessToken) {
+                        refreshAccessToken(function (accessToken) {
                             let finalParts = finalUrl.slice(1, finalUrl.length).split('/');
                             let author = finalParts[1].slice(1, finalParts[1].length);
                             let permlink = finalParts[2];
@@ -682,14 +687,14 @@ import ButtonFollow from "../components/ButtonFollow";
                                 let aKeys = Object.keys(result.accounts);
 
                                 if (aKeys.length === 0) {
-                                    Common.goTo('/404');
+                                    goTo('/404');
                                 } else {
                                     aKeys.forEach(function (k) {
-                                        result.accounts[k] = Common.parseAccount(result.accounts[k]);
+                                        result.accounts[k] = parseAccount(result.accounts[k]);
                                     });
                                     result.postKey = getPostKey(finalUrl);
-                                    result.post = Common.parsePost(result.content[result.postKey], reblogs);
-                                    result.author = Common.parseAccount(result.accounts[result.post.author]); //Order comments by date, latest first
+                                    result.post = parsePost(result.content[result.postKey], reblogs);
+                                    result.author = parseAccount(result.accounts[result.post.author]); //Order comments by date, latest first
 
                                     //console.log(clone(result.author));
                                     let cKeys = Object.keys(result.content);
@@ -699,7 +704,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                         return d2.valueOf() - d1.valueOf();
                                     });
                                     cKeys.forEach(function (c) {
-                                        result.post[c] = Common.parsePost(result.content[c]);
+                                        result.post[c] = parsePost(result.content[c]);
                                     });
                                     result.post.comments = cKeys;
                                     setUp(result);
@@ -734,8 +739,8 @@ import ButtonFollow from "../components/ButtonFollow";
                 let permlink = getPathPart(null,1);
 
                 crea.api.getContent(author, permlink, function (err, result) {
-                    if (!Common.catchError(err)) {
-                        let post = Common.parsePost(result);
+                    if (!catchError(err)) {
+                        let post = parsePost(result);
                         fetchContentState('/' + post.metadata.tags[0] + '/@' + author + '/' + permlink);
                     }
                 });

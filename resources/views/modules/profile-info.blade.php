@@ -119,7 +119,11 @@
         <div v-if="!isUserProfile()" class="row block-all">
             <div class="col-md-12">
                 <ul class="list-inline list-unstyled">
-                    <li class="cursor" v-on:click="ignoreUser"><p><img src="/img/icons/NO_see.svg" alt="" />{{ __('lang.PUBLICATION.BLOCK_USER') }}</p></li>
+                    <li class="cursor" v-on:click="ignoreUser">
+                        <p>
+                            <img v-lazy="'{{ asset('img/icons/NO_see.svg') }}'" alt="" />{{ __('lang.PUBLICATION.BLOCK_USER') }}
+                        </p>
+                    </li>
                 </ul>
             </div>
         </div>

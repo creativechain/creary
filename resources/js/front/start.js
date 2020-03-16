@@ -5,6 +5,7 @@
 import * as Cookies from 'js-cookie';
 import * as EventEmitter from 'events';
 import Vue from "vue";
+import VueLazyload from "vue-lazyload";
 
 if (!String.format) {
     /**
@@ -128,7 +129,9 @@ window.CreaCookies = createCookieInstance({
 window.currentPage = null;
 
 creaEvents.on('crea.content.prepare', function () {
-    console.log('Content prepare on start')
+    console.log('Content prepare on start');
+    Vue.use(VueLazyload);
+
     try {
         window.globalLoading = new Vue({
             el: '#global-loading',

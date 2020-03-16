@@ -25,7 +25,9 @@ class ResourceConfig {
     }
 }
 
-const JS_CONFIG = new ResourceConfig('js', 'resources/js/front/', 'public/js/control/', ['required', 'components'], true);
+const JS_CONTROL_CONFIG = new ResourceConfig('js', 'resources/js/front/', 'public/js/control/', ['required', 'components'], true);
+const JS_FAQ_ES_CONFIG = new ResourceConfig('js', 'resources/js/faq/es', 'public/js/faq/es', ['required', 'components'], true);
+const JS_FAQ_EN_CONFIG = new ResourceConfig('js', 'resources/js/faq/en', 'public/js/faq/en', ['required', 'components'], true);
 
 const SASS_CONFIG = new ResourceConfig('sass', 'resources/sass/', 'public/css/custom/', ['imported']);
 
@@ -61,7 +63,9 @@ function applyConf(config) {
 }
 
 applyConf(SASS_CONFIG);
-applyConf(JS_CONFIG);
+applyConf(JS_CONTROL_CONFIG);
+applyConf(JS_FAQ_ES_CONFIG);
+applyConf(JS_FAQ_EN_CONFIG);
 
 //Copy fonts
 mix.copyDirectory('resources/assets/fonts', 'public/fonts');

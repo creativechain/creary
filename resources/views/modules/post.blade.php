@@ -94,7 +94,7 @@
                                 </div>
                                 <div v-else-if="el.type.indexOf('image/') > -1" class="upload-img">
                                     <p>
-                                        <img v-bind:src="'https://ipfs.creary.net/ipfs/' + el.hash" v-bind:type="el.type" alt="" />
+                                        <img v-lazy="'https://ipfs.creary.net/ipfs/' + el.hash" v-bind:type="el.type" alt="" />
                                     </p>
                                 </div>
                                 <div v-else-if="el.type.indexOf('video/') > -1" class="upload-img">
@@ -520,7 +520,7 @@
                                         <ul class="float-left mt-3">
                                             <li class="li-blockchain-certificate">
                                                 <template v-for="i in getLicense().getIcons('white')">
-                                                    <img v-bind:src="i" alt="" />
+                                                    <img v-lazy="i" alt="" />
                                                 </template>
                                             </li>
                                         </ul>

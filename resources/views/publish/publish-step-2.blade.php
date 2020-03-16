@@ -7,7 +7,7 @@
         <div class="boxed boxed--border box-image-step-2" v-on:click="loadFeaturedImage">
             <div class="">
                 <div v-if="!featuredImage.url" class="col-md-4 offset-md-4 col-sm-12 text-center" style="position: relative;top: 60px;">
-                    <img src="/img/crea-web/publish/b-img-portada.png" alt="" />
+                    <img v-lazy="'{{ asset('img/crea-web/publish/b-img-portada.png') }}'" alt="" />
                     <p>{{ __('lang.PUBLISH.INFO_IMAGE') }}</p>
                     <p class="disabled">@{{ String.format(lang.PUBLISH.IMAGE_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW.IMAGE)) }}</p>
                 </div>
@@ -15,7 +15,7 @@
                     <div class="delete-img-step-1">
                         <a href="#">X</a>
                     </div>
-                    <img v-bind:src="featuredImage.url" alt="" />
+                    <img v-lazy="featuredImage.url" alt="" />
 
                 </div>
             </div>
@@ -24,7 +24,7 @@
                     <div v-if="!featuredImage.url" class="col-md-4 offset-4">
                         <div class="row row-options-steps-1">
                             <div class="col">
-                                <img src="/img/crea-web/publish/b-img-portada.png" alt="" class="img-protada" />
+                                <img v-lazy="'{{ asset('img/crea-web/publish/b-img-portada.png') }}'" alt="" class="img-protada" />
                                 <p>{{ __('lang.PUBLISH.INFO_IMAGE') }}</p>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                         <div class="delete-img-step-1">
                             <a href="#">X</a>
                         </div>
-                        <img v-bind:src="featuredImage.url" alt="" />
+                        <img v-lazy="featuredImage.url" alt="" />
 
                     </div>
                 </div>

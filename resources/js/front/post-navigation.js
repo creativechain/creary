@@ -8,6 +8,7 @@ import { jsonify, humanFileSize, toLocaleDate, cancelEventPropagation, randomNum
     makeMentions, NaNOr } from '../lib/util';
 import { CONSTANTS, moment, goTo, updateUrl, catchError, makeDownload, requireRoleKey, showPost,
     makeComment, deleteComment, updateUserSession, parsePost, parseAccount, refreshAccessToken, } from "../common/common";
+import VueLazyload from "vue-lazyload";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -23,6 +24,7 @@ import CommentLike from "../components/CommentLike";
 import ButtonFollow from "../components/ButtonFollow";
 
 (function () {
+    Vue.use(VueLazyload);
 
     //Load Vue components
     Vue.component('avatar', Avatar);
@@ -36,7 +38,7 @@ import ButtonFollow from "../components/ButtonFollow";
     Vue.component('linkname', LinkName);
     Vue.component('username', Username);
     Vue.component('btn-follow', ButtonFollow);
-    
+
     let postContainer, otherProjectsContainer;
     let promoteModal, downloadModal, reportModal, reportCommentModal;
     let session, userAccount;

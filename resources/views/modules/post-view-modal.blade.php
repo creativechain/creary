@@ -7,12 +7,12 @@
     <div class="box-next-post" style="z-index: 1">
         <div v-if="state.postIndex > 0" class="next-left">
             <div class="cursor-link" v-on:click="lastPost">
-                <img src="/img/next_post/esperra.svg" alt="">
+                <img v-lazy="'{{ asset('img/next_post/esperra.svg') }}'" alt="">
             </div>
         </div>
         <div v-if="state.postIndex <= (state.discussions.length - 2)" class="next-right">
             <div class="cursor-link" v-on:click="nextPost">
-                <img src="/img/next_post/dreta.svg" alt="">
+                <img v-lazy="'{{ assert('img/next_post/dreta.svg') }}'" alt="">
             </div>
         </div>
     </div>

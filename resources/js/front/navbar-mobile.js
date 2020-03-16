@@ -4,7 +4,7 @@ import R from '../lib/resources';
 import { crea } from '../common/conf';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, cancelEventPropagation } from '../lib/util';
-import * as Common from '../common/common';
+import { catchError, goTo, isInHome, resolveFilter, updateUrl, refreshAccessToken } from "../common/common";
 
 (function () {
 
@@ -23,7 +23,7 @@ import * as Common from '../common/common';
                 },
                 methods: {
                     isUserFeed: isUserFeed,
-                    goTo: Common.goTo,
+                    goTo: goTo,
                     getDefaultAvatar: R.getAvatar,
                     retrieveNowContent: retrieveNewContent,
                     retrieveTrendingContent: retrieveTrendingContent,
@@ -38,17 +38,17 @@ import * as Common from '../common/common';
     }
 
     function retrieveContent(event, urlFilter) {
-        if (Common.isInHome()) {
+        if (isInHome()) {
             cancelEventPropagation(event);
         }
 
-        let filter = Common.resolveFilter(urlFilter);
-        Common.updateUrl(urlFilter);
+        let filter = resolveFilter(urlFilter);
+        updateUrl(urlFilter);
 
         currentPage.pathname = urlFilter;
 
         crea.api.getState(filter, function (err, urlState) {
-            if (!Common.catchError(err)) {
+            if (!catchError(err)) {
                 if (isUserFeed()) {
                     let http = new HttpClient(apiOptions.apiUrl + '/creary/feed');
 
@@ -94,12 +94,12 @@ import * as Common from '../common/common';
                     });
 
                     http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                        Common.catchError(textStatus);
+                        catchError(textStatus);
                     });
 
                     let username = getPathPart().replace('/', '').replace('@', '');
                     crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
-                        if (!Common.catchError(err)) {
+                        if (!catchError(err)) {
                             let followings = [];
                             result.following.forEach(function (f) {
                                 followings.push(f.following);
@@ -107,7 +107,7 @@ import * as Common from '../common/common';
 
                             if (followings.length) {
                                 followings = followings.join(',');
-                                Common.refreshAccessToken(function (accessToken) {
+                                refreshAccessToken(function (accessToken) {
                                     http.headers = {
                                         Authorization: 'Bearer ' + accessToken
                                     };

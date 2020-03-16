@@ -4,11 +4,10 @@
         <div class="card__top">
             <a v-bind:href="state.content[p].url" v-on:click="openPost(state.content[p], $event)">
                 <div v-if="!state.accounts[state.content[p].author].buzz.blocked" class="img-post-list"
-                     v-bind:style="{ 'background-image': 'url(' + getFeaturedImage(state.content[p]).url + ')' }">
+                     v-lazy:background-image="getFeaturedImage(state.content[p]).url">
 
                 </div>
-                <div v-else class="img-post-list"
-                     v-bind:style="{ 'background-image': 'url(/img/crea-web/image-block-creary.jpg)' }">
+                <div v-else class="img-post-list" v-lazy:background-image="'{{ asset('img/crea-web/image-block-creary.jpg') }}'">
 
                 </div>
             </a>
@@ -53,7 +52,7 @@
                 </li>
                 <li class="float-right li-comment">
                     <p>
-                        <img src="/img/crea-web/comments.svg" alt="" />
+                        <img v-lazy="'{{ asset('img/crea-web/comments.svg') }}'" alt="" />
                         <span>@{{ state.content[p].children }}</span>
                     </p>
                 </li>

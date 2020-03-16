@@ -14,6 +14,7 @@ import { vestingCrea, delegatedCrea, vestsToCgy } from '../common/creautil';
 import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, moment, updateUrl, requireRoleKey,
     updateUserSession, hideModal, showModal } from "../common/common";
 import { receivedDelegatedCGY } from "../common/creautil";
+import VueLazyload from "vue-lazyload";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -25,6 +26,8 @@ import Amount from "../components/Amount";
 import Username from "../components/Username";
 
 (function () {
+    Vue.use(VueLazyload);
+
     //Load Vue components
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);

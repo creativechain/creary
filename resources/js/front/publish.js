@@ -10,11 +10,14 @@ import { License, LICENSE } from '../lib/license';
 import { jsonify, jsonstring, getParameterByName, humanFileSize, cancelEventPropagation, cleanArray,
     removeEmojis } from '../lib/util';
 import { catchError, CONSTANTS, uploadToIpfs, resizeImage, parsePost } from "../common/common";
+import VueLazyload from "vue-lazyload";
 
 //Import components
 import CKEditor from "../components/CKEditor";
 
 (function () {
+    Vue.use(VueLazyload);
+
     //Load components
     Vue.component('ckeditor', CKEditor);
 

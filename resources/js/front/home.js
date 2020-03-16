@@ -9,7 +9,9 @@ import { License } from '../lib/license';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, getParameterByName, toLocaleDate, NaNOr } from '../lib/util';
 import { apiOptions } from '../common/conf';
-import * as Common from '../common/common';
+import { catchError, parseAccount, parsePost, resolveFilter, removeBlockedContents, updateUserSession, showModal,
+    getDiscussion, moment, refreshAccessToken, showProfile, performSearch, getAccounts } from "../common/common";
+import VueLazyload from "vue-lazyload";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -19,6 +21,8 @@ import LinkName from "../components/LinkName";
 import ButtonFollow from "../components/ButtonFollow";
 
 (function () {
+    Vue.use(VueLazyload);
+
     //Load Vue components
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);
@@ -56,7 +60,7 @@ import ButtonFollow from "../components/ButtonFollow";
         state.content = content;
         let aKeys = Object.keys(accounts);
         aKeys.forEach(function (k) {
-            accounts[k] = Common.parseAccount(accounts[k]);
+            accounts[k] = parseAccount(accounts[k]);
         });
         state.accounts = accounts; //Normalize filter
 
@@ -64,7 +68,7 @@ import ButtonFollow from "../components/ButtonFollow";
             filter = filter.substring(1);
         }
 
-        let category = Common.resolveFilter('/' + getPathPart()).replace('/', '');
+        let category = resolveFilter('/' + getPathPart()).replace('/', '');
         let discuss = getPathPart(null, 1) || '';
 
         if (isUserFeed(getPathPart()) && !state.discussion_idx[discuss]) {
@@ -84,7 +88,7 @@ import ButtonFollow from "../components/ButtonFollow";
             lastPage = state.content[contentArray[contentArray.length - 1]];
         }
 
-        state.discussion_idx[discuss][category] = Common.removeBlockedContents(state, account, state.discussion_idx[discuss][category]);
+        state.discussion_idx[discuss][category] = removeBlockedContents(state, account, state.discussion_idx[discuss][category]);
 
         if (!homePosts) {
             homePosts = new Vue({
@@ -118,12 +122,12 @@ import ButtonFollow from "../components/ButtonFollow";
                     },
                     onFollow: function onFollow(err, result) {
                         //creaEvents.emit('crea.content.filter', this.urlFilter);
-                        Common.updateUserSession();
+                        updateUserSession();
                     },
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
                         creaEvents.emit('navigation.post.data', post, this.state, this.discuss, this.category);
-                        Common.showModal('#modal-post');
+                        showModal('#modal-post');
                     },
                     parseAsset: function parseAsset(asset) {
                         return Asset.parse(asset).toFriendlyString();
@@ -169,7 +173,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         return toLocaleDate(date).fromNow();
                     },
                     hasPaid: function hasPaid(post) {
-                        let now = Common.moment();
+                        let now = moment();
                         let payout = toLocaleDate(post.cashout_time);
                         return now.isAfter(payout);
                     },
@@ -248,19 +252,19 @@ import ButtonFollow from "../components/ButtonFollow";
                             try {
                                 return JSON.parse(strJson);
                             } catch (e) {
-                                Common.catchError(e);
+                                catchError(e);
                             }
                         }
 
                         return {};
                     },
                     onVote: function onVote(err, result, post) {
-                        Common.catchError(err);
+                        catchError(err);
                         //updateUserSession();
                         let that = this;
-                        Common.getDiscussion(post.author, post.permlink, function (err, result) {
+                        getDiscussion(post.author, post.permlink, function (err, result) {
                             if (!err) {
-                                let updatedPost = Common.parsePost(result, post.reblogged_by);
+                                let updatedPost = parsePost(result, post.reblogged_by);
                                 that.state.content[updatedPost.link] = updatedPost;
                                 that.$forceUpdate();
                             }
@@ -301,13 +305,13 @@ import ButtonFollow from "../components/ButtonFollow";
             } //separate votes
 
 
-            state.content[c] = Common.parsePost(state.content[c]);
+            state.content[c] = parsePost(state.content[c]);
         }
 
         if (isUserFeed(getPathPart())) {
             //Retrieve another accounts
-            Common.getAccounts(authors, function (err, result) {
-                if (!Common.catchError(err)) {
+            getAccounts(authors, function (err, result) {
+                if (!catchError(err)) {
                     let accounts = {};
                     result.forEach(function (a) {
                         accounts[a.name] = a;
@@ -322,7 +326,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
 
                         for (let _c in state.content) {
-                            homePosts.state.content[_c] = Common.parsePost(state.content[_c]);
+                            homePosts.state.content[_c] = parsePost(state.content[_c]);
                         }
 
                         state = homePosts.state;
@@ -339,12 +343,12 @@ import ButtonFollow from "../components/ButtonFollow";
             if (query === homePosts.search && query !== null) {
                 //Accounts
                 for (let a in state.accounts) {
-                    homePosts.state.accounts[a] = Common.parseAccount(state.accounts[a]);
+                    homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
                 } //Posts
 
 
                 for (let _c2 in state.content) {
-                    homePosts.state.content[_c2] = Common.parsePost(state.content[_c2]);
+                    homePosts.state.content[_c2] = parsePost(state.content[_c2]);
                 } //Order
 
 
@@ -356,7 +360,7 @@ import ButtonFollow from "../components/ButtonFollow";
                     }
                 }
 
-                homePosts.state.discussion_idx[''].search = Common.removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[''].search);
+                homePosts.state.discussion_idx[''].search = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[''].search);
 
             } else {
                 showPosts(urlFilter, filter, state);
@@ -366,7 +370,7 @@ import ButtonFollow from "../components/ButtonFollow";
                 //On Session update
                 //Accounts
                 for (let _a in state.accounts) {
-                    homePosts.state.accounts[_a] = Common.parseAccount(state.accounts[_a]);
+                    homePosts.state.accounts[_a] = parseAccount(state.accounts[_a]);
                 }
 
                 state = homePosts.state;
@@ -383,10 +387,10 @@ import ButtonFollow from "../components/ButtonFollow";
             };
 
             let onReblogs = function (k, d, reblogs) {
-                state.content[k] = Common.parsePost(d, reblogs);
+                state.content[k] = parsePost(d, reblogs);
             };
 
-            Common.refreshAccessToken(function (accessToken) {
+            refreshAccessToken(function (accessToken) {
 
                 for (let x = 0; x < ck.length; x++) {
                     let d = state.content[ck[x]];
@@ -432,19 +436,19 @@ import ButtonFollow from "../components/ButtonFollow";
             if (isUserFeed(getPathPart())) {
                 if (session) {
                     if (getPathPart() !== ('@' + session.account.username)) {
-                        Common.showProfile(getPathPart());
+                        showProfile(getPathPart());
                     } else {
                         //Show user feed
                         creaEvents.emit('crea.content.filter', path);
                     }
                 } else {
                     //Avoid show feed if current user is not logged
-                    Common.showProfile(getPathPart());
+                    showProfile(getPathPart());
                 }
             } else if (path.startsWith('/search')) {
                 let search = getParameterByName('query');
                 let page = getParameterByName('page') || 1;
-                Common.performSearch(search, page, true);
+                performSearch(search, page, true);
             } else {
                 creaEvents.emit('crea.content.filter', path);
             }
@@ -484,11 +488,11 @@ import ButtonFollow from "../components/ButtonFollow";
                             count--;
 
                             if (count <= 0) {
-                                Common.getAccounts(accounts, function (err, newAccounts) {
-                                    if (!Common.catchError(err)) {
+                                getAccounts(accounts, function (err, newAccounts) {
+                                    if (!catchError(err)) {
                                         //Update accounts
                                         newAccounts.forEach(function (a) {
-                                            homePosts.state.accounts[a.name] = Common.parseAccount(a);
+                                            homePosts.state.accounts[a.name] = parseAccount(a);
                                         }); //Sort
 
                                         discussions.sort(function (k1, k2) {
@@ -505,7 +509,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                             homePosts.state.discussion_idx[discuss][category].push(permlink);
                                         });
 
-                                        homePosts.state.discussion_idx[discuss][category] = Common.removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
+                                        homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
                                         homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
                                         homePosts.$forceUpdate();
                                         creaEvents.emit('navigation.state.update', homePosts.state);
@@ -526,7 +530,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                     if (err) {
                                         console.error('Error getting', permlink, err);
                                     } else {
-                                        let p = Common.parsePost(result);
+                                        let p = parsePost(result);
                                         p.reblogged_by = d.reblogged_by;
                                         discussions.push(p);
 
@@ -548,11 +552,11 @@ import ButtonFollow from "../components/ButtonFollow";
                 });
                 http.when('fail', function (jqXHR, textStatus, errorThrown) {
                     onScrollCalling = false;
-                    Common.catchError(textStatus);
+                    catchError(textStatus);
                 });
                 let username = getPathPart().replace('/', '').replace('@', '');
                 crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
-                    if (!Common.catchError(err)) {
+                    if (!catchError(err)) {
                         let followings = [];
                         result.following.forEach(function (f) {
                             followings.push(f.following);
@@ -560,7 +564,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         if (followings.length) {
                             followings = followings.join(',');
-                            Common.refreshAccessToken(function (accessToken) {
+                            refreshAccessToken(function (accessToken) {
                                 http.headers = {
                                     Authorization: 'Bearer ' + accessToken
                                 };
@@ -581,7 +585,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                 if (postCount > 0 && postCount % 20 === 0) {
                     globalLoading.show = true;
-                    Common.performSearch(query, ++lastPage, true, function () {
+                    performSearch(query, ++lastPage, true, function () {
                         onScrollCalling = false;
                         globalLoading.show = false;
                     });
@@ -612,7 +616,7 @@ import ButtonFollow from "../components/ButtonFollow";
                 }
 
                 if (apiCall) {
-                    Common.refreshAccessToken(function (accessToken) {
+                    refreshAccessToken(function (accessToken) {
                         apiCall(lastPage.author, lastPage.permlink, 21, function (err, result) {
                             if (err) {
                                 console.error(err);
@@ -628,8 +632,8 @@ import ButtonFollow from "../components/ButtonFollow";
                                     reblogsFetched++;
                                     if (reblogsFetched >= discussions.length) {
                                         //Get new accounts
-                                        Common.getAccounts(accounts, function (err, newAccounts) {
-                                            if (!Common.catchError(err)) {
+                                        getAccounts(accounts, function (err, newAccounts) {
+                                            if (!catchError(err)) {
                                                 //Update accounts
                                                 newAccounts.forEach(function (a) {
                                                     homePosts.state.accounts[a.name] = a;
@@ -643,7 +647,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                                     homePosts.state.discussion_idx[discuss][category].push(permlink);
                                                 });
 
-                                                homePosts.state.discussion_idx[discuss][category] = Common.removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
+                                                homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
                                                 homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
                                                 lastPage = discussions[discussions.length - 1];
                                                 homePosts.$forceUpdate();
@@ -664,7 +668,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                                         let onReblogs = function (reblogs) {
 
-                                            discussions[x] = Common.parsePost(d, reblogs);
+                                            discussions[x] = parsePost(d, reblogs);
 
                                             if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
                                                 accounts.push(d.author);
@@ -752,7 +756,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
         if (data.length === 0) {
             crea.api.getState('/no_results', function (err, result) {
-                if (!Common.catchError(err)) {
+                if (!catchError(err)) {
                     onFinish(result);
                 }
             });

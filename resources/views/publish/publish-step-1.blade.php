@@ -20,7 +20,7 @@
                     <div class="delete-img-step-1" style="z-index: 1" v-on:click="removeElement(k)">
                         <a href="#">X</a>
                     </div>
-                    <img v-bind:src="bodyElements[k].url" alt="" />
+                    <img v-lazy="bodyElements[k].url" alt="" />
                 </div>
                 <div v-else-if="bodyElements[k].type.indexOf('video/') > -1" class="upload-img">
                     <div class="delete-img-step-1" style="z-index: 1" v-on:click="removeElement(k)">

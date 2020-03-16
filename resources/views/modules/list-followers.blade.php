@@ -5,7 +5,7 @@
 
 
     <div v-if="Object.keys(follower).length === 0" class="col-md-12 bg--light text-center row-empty-notifications">
-        <img src="/img/empty.svg" alt="" class="img-empty"/>
+        <img v-lazy="'{{ asset('/img/empty.svg') }}'" alt="" class="img-empty"/>
         <div class="row mt-2">
             <div class="col-md-12">
                 <p class="title mb-0">{{ __('lang.HOME.EMPTY_TITLE') }}</p>

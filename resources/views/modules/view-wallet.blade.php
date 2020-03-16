@@ -73,7 +73,7 @@
                             <tbody>
                             <tr>
                                 <td>
-                                    <p><img class="img-icon-balances" src="/img/wallet/creary-crea-logo.svg" alt="">{{ __('lang.WALLET.BALANCES_CREA_TITLE') }}</p>
+                                    <p><img class="img-icon-balances" v-lazy="'{{ asset('img/wallet/creary-crea-logo.svg') }}'" alt="">{{ __('lang.WALLET.BALANCES_CREA_TITLE') }}</p>
                                     <p>{{ __('lang.WALLET.BALANCES_CREA_TEXT') }}</p>
                                 </td>
                                 <td class="td-right-balance">
@@ -226,7 +226,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <p><img class="img-icon-balances" src="/img/wallet/creary-cgy-logo.svg" alt=""> {{ __('lang.WALLET.BALANCES_CGY_TITLE') }}</p>
+                                    <p><img class="img-icon-balances" v-lazy="'{{ asset('img/wallet/creary-cgy-logo.svg') }}'" alt=""> {{ __('lang.WALLET.BALANCES_CGY_TITLE') }}</p>
                                     <p>{{ __('lang.WALLET.BALANCES_CGY_TEXT') }}</p>
                                 </td>
                                 <td class="td-right-balance">
@@ -314,7 +314,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <p><img class="img-icon-balances" src="/img/wallet/creary-cbd-logo.svg" alt="">{{ __('lang.WALLET.BALANCES_CBD_TITLE') }}</p>
+                                    <p><img class="img-icon-balances" v-lazy="'{{ asset('img/wallet/creary-cbd-logo.svg') }}'" alt="">{{ __('lang.WALLET.BALANCES_CBD_TITLE') }}</p>
                                     <p>{{ __('lang.WALLET.BALANCES_CBD_TEXT') }}</p>
                                 </td>
                                 <td class="td-right-balance">

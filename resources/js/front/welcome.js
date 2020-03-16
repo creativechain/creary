@@ -6,8 +6,11 @@ import { crea, apiOptions } from '../common/conf';
 import HttpClient from '../lib/http';
 import { jsonify, copyToClipboard, validateEmail, getParameterByName } from '../lib/util';
 import * as Common from '../common/common';
+import VueLazyload from "vue-lazyload";
 
 (function () {
+    Vue.use(VueLazyload);
+
     let welcomeVue;
     let emailCallback;
     let usernameInputs = {

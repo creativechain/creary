@@ -9,7 +9,9 @@ import Session from "../lib/session";
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, isSmallScreen, cancelEventPropagation } from '../lib/util';
 import { login, logout } from '../common/login';
-import * as Common from '../common/common';
+import { catchError, performSearch, isInHome, hideModal, goTo, resolveFilter, updateUrl, parsePost,
+    refreshAccessToken} from "../common/common";
+import VueLazyload from "vue-lazyload";
 
 import Avatar from "../components/Avatar";
 /*import Recommend from "../components/Recommend";
@@ -18,6 +20,7 @@ import LinkName from "../components/LinkName";
 import ButtonFollow from "../components/ButtonFollow";*/
 
 (function () {
+    Vue.use(VueLazyload);
 
     Vue.component('avatar', Avatar);
 
@@ -49,7 +52,7 @@ import ButtonFollow from "../components/ButtonFollow";*/
                 cancelEventPropagation(event);
 
                 if (this.search) {
-                    Common.performSearch(this.search, this.page, Common.isInHome());
+                    performSearch(this.search, this.page, isInHome());
                 }
             })
         }
@@ -100,8 +103,8 @@ import ButtonFollow from "../components/ButtonFollow";*/
                                                 console.log('applying menus');*/
                     },
                     closeLogin: function closeLogin() {
-                        Common.hideModal('#modal-login');
-                        Common.hideModal('#modal-login-d');
+                        hideModal('#modal-login');
+                        hideModal('#modal-login-d');
                     },
                     logout: logout,
                     login: function (_login) {
@@ -139,7 +142,7 @@ import ButtonFollow from "../components/ButtonFollow";*/
                     }),
                     isUserFeed: isUserFeed,
                     checkUsername: checkUsername,
-                    goTo: Common.goTo,
+                    goTo: goTo,
                     getDefaultAvatar: R.getAvatar,
                     retrieveNowContent: retrieveNewContent,
                     retrieveTrendingContent: retrieveTrendingContent,
@@ -177,17 +180,17 @@ import ButtonFollow from "../components/ButtonFollow";*/
     }
 
     function retrieveContent(event, urlFilter) {
-        if (Common.isInHome()) {
+        if (isInHome()) {
             cancelEventPropagation(event);
         }
 
-        let filter = Common.resolveFilter(urlFilter);
-        Common.updateUrl(urlFilter);
+        let filter = resolveFilter(urlFilter);
+        updateUrl(urlFilter);
 
         currentPage.pathname = urlFilter;
 
         crea.api.getState(filter, function (err, urlState) {
-            if (!Common.catchError(err)) {
+            if (!catchError(err)) {
                 if (isUserFeed()) {
                     let http = new HttpClient(apiOptions.apiUrl + '/creary/feed');
 
@@ -220,7 +223,7 @@ import ButtonFollow from "../components/ButtonFollow";*/
                                         if (err) {
                                             console.error('Error getting', permlink, err);
                                         } else {
-                                            let p = Common.parsePost(result);
+                                            let p = parsePost(result);
                                             p.reblogged_by = d.reblogged_by;
                                             urlState.content[permlink] = p;
                                         }
@@ -234,11 +237,11 @@ import ButtonFollow from "../components/ButtonFollow";*/
                         }
                     });
                     http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                        Common.catchError(textStatus);
+                        catchError(textStatus);
                     });
                     let username = getPathPart().replace('/', '').replace('@', '');
                     crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
-                        if (!Common.catchError(err)) {
+                        if (!catchError(err)) {
                             let followings = [];
                             result.following.forEach(function (f) {
                                 followings.push(f.following);
@@ -246,7 +249,7 @@ import ButtonFollow from "../components/ButtonFollow";*/
 
                             if (followings.length) {
                                 followings = followings.join(',');
-                                Common.refreshAccessToken(function (accessToken) {
+                                refreshAccessToken(function (accessToken) {
                                     http.headers = {
                                         Authorization: 'Bearer ' + accessToken
                                     };
