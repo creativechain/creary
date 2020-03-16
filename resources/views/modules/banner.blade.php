@@ -3,7 +3,7 @@
         <a class="cursor"><i class="fas fa-times"></i></a>
     </div>
     <div class="background-image-holder">
-        <img alt="background" v-lazy="'{{ asset('img/crea-web/banner_2_6_casmiclab.jpg') }}'"/>
+        <img alt="background" src="'{{ asset('img/crea-web/banner_2_6_casmiclab.jpg') }}'"/>
     </div>
     <div class="container">
         <div class="row">
