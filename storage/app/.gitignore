@@ -1,6 +1,0 @@
-*
-!public/
-!translations/
-!country_codes.json
-!isolangs.json
-!.gitignore
