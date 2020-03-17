@@ -543,5 +543,8 @@
 
 
     </div>
+    <script>
+        window.countryCodes = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('country_codes.json') !!};
+    </script>
     <script src="{{ asset('js/welcome.js') }}"></script>
 @endsection

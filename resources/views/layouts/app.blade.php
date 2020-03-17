@@ -10,18 +10,27 @@
     @endforeach
 
 
-    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css" media="all"/>
-    {{--<!--<link href="/css/slider.min.css" rel="stylesheet" type="text/css" media="all"/>-->--}}
-    <link href="/css/stack-interface.css" rel="stylesheet" type="text/css" media="all"/>
-    <link href="/css/socicon.css" rel="stylesheet" type="text/css" media="all"/>
-    {{--<!--<link href="/css/lightbox.min.css" rel="stylesheet" type="text/css" media="all"/>-->--}}
-    <link href="/css/flickity.css" rel="stylesheet" type="text/css" media="all"/>
-    <link href="/css/iconsmind.css" rel="stylesheet" type="text/css" media="all"/>
-    {{--<!--<link href="/css/jquery.steps.css" rel="stylesheet" type="text/css" media="all"/>-->--}}
-    <link href="/css/theme.css" rel="stylesheet" type="text/css" media="all"/>
-    <link href="/css/custom/creativechain.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="/css/tagsinput.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="/css/custom.css" rel="stylesheet" type="text/css" media="all" />
+    {{--PRELOAD STYLES - SEO IMPROVEMENT--}}
+    <link href="{{ asset('css/bootstrap.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/stack-interface.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/socicon.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/flickity.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/iconsmind.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/theme.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/custom/creativechain.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/tagsinput.css') }}" rel="preload" as="style">
+    <link href="{{ asset('css/custom.css') }}" rel="preload" as="style">
+    <link rel="preload" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css" as="style">
+
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/stack-interface.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/socicon.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/flickity.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/iconsmind.css') }}" rel="stylesheet" type="text/ckss" media="all"/>
+    <link href="{{ asset('css/theme.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/custom/creativechain.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/tagsinput.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css" media="all" />
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
@@ -29,8 +38,7 @@
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link rel="icon" type="image/ico" href="/img/favicon.ico" />
+    <link rel="icon" type="image/ico" href="{{ asset('img/favicon.ico') }}" />
 
     {{--<!-- Global site tag (gtag.js) - Google Analytics -->--}}
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-126970682-1"></script>
@@ -73,11 +81,28 @@
     <script>
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
         window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/es/lang.json') !!};
-        window.countryCodes = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('country_codes.json') !!};
     </script>
 
-    <script src="{{ asset('js/control/start.js') }}"></script>
+    {{--PRELOAD SCRIPTS - SEO IMPROVEMENTS--}}
+    <link rel="preload" href="{{ asset('js/control/start.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/tagsinput.js') }}" as="script">
 
+    {{--FOOTER PRELOADS--}}
+    <link rel="preload" href="{{ asset('js/ui/flickity.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/parallax.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/isotope.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/bootstrap-slider.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/popper.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/util.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/tooltip.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/popover.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/ui/scripts.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/control/custom.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/control/modals.js') }}" as="script">
+    <link rel="preload" href="{{ asset('js/control/setup.js') }}" as="script">
+    {{--END PRELOADS--}}
+
+    <script src="{{ asset('js/control/start.js') }}"></script>
     <script src="{{ asset('js/ui/tagsinput.js') }}"></script>
 </head>
 
