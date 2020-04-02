@@ -18,7 +18,7 @@
     </div>
     <div class="modal-content">
         <div v-cloak v-if="state.post">
-            @include('modules/post')
+            @include('modules.post')
         </div>
     </div>
 

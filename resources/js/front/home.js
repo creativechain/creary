@@ -5,7 +5,15 @@ import R from '../lib/resources';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
 import HttpClient from '../lib/http';
-import { jsonify, getPathPart, isUserFeed, getParameterByName, toLocaleDate, NaNOr } from '../lib/util';
+import {
+    jsonify,
+    getPathPart,
+    isUserFeed,
+    getParameterByName,
+    toLocaleDate,
+    NaNOr,
+    cancelEventPropagation
+} from '../lib/util';
 import { catchError, parseAccount, parsePost, resolveFilter, removeBlockedContents, updateUserSession, showModal,
     getDiscussion, refreshAccessToken, showProfile, performSearch, getAccounts } from "../common/common";
 
