@@ -67,6 +67,11 @@ import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from ".
 
                     let that = this;
 
+                    if (slide < this.slide) {
+                        this.slide = slide;
+                        return;
+                    }
+
                     //Validate username
                     if (this.slide === 2) {
 
