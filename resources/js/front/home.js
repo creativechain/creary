@@ -159,7 +159,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         tags = tags.slice(0, 7);
                         tags.forEach(function (t) {
-                            linkedTags.push('<a href="/search?page=1&query=' + encodeURIComponent(t) + '">' + t + '</a>');
+                            linkedTags.push('<a href="/popular/' + encodeURIComponent(t) + '">' + t + '</a>');
                         });
                         return linkedTags.join(', ');
                     },
