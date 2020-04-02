@@ -231,7 +231,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         let tags = this.state.post.metadata.tags;
                         let linkedTags = [];
                         tags.forEach(function (t) {
-                            linkedTags.push('<a href="/search?page=1&query=' + encodeURIComponent(t) + '">' + t + '</a>');
+                            linkedTags.push('<a href="/popular/' + encodeURIComponent(t) + '">' + t + '</a>');
                         });
 
                         if (asString) {
