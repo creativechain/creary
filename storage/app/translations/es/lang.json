@@ -317,7 +317,7 @@
         "FILE_TYPE_INFO": "(imagen, audio, video)",
         "IMAGE_MAX_FILE_SIZE": "Imagen Max: %s",
         "AUDIO_MAX_FILE_SIZE": "Audio Max: %s",
-        "VIDEO_MAX_FILE_SIZE": "Video Max: %s",
+        "VIDEO_MAX_FILE_SIZE": "Video solo formato .MP4 y .WebM Max: %s",
         "PROJECT_INFO": "Project información",
         "SECONDARY_MENU_LICENSE": "Licencia",
         "INFO_DESCRIPTION": "DESCRIPCIÓN CORTA",
