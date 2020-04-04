@@ -61,10 +61,17 @@ class CrearyController extends Controller
 
         if ($post) {
             $authorName = $author;
-            $blocked = $post['author']['metadata']['blocked'];
-            if (!$blocked) {
-                $authorName = $post['author']['metadata']['publicName'] ? $post['author']['metadata']['publicName'] : $author;
+
+            if (array_key_exists('metadata', $post['author'])) {
+                $authorMetadata = $post['author']['metadata'];
+                $blocked = $authorMetadata['blocked'];
+                if (!$blocked) {
+                    if (array_key_exists('publicName', $authorMetadata)) {
+                        $authorName = $authorMetadata['publicName'];
+                    }
+                }
             }
+
 
             $title = 'Creary - ' . $post['title'];
 
