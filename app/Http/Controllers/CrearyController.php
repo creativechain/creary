@@ -58,7 +58,7 @@ class CrearyController extends Controller
 
         $client = $this->getCrearyClient();
         $post = $client->getPost($author, $permlink);
-
+        $blocked = false;
         if ($post) {
             $authorName = $author;
 
