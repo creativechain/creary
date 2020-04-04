@@ -19,6 +19,7 @@
     "/js/control/setup.js": "/js/control/setup.js",
     "/js/control/start.js": "/js/control/start.js",
     "/js/control/tags.js": "/js/control/tags.js",
+    "/js/control/terms.js": "/js/control/terms.js",
     "/js/control/welcome.js": "/js/control/welcome.js",
     "/js/control/witness.js": "/js/control/witness.js",
     "/js/faq/en/faq.js": "/js/faq/en/faq.js",

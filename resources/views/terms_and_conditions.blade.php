@@ -134,9 +134,7 @@
                 </div>
             </div>
         </section>
-        <script src="{{ asset('js/tags.js') }}"></script>
-
         @include('layouts.modals')
-
     </div>
+    <script src="{{ asset('js/control/terms.js') }}"></script>
 @endsection

@@ -35,6 +35,7 @@ import { catchError } from "../common/common";
                         --count;
 
                         if (count === 0) {
+                            console.log('Emitting session')
                             creaEvents.emit('crea.session.login', session, account);
                         }
                     };

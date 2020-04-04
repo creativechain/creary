@@ -5,7 +5,7 @@
 import { parseAccount } from "../common/common";
 import { Account, DEFAULT_ROLES} from "./account";
 import Errors from "./error";
-import { jsonify, jsonstring } from "./util";
+import { jsonify, jsonstring, clone } from "./util";
 import * as CREARY from '../common/ls';
 
 class Session {

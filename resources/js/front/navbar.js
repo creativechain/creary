@@ -10,6 +10,8 @@ import { login, logout } from '../common/login';
 import { catchError, performSearch, isInHome, hideModal, goTo, resolveFilter, updateUrl, parsePost,
     refreshAccessToken} from "../common/common";
 
+import Errors from "../lib/error";
+
 import Avatar from "../components/Avatar";
 
 (function () {

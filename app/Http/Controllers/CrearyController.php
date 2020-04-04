@@ -152,18 +152,23 @@ class CrearyController extends Controller
                 );
 
             } else {
-                $publicName = $profile['metadata']['publicName'];
+                //dd($profile);
+                $publicName = null;
+                if (array_key_exists('metadata', $profile)) {
+                    if (array_key_exists('publicName', $profile['metadata'])) {
+                        $publicName = $profile['metadata']['publicName'];
+                    }
+                }
+
                 if ($publicName) {
-                    $title = 'Creary - ' . $publicName . ' (@' . $profileName . ')';
+                    $title = "Creary - $publicName (@$profileName)";
                 } else {
-                    $title = 'Creary - @' . $profileName;
+                    $title = "Creary - @$profileName";
                 }
 
                 $metas = array(
                     $this->buildMeta('property', 'og:url', $request->fullUrl()),
                     $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:image', $profile['metadata']['avatar']['url']),
-                    $this->buildMeta('property', 'og:description', $profile['metadata']['about']),
                     $this->buildMeta('property', 'og:type', 'profile'),
                     $this->buildMeta('property', 'profile:first_name', $publicName ? $publicName : $profileName),
                     $this->buildMeta('property', 'profile:username', $profileName),
@@ -171,16 +176,31 @@ class CrearyController extends Controller
                     $this->buildMeta('name', 'twitter:site', '@Crearynet'),
                     $this->buildMeta('name', 'twitter:creator', '@' . $profileName),
                     $this->buildMeta('name', 'twitter:title', $title),
-                    $this->buildMeta('name', 'twitter:description', $profile['metadata']['about']),
-                    $this->buildMeta('name', 'twitter:image', $profile['metadata']['avatar']['url']),
-                    $this->buildMeta('name', 'description', $profile['metadata']['about']),
                 );
+
+                if (array_key_exists('metadata', $profile)) {
+                    $metadata = $profile['metadata'];
+
+                    if (array_key_exists('avatar', $metadata)) {
+                        $metas[] = $this->buildMeta('property', 'og:image', $metadata['avatar']['url']);
+                        $metas[] = $this->buildMeta('name', 'twitter:image', $metadata['avatar']['url']);
+                    }
+
+                    if (array_key_exists('about', $metadata)) {
+                        $metas[] = $this->buildMeta('property', 'og:description', $metadata['about']);
+                        $metas[] = $this->buildMeta('name', 'twitter:description', $metadata['about']);
+                        $metas[] = $this->buildMeta('name', 'description', $metadata['about']);
+                    }
+
+                    if (array_key_exists('tags', $metadata)) {
+                        $tags = $metadata['tags'];
+                        $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
+                    }
+
+                }
             }
 
-            $tags = $profile['metadata']['tags'];
-            if ($tags) {
-                $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
-            }
+
 
             return view('profile')
                 ->withTitle($title)
