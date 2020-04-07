@@ -10,7 +10,7 @@ import HttpClient from '../lib/http';
 import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropagation, toUrl, NaNOr } from '../lib/util';
 import { vestingCrea, delegatedCrea, vestsToCgy } from '../common/creautil';
 import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, updateUrl, requireRoleKey,
-    updateUserSession, hideModal, showModal } from "../common/common";
+    updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs } from "../common/common";
 import { receivedDelegatedCGY } from "../common/creautil";
 
 //Components import
