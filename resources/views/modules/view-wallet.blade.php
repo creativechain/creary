@@ -117,7 +117,7 @@
                                                                                                                 <div class="col-md-11">
                                                                                                                     <div class="input-icon input-icon--left">
                                                                                                                         <i class="fas fa-at"></i>
-                                                                                                                        <input disabled type="text" v-model="from" placeholder="{{ __('lang.MODAL.WALLET_INPUT_SEND_PLACEHOLDER') }}" />
+                                                                                                                        <input disabled type="text" v-model="from" placeholder="{{ __('lang.MODAL.WALLET_INPUT_ORIGIN_PLACEHOLDER') }}" />
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
@@ -128,7 +128,7 @@
                                                                                                                 <div class="col-md-11">
                                                                                                                     <div class="input-icon input-icon--left">
                                                                                                                         <i class="fas fa-at"></i>
-                                                                                                                        <input v-bind:disabled="config.confirmed || config.disabledTo" v-on:input="validateDestiny" v-bind:class="{ 'field-error': toError }" v-model="config.to" type="text" name="input" placeholder="{{ __('lang.MODAL.WALLET_INPUT_SEND_PLACEHOLDER') }}" />
+                                                                                                                        <input v-bind:disabled="config.confirmed || config.disabledTo" v-on:input="validateDestiny" v-bind:class="{ 'field-error': toError }" v-model="config.to" type="text" name="input" placeholder="{{ __('lang.MODAL.WALLET_INPUT_DESTINY_PLACEHOLDER') }}" />
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
