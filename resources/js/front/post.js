@@ -12,6 +12,7 @@ import { catchError, CONSTANTS, showPost, goTo, makeComment, makeDownload, delet
     requireRoleKey, updateUserSession, hideModal, showModal, refreshAccessToken, parseAccount, parsePost } from "../common/common";
 
 //Components import
+import Amount from "../components/Amount";
 import Avatar from "../components/Avatar";
 import Recommend from "../components/Recommend";
 import RecommendPost from "../components/RecommendPost";
@@ -27,6 +28,7 @@ import ButtonFollow from "../components/ButtonFollow";
 (function () {
 
     //Load Vue components
+    Vue.component('amount', Amount);
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);
     Vue.component('recommend-post', RecommendPost);

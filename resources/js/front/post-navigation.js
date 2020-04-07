@@ -4,10 +4,11 @@ import { License } from '../lib/license';
 import HttpClient from '../lib/http';
 import { jsonify, humanFileSize, toLocaleDate, cancelEventPropagation, randomNumber, clone,
     makeMentions, NaNOr } from '../lib/util';
-import { CONSTANTS, goTo, updateUrl, catchError, makeDownload, requireRoleKey, showPost,
+import { CONSTANTS, goTo, updateUrl, catchError, makeDownload, requireRoleKey, showPost, ignoreUser,
     makeComment, deleteComment, updateUserSession, parsePost, parseAccount, refreshAccessToken, hideModal, showModal } from "../common/common";
 
 //Components import
+import Amount from "../components/Amount";
 import Avatar from "../components/Avatar";
 import Recommend from "../components/Recommend";
 import RecommendPost from "../components/RecommendPost";
@@ -23,6 +24,7 @@ import ButtonFollow from "../components/ButtonFollow";
 (function () {
 
     //Load Vue components
+    Vue.component('amount', Amount);
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);
     Vue.component('recommend-post', RecommendPost);
@@ -329,21 +331,11 @@ import ButtonFollow from "../components/ButtonFollow";
                         this.response_comment = comment.body;
                         this.active_response_edit = comment;
                     },
-                    ignoreUser: function (_ignoreUser) {
-                        function ignoreUser() {
-                            return _ignoreUser.apply(this, arguments);
-                        }
-
-                        ignoreUser.toString = function () {
-                            return _ignoreUser.toString();
-                        };
-
-                        return ignoreUser;
-                    }(function () {
+                    ignoreUser: function () {
                         ignoreUser(this.state.post.author, true, function (err, result) {
                             updatePostData();
                         });
-                    }),
+                    },
                     vote: function vote(weight, post) {
                         console.log('Vote', weight, post);
                         post = post || this.state.post;

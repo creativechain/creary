@@ -88,7 +88,7 @@
                                     <div class="modal-close modal-close-cross" v-on:click="cancelPay"></div>
                                     <div class="text-block">
                                         <h3>{{ __('lang.PUBLICATION.MODAL_DOWNLOAD_TITLE') }}</h3>
-                                        <p>@{{ modal.alreadyPayed ? "{{ __('lang.PUBLICATION.MODAL_DOWNLOAD_TEXT_PAYED') }}" : "{{ __('lang.PUBLICATION.MODAL_DOWNLOAD_TEXT') }}" }}</p>
+                                        <p>@{{ modal.alreadyPayed ? lang.PUBLICATION.MODAL_DOWNLOAD_TEXT_PAYED : lang.PUBLICATION.MODAL_DOWNLOAD_TEXT }}</p>
                                     </div>
                                     <form>
                                         <div v-if="!modal.alreadyPayed" class="row">
@@ -113,7 +113,7 @@
                                                     <span class="btn__text">{{ __('lang.BUTTON.DOWNLOAD') }}</span>
                                                 </div>
                                                 <div v-else v-on:click="confirmDownload" class="btn btn--sm btn--primary" >
-                                                    <span class="btn__text">@{{ modal.confirmed ? "{{ __('lang.BUTTON.PAY') }}" : "{{ __('lang.BUTTON.CONFIRM') }}" }}</span>
+                                                    <span class="btn__text">@{{ modal.confirmed ? lang.BUTTON.PAY : lang.BUTTON.CONFIRM }}</span>
                                                 </div>
                                             </div>
                                         </div>
