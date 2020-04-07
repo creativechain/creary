@@ -533,7 +533,7 @@
                             </div>
                             <div class="col-md-12 mt-3">
                                 <label>{{ __('lang.CHANGE_PASSWORD.CURRENT_PASSWORD') }}</label>
-                                <label class="float-right"><a href="" class="color--primary button-recover-account">{{ __('lang.CHANGE_PASSWORD.ACCOUNT_RECOVERY') }}</a></label>
+                                {{--<label class="float-right"><a href="" class="color--primary button-recover-account">{{ __('lang.CHANGE_PASSWORD.ACCOUNT_RECOVERY') }}</a></label>--}}
                                 <input v-model="changePass.oldPass" class="validate-required" type="password" placeholder="{{ __('lang.CHANGE_PASSWORD.PASSWORD') }}"/>
                             </div>
                             <div class="col-md-12 mt-3">
