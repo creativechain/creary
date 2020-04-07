@@ -188,7 +188,7 @@ class CrearyController extends Controller
                 if (array_key_exists('metadata', $profile)) {
                     $metadata = $profile['metadata'];
 
-                    if (array_key_exists('avatar', $metadata)) {
+                    if (array_key_exists('avatar', $metadata) && array_key_exists('url', $metadata['avatar'])) {
                         $metas[] = $this->buildMeta('property', 'og:image', $metadata['avatar']['url']);
                         $metas[] = $this->buildMeta('name', 'twitter:image', $metadata['avatar']['url']);
                     }
