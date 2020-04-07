@@ -3,11 +3,12 @@
  * Created by ander on 25/09/18.
  */
 
+import Session from "../lib/session";
 import R from '../lib/resources';
 import { Asset, Vests } from '../lib/amount';
 import { License, LICENSE } from '../lib/license';
 import HttpClient from '../lib/http';
-import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropagation, toUrl, NaNOr } from '../lib/util';
+import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropagation, toUrl, NaNOr, createAuth } from '../lib/util';
 import { vestingCrea, delegatedCrea, vestsToCgy } from '../common/creautil';
 import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, updateUrl, requireRoleKey,
     updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs } from "../common/common";
@@ -242,8 +243,6 @@ import Username from "../components/Username";
      * @param navSection
      * @param walletSection
      */
-
-
     function updateProfileView(state, session, account, usernameFilter) {
         let navSection = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'projects';
         let walletSection = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'balance';
