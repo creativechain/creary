@@ -5,7 +5,7 @@ import HttpClient from '../lib/http';
 import { jsonify, humanFileSize, toLocaleDate, cancelEventPropagation, randomNumber, clone,
     makeMentions, NaNOr } from '../lib/util';
 import { CONSTANTS, goTo, updateUrl, catchError, makeDownload, requireRoleKey, showPost,
-    makeComment, deleteComment, updateUserSession, parsePost, parseAccount, refreshAccessToken, } from "../common/common";
+    makeComment, deleteComment, updateUserSession, parsePost, parseAccount, refreshAccessToken, hideModal, showModal } from "../common/common";
 
 //Components import
 import Avatar from "../components/Avatar";
