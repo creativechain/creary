@@ -12,7 +12,7 @@
         </div>
         <div v-if="state.postIndex <= (state.discussions.length - 2)" class="next-right">
             <div class="cursor-link" v-on:click="nextPost">
-                <img v-lazy="'{{ assert('img/next_post/dreta.svg') }}'" alt="">
+                <img v-lazy="'{{ asset('img/next_post/dreta.svg') }}'" alt="">
             </div>
         </div>
     </div>
