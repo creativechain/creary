@@ -4,7 +4,7 @@ import Session from "../lib/session";
 import * as CREARY from "../common/ls";
 import { Asset } from '../lib/amount';
 import { clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
-    getNavigatorLanguage } from "../lib/util";
+    getNavigatorLanguage, uniqueId } from "../lib/util";
 import Errors from "../lib/error";
 
 /**

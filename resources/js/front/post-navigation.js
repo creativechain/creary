@@ -319,8 +319,8 @@ import ButtonFollow from "../components/ButtonFollow";
                     removeComment: function(comment) {
                         let that = this;
                         deleteComment(comment, this.session, function (err, result) {
+                            globalLoading.show = false;
                             if (!catchError(err)) {
-                                globalLoading.show = false;
                                 showPostData(that.state.post, that.state, that.state.discuss, that.state.category, null, true);
                             }
                         })
