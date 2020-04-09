@@ -62,8 +62,8 @@ class Controller extends BaseController
     protected function getLanguage() {
         $profile = $this->getProfileOfCookie();
 
-        if ($profile && array_key_exists('metadata', $profile) && array_key_exists('avatar', $profile['metadata'])) {
-            $lang = $profile['metadata']['lang'];
+        if ($profile && $profile->metadata && $profile->metadata->avatar) {
+            $lang = $profile->metadata->lang;
         } else {
             $lang = $this->getCookie('creary_language');
             $lang = $lang ? $lang : 'en';

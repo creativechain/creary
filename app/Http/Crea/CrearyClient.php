@@ -31,8 +31,8 @@ class CrearyClient
      * @return mixed
      */
     private function callRequest(array $requestBody) {
-        $response = $this->httpClient->post('https://supportnodes.creary.net', array( 'json' => $requestBody));
-        return json_decode((string) $response->getBody(), true);
+        $response = $this->httpClient->post(env('CREA_NODE'), array( 'json' => $requestBody));
+        return json_decode((string) $response->getBody());
     }
 
     /**
@@ -60,10 +60,10 @@ class CrearyClient
 
         $response = $this->callRequest($rpcData);
 
-        if (array_key_exists('result', $response)) {
-            $post = $response['result'];
-            $post['metadata'] = json_decode($post['json_metadata'], true);
-            $post['author'] = $this->getAccount($post['author']);
+        if ($response->result) {
+            $post = $response->result;
+            $post->metadata = json_decode($post->json_metadata);
+            $post->author = $this->getAccount($post->author);
             return $post;
         }
 
@@ -82,10 +82,10 @@ class CrearyClient
         ));
 
         $response = $this->callRequest($rpcData);
-        if (array_key_exists('result', $response)) {
-            $account = $response['result'][0];
-            $account['metadata'] = json_decode($account['json_metadata'], true);
-            $account['metadata']['blocked'] = intval($account['reputation']) < 0;
+        if ($response->result) {
+            $account = $response->result[0];
+            $account->metadata = json_decode($account->json_metadata);
+            $account->metadata->blocked = intval($account->reputation) < 0;
 
             return $account;
         }

@@ -62,18 +62,18 @@ class CrearyController extends Controller
         if ($post) {
             $authorName = $author;
 
-            if (array_key_exists('metadata', $post['author'])) {
-                $authorMetadata = $post['author']['metadata'];
-                $blocked = $authorMetadata['blocked'];
+            if (array_key_exists('metadata', $post->author)) {
+                $authorMetadata = $post->author->metadata;
+                $blocked = $authorMetadata->blocked;
                 if (!$blocked) {
                     if (array_key_exists('publicName', $authorMetadata)) {
-                        $authorName = $authorMetadata['publicName'];
+                        $authorName = $authorMetadata->publicName;
                     }
                 }
             }
 
 
-            $title = 'Creary - ' . $post['title'];
+            $title = 'Creary - ' . $post->title;
 
             if ($blocked) {
                 $metas = array();
@@ -81,33 +81,29 @@ class CrearyController extends Controller
                 $metas = array(
                     $this->buildMeta('property', 'og:url', $request->fullUrl()),
                     $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:image', $post['metadata']['featuredImage']['url']),
-                    $this->buildMeta('property', 'og:description', $post['metadata']['description']),
+                    $this->buildMeta('property', 'og:image', $post->metadata->featuredImage->url),
+                    $this->buildMeta('property', 'og:description', $post->metadata->description),
                     $this->buildMeta('property', 'og:type', 'article'),
-                    $this->buildMeta('property', 'article:published_time', $post['created']),
-                    $this->buildMeta('property', 'article:modified_time', $post['last_update']),
+                    $this->buildMeta('property', 'article:published_time', $post->created),
+                    $this->buildMeta('property', 'article:modified_time', $post->last_update),
                     $this->buildMeta('property', 'article:author', $authorName),
                     $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
                     $this->buildMeta('name', 'twitter:site', '@Crearynet'),
                     $this->buildMeta('name', 'twitter:creator', '@' . $author),
                     $this->buildMeta('name', 'twitter:title', $title),
-                    $this->buildMeta('name', 'twitter:description', $post['metadata']['description']),
-                    $this->buildMeta('name', 'twitter:image', $post['metadata']['featuredImage']['url']),
-                    $this->buildMeta('name', 'description', $post['metadata']['description']),
+                    $this->buildMeta('name', 'twitter:description', $post->metadata->description),
+                    $this->buildMeta('name', 'twitter:image', $post->metadata->featuredImage->url),
+                    $this->buildMeta('name', 'description', $post->metadata->description),
                 );
             }
 
-            $tags = $post['metadata']['tags'];
+            $tags = $post->metadata->tags;
             if ($tags) {
                 $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
                 foreach ($tags as $t) {
                     $metas[] = $this->buildMeta('property', 'article:tag', $t);
                 }
             }
-
-            $renderParams['post'] = $post;
-            $renderParams['metas'] = $metas;
-            $renderParams['title'] = $title;
 
             return view('post-view')
                 ->withTitle($title)
@@ -134,18 +130,18 @@ class CrearyController extends Controller
             //dd($profile);
 
             //Blocked == If user has negative reputation, is a blocked user. Metadata must be a default user
-            $blocked = $profile['metadata']['blocked'];
+            $blocked = $profile->metadata->blocked;
 
             if ($blocked) {
-                $publicName = $profile['metadata']['publicName'];
+                $publicName = $profile->metadata->publicName;
                 $title = 'Creary - @' . $profileName;
 
 
                 $metas = array(
                     $this->buildMeta('property', 'og:url', $request->fullUrl()),
                     $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:image', $profile['metadata']['avatar']['url']),
-                    $this->buildMeta('property', 'og:description', $profile['metadata']['about']),
+                    $this->buildMeta('property', 'og:image', $profile->metadata->avatar->url),
+                    $this->buildMeta('property', 'og:description', $profile->metadata->about),
                     $this->buildMeta('property', 'og:type', 'profile'),
                     $this->buildMeta('property', 'profile:first_name', $publicName ? $publicName : $profileName),
                     $this->buildMeta('property', 'profile:username', $profileName),
@@ -153,17 +149,17 @@ class CrearyController extends Controller
                     $this->buildMeta('name', 'twitter:site', '@Crearynet'),
                     $this->buildMeta('name', 'twitter:creator', '@' . $profileName),
                     $this->buildMeta('name', 'twitter:title', $title),
-                    $this->buildMeta('name', 'twitter:description', $profile['metadata']['about']),
-                    $this->buildMeta('name', 'twitter:image', $profile['metadata']['avatar']['url']),
-                    $this->buildMeta('name', 'description', $profile['metadata']['about']),
+                    $this->buildMeta('name', 'twitter:description', $profile->metadata->about),
+                    $this->buildMeta('name', 'twitter:image', $profile->metadata->avatar->url),
+                    $this->buildMeta('name', 'description', $profile->metadata->about),
                 );
 
             } else {
                 //dd($profile);
                 $publicName = null;
                 if (array_key_exists('metadata', $profile)) {
-                    if (array_key_exists('publicName', $profile['metadata'])) {
-                        $publicName = $profile['metadata']['publicName'];
+                    if (array_key_exists('publicName', $profile->metadata)) {
+                        $publicName = $profile->metadata->publicName;
                     }
                 }
 
@@ -186,21 +182,21 @@ class CrearyController extends Controller
                 );
 
                 if (array_key_exists('metadata', $profile)) {
-                    $metadata = $profile['metadata'];
+                    $metadata = $profile->metadata;
 
-                    if (array_key_exists('avatar', $metadata) && array_key_exists('url', $metadata['avatar'])) {
-                        $metas[] = $this->buildMeta('property', 'og:image', $metadata['avatar']['url']);
-                        $metas[] = $this->buildMeta('name', 'twitter:image', $metadata['avatar']['url']);
+                    if (array_key_exists('avatar', $metadata) && array_key_exists('url', $metadata->avatar)) {
+                        $metas[] = $this->buildMeta('property', 'og:image', $metadata->avatar->url);
+                        $metas[] = $this->buildMeta('name', 'twitter:image', $metadata->avatar->url);
                     }
 
                     if (array_key_exists('about', $metadata)) {
-                        $metas[] = $this->buildMeta('property', 'og:description', $metadata['about']);
-                        $metas[] = $this->buildMeta('name', 'twitter:description', $metadata['about']);
-                        $metas[] = $this->buildMeta('name', 'description', $metadata['about']);
+                        $metas[] = $this->buildMeta('property', 'og:description', $metadata->about);
+                        $metas[] = $this->buildMeta('name', 'twitter:description', $metadata->about);
+                        $metas[] = $this->buildMeta('name', 'description', $metadata->about);
                     }
 
                     if (array_key_exists('tags', $metadata)) {
-                        $tags = $metadata['tags'];
+                        $tags = $metadata->tags;
                         $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
                     }
 
