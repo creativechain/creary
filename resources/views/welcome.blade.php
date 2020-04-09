@@ -122,7 +122,7 @@
                         <div class="welcome-content">
                             <div class="row">
                                 <div class="col-lg-10 offset-lg-1 col-md-12 ">
-                                    <img class="logo-welcome" v-lazy="'{{ 'img/welcome/logo-welcome.png') }}'" alt="" />
+                                    <img class="logo-welcome" v-lazy="'{{ asset('img/welcome/logo-welcome.png') }}'" alt="" />
                                     <h1>{{ __('lang.WELCOME.SLIDE3_TITLE') }}</h1>
                                     <p class="lead">{{ __('lang.WELCOME.SLIDE3_TEXT1') }}</p>
                                 </div>
@@ -539,12 +539,10 @@
             </div>
         </section>
 
-        @include('layouts.modals')
-
-
     </div>
+    @include('layouts.modals')
     <script>
         window.countryCodes = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('country_codes.json') !!};
     </script>
-    <script src="{{ asset('js/welcome.js') }}"></script>
+    <script src="{{ asset('js/control/welcome.js') }}"></script>
 @endsection

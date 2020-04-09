@@ -58,7 +58,7 @@
         },
         "DUPLICATE_PHONE": "Phone already in use.",
         "INVALID_PHONE": "Phone is invalid. Please check and sure that phone number includes the country prefix",
-        "SMS_REQUEST_LIMIT": "SMS Request Limit Reached. Try again after 30 min since the last request.",
+        "SMS_REQUEST_LIMIT": "Wait at least 30 min from the last code request to be able to make a new one with this phone number.",
         "INVALID_PHONE_VERIFICATION": "Verification Code is invalid"
 
     },

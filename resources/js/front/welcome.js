@@ -5,7 +5,11 @@ import HttpClient from '../lib/http';
 import { jsonify, copyToClipboard, validateEmail, getParameterByName } from '../lib/util';
 import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from "../common/common";
 
+import Autocomplete from "../components/Autocomplete";
+
 (function () {
+
+    Vue.component('autocomplete', Autocomplete);
 
     let welcomeVue;
     let emailCallback;
@@ -351,6 +355,7 @@ import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from ".
                     console.log('SignUp', data);
                     welcomeVue.username = data.data.username;
                     welcomeVue.slide = 5;
+                    welcomeVue.sentSMS = (data.data.phoneToken !== null && data.data.phoneToken !== undefined);
                 }).when('fail', function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR, textStatus, errorThrown);
                     //TODO: SHOW ERROR
