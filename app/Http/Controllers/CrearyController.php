@@ -157,8 +157,8 @@ class CrearyController extends Controller
             } else {
                 //dd($profile);
                 $publicName = null;
-                if (array_key_exists('metadata', $profile)) {
-                    if (array_key_exists('publicName', $profile->metadata)) {
+                if ($profile->metadata) {
+                    if ($profile->metadata->publicName) {
                         $publicName = $profile->metadata->publicName;
                     }
                 }
@@ -181,21 +181,21 @@ class CrearyController extends Controller
                     $this->buildMeta('name', 'twitter:title', $title),
                 );
 
-                if (array_key_exists('metadata', $profile)) {
+                if ($profile->metadata) {
                     $metadata = $profile->metadata;
 
-                    if (array_key_exists('avatar', $metadata) && array_key_exists('url', $metadata->avatar)) {
+                    if ($metadata->avatar && $metadata->avatar->url) {
                         $metas[] = $this->buildMeta('property', 'og:image', $metadata->avatar->url);
                         $metas[] = $this->buildMeta('name', 'twitter:image', $metadata->avatar->url);
                     }
 
-                    if (array_key_exists('about', $metadata)) {
+                    if ($metadata->about) {
                         $metas[] = $this->buildMeta('property', 'og:description', $metadata->about);
                         $metas[] = $this->buildMeta('name', 'twitter:description', $metadata->about);
                         $metas[] = $this->buildMeta('name', 'description', $metadata->about);
                     }
 
-                    if (array_key_exists('tags', $metadata)) {
+                    if ($metadata->tags) {
                         $tags = $metadata->tags;
                         $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
                     }
