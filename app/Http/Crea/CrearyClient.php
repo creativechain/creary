@@ -9,6 +9,7 @@
 namespace App\Http\Crea;
 
 
+use App\Utils\Obj;
 use GuzzleHttp\Client;
 
 class CrearyClient
@@ -32,7 +33,7 @@ class CrearyClient
      */
     private function callRequest(array $requestBody) {
         $response = $this->httpClient->post(env('CREA_NODE'), array( 'json' => $requestBody));
-        return json_decode((string) $response->getBody());
+        return Obj::parse(json_decode((string) $response->getBody()));
     }
 
     /**
@@ -62,7 +63,7 @@ class CrearyClient
 
         if ($response->result) {
             $post = $response->result;
-            $post->metadata = json_decode($post->json_metadata);
+            $post->metadata = Obj::parse(json_decode($post->json_metadata));
             $post->author = $this->getAccount($post->author);
             return $post;
         }
@@ -84,7 +85,9 @@ class CrearyClient
         $response = $this->callRequest($rpcData);
         if ($response->result) {
             $account = $response->result[0];
-            $account->metadata = json_decode($account->json_metadata);
+            $account = Obj::parse($account);
+            $account->metadata = Obj::parse(json_decode($account->json_metadata));
+
             $account->metadata->blocked = intval($account->reputation) < 0;
 
             return $account;

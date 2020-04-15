@@ -4,6 +4,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Utils\CreaUtils;
+use App\Utils\Lang;
 use Creary\URLUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -59,58 +61,80 @@ class CrearyController extends Controller
         $client = $this->getCrearyClient();
         $post = $client->getPost($author, $permlink);
         $blocked = false;
-        if ($post) {
-            $authorName = $author;
 
-            if (array_key_exists('metadata', $post->author)) {
-                $authorMetadata = $post->author->metadata;
+        $metas = array(
+            $this->buildMeta('property', 'og:url', $request->fullUrl()),
+            $this->buildMeta('property', 'og:type', 'article'),
+            $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
+            $this->buildMeta('name', 'twitter:site', '@Crearynet'),
+        );
+
+        //dd($post->metadata);
+        if ($post && $post->title) {
+            $authorName = $author;
+            $metadata = $post->metadata;
+            $authorMetadata = $post->author->metadata;
+
+            if ($authorMetadata) {
                 $blocked = $authorMetadata->blocked;
-                if (!$blocked) {
-                    if (array_key_exists('publicName', $authorMetadata)) {
-                        $authorName = $authorMetadata->publicName;
-                    }
+                if (!$blocked && $authorMetadata->publicName) {
+                    $authorName = $authorMetadata->publicName;
                 }
             }
 
-
-            $title = 'Creary - ' . $post->title;
-
-            if ($blocked) {
-                $metas = array();
-            } else {
+            if (!$blocked) {
+                //User is not blocked
                 $metas = array(
                     $this->buildMeta('property', 'og:url', $request->fullUrl()),
-                    $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:image', $post->metadata->featuredImage->url),
-                    $this->buildMeta('property', 'og:description', $post->metadata->description),
                     $this->buildMeta('property', 'og:type', 'article'),
-                    $this->buildMeta('property', 'article:published_time', $post->created),
-                    $this->buildMeta('property', 'article:modified_time', $post->last_update),
-                    $this->buildMeta('property', 'article:author', $authorName),
                     $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
                     $this->buildMeta('name', 'twitter:site', '@Crearynet'),
-                    $this->buildMeta('name', 'twitter:creator', '@' . $author),
-                    $this->buildMeta('name', 'twitter:title', $title),
-                    $this->buildMeta('name', 'twitter:description', $post->metadata->description),
-                    $this->buildMeta('name', 'twitter:image', $post->metadata->featuredImage->url),
-                    $this->buildMeta('name', 'description', $post->metadata->description),
                 );
-            }
 
-            $tags = $post->metadata->tags;
-            if ($tags) {
-                $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
-                foreach ($tags as $t) {
-                    $metas[] = $this->buildMeta('property', 'article:tag', $t);
+                $metas[] = $this->buildMeta('property', 'article:author', $authorName);
+
+                //Set title
+                $metas[] = $this->buildMeta('property', 'og:title', "Creary - $post->title");
+                $metas[] = $this->buildMeta('property', 'article:published_time', $post->created);
+                $metas[] = $this->buildMeta('property', 'article:modified_time', $post->last_update);
+                $metas[] = $this->buildMeta('name', 'twitter:creator', '@' . $author);
+
+                if ($metadata) {
+                    //Set post preview
+                    if ($metadata->featuredImage && $metadata->featuredImage->url) {
+                        $metas[] = $this->buildMeta('property', 'og:image', $post->metadata->featuredImage->url);
+                        $metas[] = $this->buildMeta('name', 'twitter:image', $post->metadata->featuredImage->url);
+                    }
+
+                    //Set description
+                    if ($metadata->description) {
+                        $metas[] = $this->buildMeta('property', 'og:description', $post->metadata->description);
+                        $metas[] = $this->buildMeta('name', 'twitter:description', $post->metadata->description);
+                        $metas[] = $this->buildMeta('name', 'description', $post->metadata->description);
+                    } else {
+                        $pageMeta = $this->getLanguage()->METADATA->{ '/' };
+                        $metas[] = $this->buildMeta('property', 'og:description', $pageMeta->DESCRIPTION);
+                        $metas[] = $this->buildMeta('name', 'twitter:description', $pageMeta->DESCRIPTION);
+                        $metas[] = $this->buildMeta('name', 'description', $pageMeta->DESCRIPTION);
+                    }
+
+                    $tags = $post->metadata->tags;
+                    if ($tags) {
+                        $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
+                        foreach ($tags as $t) {
+                            $metas[] = $this->buildMeta('property', 'article:tag', $t);
+                        }
+                    }
                 }
+
             }
 
             return view('post-view')
-                ->withTitle($title)
+                ->withTitle($post->title)
                 ->withMetas($metas);
         }
 
-        //TODO: Return 404
+        abort(404, "Post $user/$permlink not found");
     }
 
     public function postCategory(Request $request, $category, $user, $permlink) {
@@ -126,84 +150,51 @@ class CrearyController extends Controller
         $client = $this->getCrearyClient();
         $profile = $client->getAccount($profileName);
 
+        $metas = array(
+            $this->buildMeta('property', 'og:url', $request->fullUrl()),
+            $this->buildMeta('property', 'og:type', 'profile'),
+            $this->buildMeta('property', 'profile:username', $profileName),
+            $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
+            $this->buildMeta('name', 'twitter:site', '@Crearynet'),
+            $this->buildMeta('name', 'twitter:creator', '@' . $profileName)
+        );
+
         if ($profile) {
             //dd($profile);
 
-            //Blocked == If user has negative reputation, is a blocked user. Metadata must be a default user
-            $blocked = $profile->metadata->blocked;
+            $metadata = $profile->metadata;
 
-            if ($blocked) {
-                $publicName = $profile->metadata->publicName;
-                $title = 'Creary - @' . $profileName;
-
-
-                $metas = array(
-                    $this->buildMeta('property', 'og:url', $request->fullUrl()),
-                    $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:image', $profile->metadata->avatar->url),
-                    $this->buildMeta('property', 'og:description', $profile->metadata->about),
-                    $this->buildMeta('property', 'og:type', 'profile'),
-                    $this->buildMeta('property', 'profile:first_name', $publicName ? $publicName : $profileName),
-                    $this->buildMeta('property', 'profile:username', $profileName),
-                    $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
-                    $this->buildMeta('name', 'twitter:site', '@Crearynet'),
-                    $this->buildMeta('name', 'twitter:creator', '@' . $profileName),
-                    $this->buildMeta('name', 'twitter:title', $title),
-                    $this->buildMeta('name', 'twitter:description', $profile->metadata->about),
-                    $this->buildMeta('name', 'twitter:image', $profile->metadata->avatar->url),
-                    $this->buildMeta('name', 'description', $profile->metadata->about),
-                );
-
+            //Set page title and user's name
+            if ($metadata->publicName) {
+                $title = "Creary - $metadata->publicName (@$profileName)";
             } else {
-                //dd($profile);
-                $publicName = null;
-                if ($profile->metadata) {
-                    if ($profile->metadata->publicName) {
-                        $publicName = $profile->metadata->publicName;
-                    }
-                }
-
-                if ($publicName) {
-                    $title = "Creary - $publicName (@$profileName)";
-                } else {
-                    $title = "Creary - @$profileName";
-                }
-
-                $metas = array(
-                    $this->buildMeta('property', 'og:url', $request->fullUrl()),
-                    $this->buildMeta('property', 'og:title', $title),
-                    $this->buildMeta('property', 'og:type', 'profile'),
-                    $this->buildMeta('property', 'profile:first_name', $publicName ? $publicName : $profileName),
-                    $this->buildMeta('property', 'profile:username', $profileName),
-                    $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
-                    $this->buildMeta('name', 'twitter:site', '@Crearynet'),
-                    $this->buildMeta('name', 'twitter:creator', '@' . $profileName),
-                    $this->buildMeta('name', 'twitter:title', $title),
-                );
-
-                if ($profile->metadata) {
-                    $metadata = $profile->metadata;
-
-                    if ($metadata->avatar && $metadata->avatar->url) {
-                        $metas[] = $this->buildMeta('property', 'og:image', $metadata->avatar->url);
-                        $metas[] = $this->buildMeta('name', 'twitter:image', $metadata->avatar->url);
-                    }
-
-                    if ($metadata->about) {
-                        $metas[] = $this->buildMeta('property', 'og:description', $metadata->about);
-                        $metas[] = $this->buildMeta('name', 'twitter:description', $metadata->about);
-                        $metas[] = $this->buildMeta('name', 'description', $metadata->about);
-                    }
-
-                    if ($metadata->tags) {
-                        $tags = $metadata->tags;
-                        $metas[] = $this->buildMeta('name', 'keywords', implode(',', $tags));
-                    }
-
-                }
+                $title = "Creary - @$profileName";
             }
 
+            $metas[] = $this->buildMeta('property', 'og:title', $title);
+            $metas[] = $this->buildMeta('property', 'profile:first_name', $metadata->publicName ? $metadata->publicName : $profileName);
 
+            //Set avatar
+            if ($metadata && $metadata->avatar && $metadata->avatar->url) {
+                $metas[] = $this->buildMeta('property', 'og:image', $metadata->avatar->url);
+                $metas[] = $this->buildMeta('name', 'twitter:image', $metadata->avatar->url);
+            } else {
+                $metas[] = $this->buildMeta('property', 'og:image', $request->getSchemeAndHttpHost() . CreaUtils::getDefaultAvatar($profileName));
+                $metas[] = $this->buildMeta('name', 'twitter:image', $request->getSchemeAndHttpHost() . CreaUtils::getDefaultAvatar($profileName));
+            }
+
+            //Set user description
+            if ($metadata->about) {
+                $metas[] = $this->buildMeta('property', 'og:description', $metadata->about);
+                $metas[] = $this->buildMeta('name', 'twitter:description', $metadata->about);
+            } else {
+                $pageMeta = $this->getLanguage()->METADATA->{ '/' };
+                $metas[] = $this->buildMeta('property', 'og:description', $pageMeta->DESCRIPTION);
+                $metas[] = $this->buildMeta('name', 'twitter:description', $pageMeta->DESCRIPTION);
+            }
+
+            //Blocked == If user has negative reputation, is a blocked user. Metadata must be a default user
+            $blocked = $profile->metadata->blocked;
 
             return view('profile')
                 ->withTitle($title)
@@ -211,7 +202,7 @@ class CrearyController extends Controller
                 ->withProfile($profile);
         }
 
-        //TODO: Return 404
+        abort(404, "User $user not found.");
     }
 
     public function profileSection(Request $request, $user, $section) {
