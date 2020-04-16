@@ -6,8 +6,8 @@ import Session from "../lib/session";
 import { Asset } from '../lib/amount';
 import { License, LICENSE } from '../lib/license';
 import { jsonify, jsonstring, getParameterByName, humanFileSize, cancelEventPropagation, cleanArray,
-    removeEmojis, toPermalink } from '../lib/util';
-import { catchError, CONSTANTS, uploadToIpfs, resizeImage, parsePost, showPost } from "../common/common";
+    removeEmojis, toPermalink, normalizeTag } from '../lib/util';
+import { catchError, CONSTANTS, uploadToIpfs, resizeImage, parsePost, showPost, requireRoleKey } from "../common/common";
 
 //Import components
 import CKEditor from "../components/CKEditor";
