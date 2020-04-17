@@ -1,6 +1,7 @@
 {
     "private": true,
     "scripts": {
+        "mqtt": "node ./mqtt/index.js",
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
@@ -23,8 +24,10 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "@creativechain-fdn/crea-js": "^0.3.0",
+        "@creativechain-fdn/crea-js": "^0.4.0",
+        "aedes": "^0.41.0",
         "compressorjs": "^1.0.6",
+        "dotenv": "^8.2.0",
         "event-emitter": "^0.3.5",
         "flickity": "^2.2.1",
         "granim": "^1.1.1",
