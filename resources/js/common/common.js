@@ -6,6 +6,7 @@ import { Asset } from '../lib/amount';
 import { clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
     getNavigatorLanguage, uniqueId, cancelEventPropagation } from "../lib/util";
 import Errors from "../lib/error";
+import { DEFAULT_ROLES } from "../lib/account";
 
 /**
  * Created by ander on 25/09/18.
