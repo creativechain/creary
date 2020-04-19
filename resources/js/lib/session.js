@@ -20,6 +20,14 @@ class Session {
         this.keepAlive = keepAlive;
     }
 
+    /**
+     *
+     * @returns {Account}
+     */
+    getAccount() {
+        return new Account(this.account.username, this.account.keys);
+    }
+
     login(callback) {
         let that = this;
         crea.api.getState('@' + this.account.username, function (err, result) {

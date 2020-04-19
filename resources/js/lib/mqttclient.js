@@ -9,18 +9,34 @@ class MqttClient extends EventEmitter {
         this.client = null;
     }
 
-    connect() {
-        return new Promise( (resolve, reject) => {
-            this.client = mqtt.connect(this.url, this.options);
-            this.client.on('connect', function () {
-                resolve();
-            })
-        });
+    connect(callback) {
+        this.client = mqtt.connect(this.url, this.options);
+        this.client.on('connect', callback);
     }
 
-    subscribe() {
-        return new Promise( (resolve, reject) => {
-            
-        })
+    publish(topic, message, options, callback) {
+        if (this.client) {
+            this.client.publish(topic, message, options, callback);
+        }
     }
+
+    subscribe(topic, options, callback) {
+        if (this.client) {
+            this.client.subscribe(topic, options, callback);
+        }
+    }
+
+    unsubscribe(topic, options, callback) {
+        if (this.client) {
+            this.client.unsubscribe(topic, options, callback)
+        }
+    }
+
+    end(force, options, cb) {
+        if (this.client) {
+            this.client.end(force, options, cb);
+        }
+    }
+
+
 }

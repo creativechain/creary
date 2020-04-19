@@ -42,7 +42,7 @@ Route::get('/{user}/feed', 'CrearyController@home')
 
 Route::get('/{user}/{section}', 'CrearyController@profileSection')
     ->where('user', '^(@[\w\.\d-]+)$')
-    ->where('section', '^(projects|following|followers|curation-rewards|author-rewards|blocked|wallet|settings|passwords|balances|permissions)$');
+    ->where('section', '^(projects|following|followers|curation-rewards|author-rewards|blocked|wallet|settings|passwords|balances|permissions|notifications)$');
 
 Route::get('/{category}/{user}/{permlink}', 'CrearyController@postCategory')
     ->where('category', '^([\w\d\-\/]+)$')

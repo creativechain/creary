@@ -1,7 +1,8 @@
 const crea = require('@creativechain-fdn/crea-js');
 const aedes = require('aedes');
 const dotenv = require('dotenv');
-const { createServer } = require('net');
+const { createServer } = require('http');
+const ws = require('websocket-stream');
 
 //Load .env file
 dotenv.config();
@@ -42,28 +43,36 @@ mqttServer.authenticate = function(client, username, password, callback) {
             if (accountData.accounts[username]) {
                 let account = accountData.accounts[username];
 
-                console.log(password.length, password.toString('hex'), password.toString());
-                let signature = crea.crypto.Signature.fromBuffer(password);
-                for (let role in DEFAULT_ROLES) {
-                    let authRole = account['role'];
-                    let pubKey = null;
-                    if (role === 'memo') {
-                        pubKey = authRole;
-                    } else {
-                        pubKey = authRole.key_auths[0][0];
-                    }
+                console.log(password.length, password.toString());
+                let passWordHex = Buffer.from(password.toString(), 'hex');
+                try {
+                    let signature = crea.crypto.Signature.fromBuffer(passWordHex);
+                    for (let role of DEFAULT_ROLES) {
+                        let authRole = account[role];
+                        let pubKey = null;
+                        if (role === 'memo') {
+                            pubKey = authRole;
+                        } else {
+                            pubKey = authRole.key_auths[0][0];
+                        }
 
-                    let pk = crea.crypto.PublicKey.fromString(pubKey);
-                    if (signature.verifyBuffer(Buffer.from(username, 'utf8'), pk)) {
-                        callback(null, true);
-                        return;
+                        let pk = crea.crypto.PublicKey.fromString(pubKey);
+                        if (signature.verifyBuffer(Buffer.from(username, 'utf8'), pk)) {
+                            callback(null, true);
+                            console.log('Client', client.id, 'authenticated with', role, 'key');
+                            return;
+                        }
                     }
+                } catch (e) {
+                    console.error('Error', e.message);
                 }
 
                 //Can not verify user
+                console.log('Client', client.id, 'not has valid key');
                 callback(null, false);
             } else {
                 //User not exists
+                console.log('Client', client.id, 'not exists');
                 callback(null, false);
             }
 
@@ -92,8 +101,9 @@ mqttServer.on('closed', function (client) {
 });
 
 
+const httpServer = createServer();
+ws.createServer({ server: httpServer }, mqttServer.handle)
 
-const netServer = createServer(mqttServer.handle);
-netServer.listen(port, function () {
+httpServer.listen(port, function () {
     console.log('MQTT Server listening on port', port)
 });

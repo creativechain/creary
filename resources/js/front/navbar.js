@@ -4,6 +4,7 @@
 
 import R from '../lib/resources';
 import Session from "../lib/session";
+import mqtt from 'mqtt';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, isSmallScreen, cancelEventPropagation } from '../lib/util';
 import { login, logout } from '../common/login';
@@ -281,6 +282,46 @@ import Avatar from "../components/Avatar";
         retrieveContent(event, "/promoted");
     }
 
+    /**
+     *
+     * @param {Session} session
+     * @param account
+     */
+    function prepareNotifClient(session) {
+        if (session) {
+            let host = location.host;
+            let port = 1902;
+
+            let account = session.getAccount();
+            let username = session.account.username;
+
+            let options = {
+                host, port,
+                clientId: username,
+                username: username,
+                password: account.getSignature(),
+                clean: true,
+                //protocolId: 'MQTT',
+            };
+
+            console.log('MQTT options', options)
+            const mqttClient = mqtt.connect(options);
+            mqttClient.on('connect', function (connack) {
+                console.log('MQTT connected!');
+
+                //Subcribe to notifications messages
+                mqttClient.subscribe(`${username}/notifications`, function (err, granted) {
+                    console.log('Subscription topic', err, granted);
+                })
+            });
+
+            mqttClient.on('message', function (topic, message, packet) {
+                console.log('Message received', topic, message.toString('utf8'), packet)
+            })
+        }
+
+    }
+
     creaEvents.on('crea.posts', function () {
         navbarContainer.nav = getPathPart();
     });
@@ -291,6 +332,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.login', function (session, account) {
         updateNavbarSession(session, account);
+        prepareNotifClient(session, account);
     });
 
     creaEvents.on('crea.session.logout', function () {

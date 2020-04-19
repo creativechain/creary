@@ -13,6 +13,21 @@ class Account {
 
     /**
      *
+     * @returns {null|string}
+     */
+    getSignature() {
+        let roles = Object.keys(this.keys);
+        if (roles.length > 0) {
+            let k = this.keys[roles[0]];
+            let prvK = crea.crypto.PrivateKey.fromWif(k.prv);
+            return crea.crypto.Signature.sign(this.username, prvK).toHex();
+        }
+
+        return null;
+    }
+
+    /**
+     *
      * @param username
      * @param password
      * @param role
