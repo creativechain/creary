@@ -25,7 +25,8 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^6.0",
         "salmanzafar/laravel-mqtt": "^1.0",
-        "telegram-bot/api": "^2.3"
+        "telegram-bot/api": "^2.3",
+        "twilio/sdk": "^6.3"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

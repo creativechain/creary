@@ -96,5 +96,11 @@ class CrearyClient
         return null;
     }
 
+    public function getBlock($height) {
+        $rpcData = $this->buildRpcData('condenser_api.get_block', array( $height ));
+
+        $response = $this->callRequest($rpcData);
+        return $response->result;
+    }
 
 }

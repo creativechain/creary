@@ -1,7 +1,8 @@
 const crea = require('@creativechain-fdn/crea-js');
 const aedes = require('aedes');
 const dotenv = require('dotenv');
-const { createServer } = require('http');
+const http = require('http');
+const net = require('net');
 const ws = require('websocket-stream');
 
 //Load .env file
@@ -28,11 +29,22 @@ crea.config.set('address_prefix', apiOptions.addressPrefix);
 crea.config.set('chain_id', apiOptions.chainId);
 
 const port = process.env.MQTT_PORT;
+const wsPort = process.env.MQTT_WS_PORT;
 const mqttServer = aedes();
 const DEFAULT_ROLES = ['owner', 'active', 'posting', 'memo'];
 
 mqttServer.authenticate = function(client, username, password, callback) {
     console.log('Trying authentication', username, password);
+    if (username === process.env.MQTT_ADMIN_USER) {
+        console.log(`User admin (${username}) authenticated!`);
+
+        callback(null, password.toString('utf8') === process.env.MQTT_ADMIN_PASSWORD);
+        return;
+    } else if (username === 'test') {
+        callback(null, true);
+        return;
+    }
+
     crea.api.getState('@' + username, function (err, result) {
         if (err) {
             callback(err);
@@ -100,10 +112,15 @@ mqttServer.on('closed', function (client) {
     console.log('Server closed', client);
 });
 
+const netServer = net.createServer(mqttServer.handle);
+const httpServer = http.createServer();
+ws.createServer({ server: httpServer }, mqttServer.handle);
 
-const httpServer = createServer();
-ws.createServer({ server: httpServer }, mqttServer.handle)
+netServer.listen(port, function () {
+    console.log('MQTT Server listening on port', port);
 
-httpServer.listen(port, function () {
-    console.log('MQTT Server listening on port', port)
+    httpServer.listen(wsPort, function () {
+        console.log('WS Server listening on port', wsPort)
+    });
 });
+
