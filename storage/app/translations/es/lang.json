@@ -290,6 +290,7 @@
         "RADIO_INPUT_UNDERSTAND": "Entiendo que Creary no puede recuperar contraseñas perdidas",
         "ERROR_CURRENT_PASSWORD": "La contraseña actual no es válida",
         "ERROR_MATCHED_PASSWORDS": "Las contraseñas no coinciden",
+        "ERROR_INSECURE_PASSWORD": "La nueva contraseña debe contener al menos 12 carácteres, una letra minúscula, una letra mayúscula, un dígito numérico y un carácter especial.",
         "ERROR_CONDITIONS": "Revisa las condiciones para cambiar la contraseña",
         "RULE_1": "Si alguna vez pierdes tu contraseña, tu cuenta se perderá y no podrás acceder a su contenido ni a sus tokens.",
         "RULE_2": "No conocemos tu contraseña y no podremos ayudarte a recuperarla.",

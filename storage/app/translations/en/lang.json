@@ -290,6 +290,7 @@
         "RADIO_INPUT_UNDERSTAND": "I understand that Creary can\u2019t recover lost passwords.",
         "ERROR_CURRENT_PASSWORD": "Current password is not valid.",
         "ERROR_MATCHED_PASSWORDS": "Passwords do not match.",
+        "ERROR_INSECURE_PASSWORD": "The new password must contain at least 12 characters, one lowercase letter, one uppercase letter, one numeric digit, and one special character.",
         "ERROR_CONDITIONS": "Check the conditions to change the password.",
         "RULE_1": "If you ever lose your password, your account will be irretrievably lost and you will not be able to access its content or its tokens.",
         "RULE_2": "We do not save your password, and we can not help you recover it.",

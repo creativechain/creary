@@ -57,9 +57,6 @@
                 </a>
             </div>
 
-
-
-
             <ul id="wallet-tabs" class="tabs-content no-padding">
                 <li v-bind:class="{ active: walletTab === 'balances' }" class="wallet-balances-tab">
                     <div v-bind:class="{ tab__content: true, hidden: walletTab !== 'balances' }">
@@ -538,9 +535,9 @@
                             </div>
                             <div class="col-md-12 mt-3">
                                 <label>{{ __('lang.CHANGE_PASSWORD.PASSWORD_CREATED') }}</label>
-                                <input v-if="changePass.newPass" v-model="changePass.newPass" class="validate-required" type="text" placeholder="{{ __('lang.CHANGE_PASSWORD.PASSWORD') }}" readonly/>
+                                <input v-model="changePass.newPass" class="validate-required" type="text" placeholder="{{ __('lang.CHANGE_PASSWORD.PASSWORD') }}" />
 
-                                <div v-else class="">
+                                <div class="">
                                     <div class="">
                                         <div v-on:click="suggestPassword" class="btn btn--sm btn--black mt-3 cursor">
                                             <span class="btn__text  font-weight-bold">{{ __('lang.CHANGE_PASSWORD.CONFIRM_PASSWORD') }}</span>

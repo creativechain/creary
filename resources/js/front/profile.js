@@ -13,6 +13,7 @@ import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropa
 import { vestingCrea, delegatedCrea, vestsToCgy, cgyToVests, receivedDelegatedCGY } from '../common/creautil';
 import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, updateUrl, requireRoleKey,
     updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs, ignoreUser, goTo, showAlert } from "../common/common";
+import Errors from "../lib/error";
 
 //Components import
 import Avatar from "../components/Avatar";
@@ -706,31 +707,38 @@ import Username from "../components/Username";
                             //Check if passwords match
                             if (this.changePass.newPass && this.changePass.newPass === this.changePass.matchedPass) {
                                 //Check radio inputs
-                                if (this.changePass.checkedLostPass && this.changePass.checkedStoredPass) {
-                                    let session = Session.create(this.changePass.username, this.changePass.oldPass); //Check if current is valid
+                                let passValidation = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$/;
+                                console.log(this.changePass.newPass.match(passValidation));
+                                if (this.changePass.newPass.match(passValidation) || this.changePass.newPass.length >= 52) {
+                                    if (this.changePass.checkedLostPass && this.changePass.checkedStoredPass) {
+                                        let session = Session.create(this.changePass.username, this.changePass.oldPass); //Check if current is valid
 
 
-                                    session.login(function (err, result) {
-                                        if (err) {
-                                            if (err === Errors.USER_LOGIN_ERROR) {
-                                                setError(that.lang.CHANGE_PASSWORD.ERROR_CURRENT_PASSWORD);
-                                            }
-                                        } else {
-                                            //Current pass is valid
-                                            let keys = Account.generate(that.changePass.username, that.changePass.newPass, DEFAULT_ROLES).keys;
-                                            sendAccountUpdate(null, keys, function (err, result) {
-                                                let s = Session.getAlive();
-
-                                                if (s) {
-                                                    s.logout();
-                                                    goTo('/');
+                                        session.login(function (err, result) {
+                                            if (err) {
+                                                if (err === Errors.USER_LOGIN_ERROR) {
+                                                    setError(that.lang.CHANGE_PASSWORD.ERROR_CURRENT_PASSWORD);
                                                 }
-                                            });
-                                        }
-                                    });
+                                            } else {
+                                                //Current pass is valid
+                                                let keys = Account.generate(that.changePass.username, that.changePass.newPass, DEFAULT_ROLES).keys;
+                                                sendAccountUpdate(null, keys, function (err, result) {
+                                                    let s = Session.getAlive();
+
+                                                    if (s) {
+                                                        s.logout();
+                                                        goTo('/');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        setError(that.lang.CHANGE_PASSWORD.ERROR_CONDITIONS);
+                                    }
                                 } else {
-                                    setError(that.lang.CHANGE_PASSWORD.ERROR_CONDITIONS);
+                                    setError(that.lang.CHANGE_PASSWORD.ERROR_INSECURE_PASSWORD);
                                 }
+
                             } else {
                                 setError(that.lang.CHANGE_PASSWORD.ERROR_MATCHED_PASSWORDS);
                             }
