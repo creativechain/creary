@@ -359,7 +359,7 @@
                                     <img class="logo-welcome" v-lazy="'{{ asset('img/welcome/logo-welcome.png') }}'" alt="" />
 
                                     <h1>{{ __('lang.WELCOME.SLIDE7_TITLE') }}</h1>
-                                    <p class="lead">{{ __('lang.SLIDE7_TEXT1') }}</p>
+                                    <p class="lead">{{ __('lang.WELCOME.SLIDE7_TEXT1') }}</p>
                                 </div>
                             </div>
                             <div class="row">
