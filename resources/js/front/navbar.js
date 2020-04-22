@@ -332,7 +332,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.login', function (session, account) {
         updateNavbarSession(session, account);
-        prepareNotifClient(session, account);
+        //prepareNotifClient(session, account);
     });
 
     creaEvents.on('crea.session.logout', function () {
