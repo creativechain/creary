@@ -27,7 +27,7 @@
             account: {
                 type: [Object, Boolean]
             },
-            user: {
+            followuser: {
                 type: String
             }
         },
@@ -91,7 +91,7 @@
                     if (session) {
                         let followJson = {
                             follower: session.account.username,
-                            following: this.$props.user,
+                            following: this.$props.followuser,
                             what: this.isStateFollowing(lastState) ? [] : ['blog']
                         };
                         followJson = [operation, followJson];
@@ -101,7 +101,17 @@
                                     that.state = lastState;
                                     that.$emit('follow', err);
                                 } else {
+                                    //console.log('on follow ok');
+                                    if (that.state === that.states.UNFOLLOWING_OP) {
+                                        that.account.followings.push(that.followuser);
+                                    } else {
+                                        that.account.followings = that.account.followings.filter(i => i !== that.followuser);
+                                    }
+                                    //console.log('on follow ok - changed state', that.state);
                                     that.state = that.isStateFollowing(lastState) ? that.states.UNFOLLOWED : that.states.FOLLOWED;
+                                    //console.log('on follow ok - added following', that.account.followings.includes(that.followuser));
+                                    /*that.$forceUpdate();
+                                    console.log('on follow ok - forceUpdate');*/
                                     that.$emit('follow', null, result);
                                 }
                             });
@@ -119,7 +129,7 @@
                 this.over = false;
             },
             isFollowing: function isFollowing() {
-                return this.session && this.account.followings.includes(this.user);
+                return this.session && this.account.followings.includes(this.followuser);
             },
             updateText: function updateText() {
                 switch (this.state) {
@@ -143,10 +153,11 @@
             }
         },
         updated: function updated() {
-            if (!this.isStateOp()) {
+            /*if (!this.isStateOp()) {
                 this.state = this.isFollowing() ? this.states.FOLLOWING : this.states.NO_FOLLOWING;
-            }
+            }*/
 
+            //console.log('onUpdate', this.state, this.isFollowing());
             this.updateText();
         },
         mounted: function mounted() {

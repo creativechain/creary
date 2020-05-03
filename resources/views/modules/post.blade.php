@@ -31,7 +31,7 @@
                             <btn-follow v-if="session && !isSameUser() && !state.author.buzz.blocked"
                                         v-on:follow="onFollow" v-bind:session="session"
                                         v-bind:account="user"
-                                        v-bind:user="state.post.author" >
+                                        v-bind:followuser="state.post.author" >
 
                             </btn-follow>
                             <div v-else-if="session && isSameUser()" class="btn btn--primary" v-on:click="editPost()">

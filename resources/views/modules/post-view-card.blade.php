@@ -100,7 +100,7 @@
                                             <div class="col text-center m-btn-follow">
                                                 <btn-follow class="button-follow" v-on:follow="onFollow"
                                                             v-bind:session="session" v-bind:account="account.user"
-                                                            v-bind:user="state.content[p].author">
+                                                            v-bind:followuser="state.content[p].author">
                                                 </btn-follow>
                                             </div>
                                         </div>

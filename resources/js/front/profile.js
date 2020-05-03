@@ -12,7 +12,7 @@ import HttpClient from '../lib/http';
 import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropagation, toUrl, NaNOr, createAuth } from '../lib/util';
 import { vestingCrea, delegatedCrea, vestsToCgy, cgyToVests, receivedDelegatedCGY } from '../common/creautil';
 import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, updateUrl, requireRoleKey,
-    updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs, ignoreUser, goTo, showAlert } from "../common/common";
+    updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs, ignoreUser, goTo, showAlert, getDiscussion } from "../common/common";
 import Errors from "../lib/error";
 
 //Components import

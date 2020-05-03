@@ -21,9 +21,9 @@
     <div class="row mt-3">
         <div class="col-12 text-center">
             <div v-if="session">
-                <btn-follow v-if="state.user.name != account.user.name && !state.user.buzz.blocked"
+                <btn-follow v-if="state.user.name !== account.user.name && !state.user.buzz.blocked"
                             v-on:follow="onFollow" v-bind:session="session"
-                            v-bind:account="account.user" v-bind:user="state.user.name" >
+                            v-bind:account="account.user" v-bind:followuser="state.user.name" >
                 </btn-follow>
 
                 <a v-else-if="state.user.name === account.user.name" class="btn btn--sm" v-bind:href="'/@' + session.account.username + '/settings'" v-on:click="navigateTo($event, 'settings')">
