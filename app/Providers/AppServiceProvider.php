@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
 
         $lang = $request->cookie('lang');
 
-        dd($lang, $request->getPreferredLanguage(['en', 'es']));
         if (!$lang) {
             $lang = $request->getPreferredLanguage(['en', 'es']);
             if (!$lang) {
@@ -38,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
+        dd($lang);
         App::setLocale($lang);
         Schema::defaultStringLength(191);
 
