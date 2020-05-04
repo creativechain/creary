@@ -473,12 +473,13 @@
                                 </div>
                             </li>
 
-                            <li>
+                            {{--Hide notifications--}}
+                            {{--<li>
                                 <a href="/profile.php?nav=notifications" class="navbar-notification icons-navbar" style="display: inline-grid;">
                                     <i class="far fa-bell"></i>
                                     <i class="fas fa-circle">5</i>
                                 </a>
-                            </li>
+                            </li>--}}
 
                             <li v-if="session">
                                 <!-- mobile-->
