@@ -37,7 +37,6 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        dd($lang);
         App::setLocale($lang);
         Schema::defaultStringLength(191);
 
