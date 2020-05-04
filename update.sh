@@ -14,8 +14,8 @@ elif [ $LOCAL = $BASE ]; then
     git pull
 
     # Update dependencies
-    composer update
+    composer install
 
     # Clear twig cache
-    rm -rf var/twig_cache
+    php artisan cache:clear
 fi
