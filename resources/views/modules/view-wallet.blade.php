@@ -104,7 +104,7 @@
                                                                                                         <div class="text-block">
                                                                                                             <h3>@{{ config.title }}</h3>
                                                                                                             <p>@{{ config.text }}</p>
-                                                                                                            <p v-if="toExchange">@{{ config.exchange_text }}</p>
+                                                                                                            <p v-if="toExchange" class="error-color-form">@{{ config.exchange_text }}</p>
                                                                                                         </div>
                                                                                                         <form>
                                                                                                             <div class="row">

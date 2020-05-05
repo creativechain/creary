@@ -395,6 +395,7 @@ import Username from "../components/Username";
                                     exchange_text: lang.WALLET.TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CBD,
+                                    to: this.session.account.username,
                                     total_amount: Asset.parseString(this.state.user.savings_cbd_balance)
                                 };
                                 break;
