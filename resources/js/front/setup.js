@@ -68,25 +68,28 @@ import { catchError } from "../common/common";
         }
     });
 
-    function updateCookies(session) {
-        console.log('Cookie session', session);
+    function updateCookies(session, account) {
+        console.log('Cookie session', session, account);
         if (session) {
             CreaCookies.set('creary.username', session.account.username);
         } else {
             CreaCookies.remove('creary.username')
         }
 
-        //Send language
-        //console.log('cookies');
-        let navLang = navigator.language.toLowerCase().split('-')[0];
-        CreaCookies.set('creary.language', navLang);
+        let lang = navigator.language.toLowerCase().split('-')[0];
+        if (account && account.user.metadata.lang) {
+            lang = account.user.metadata.lang;
+        }
+
+        //Set language
+        CreaCookies.set('creary.language', lang);
 
         //console.log(navLang, CreaCookies.get('creary.language'));
     }
 
-    creaEvents.on('crea.session.login', function (session) {
+    creaEvents.on('crea.session.login', function (session, account) {
         globalLoading.show = false;
-        updateCookies(session);
+        updateCookies(session, account);
     });
 
     creaEvents.on('crea.session.update', updateCookies);
