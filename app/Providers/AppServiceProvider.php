@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         //
         $request = request();
 
-        $lang = $request->cookie('lang');
+        $lang = $request->cookie('creary_language');
 
         if (!$lang) {
             $lang = $request->getPreferredLanguage(['en', 'es']);
