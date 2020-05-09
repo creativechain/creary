@@ -14,8 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 Route::get('/blockchain/totalSupply', 'Api\BlockchainController@getTotalSupply')->name('crea.supply');
+Route::get('/blockchain/test', 'Api\BlockchainController@markRead');
+
+Route::group(['prefix' => 'notification'], function () {
+   Route::get('/{creaUser}', 'Api\NotificationController@index')
+       ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.list');
+
+    Route::get('/{creaUser}/unread', 'Api\NotificationController@unread')
+        ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.unread');
+
+   Route::get('/{creaUser}/markRead', 'Api\NotificationController@markRead')
+        ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
+});
+

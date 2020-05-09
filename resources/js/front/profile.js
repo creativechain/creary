@@ -23,6 +23,11 @@ import LinkName from "../components/LinkName";
 import ButtonFollow from "../components/ButtonFollow";
 import Amount from "../components/Amount";
 import Username from "../components/Username";
+import FollowNotification from "../components/notifications/FollowNotification";
+import LikePostNotification from "../components/notifications/LikePostNotification";
+import CommentPostNotification from "../components/notifications/CommentPostNotification";
+import RecommendPostNotification from "../components/notifications/RecommendPostNotification";
+import DownloadNotification from "../components/notifications/DownloadNotification";
 
 (function () {
 
@@ -34,7 +39,13 @@ import Username from "../components/Username";
     Vue.component('btn-follow', ButtonFollow);
     Vue.component('amount', Amount);
     Vue.component('username', Username);
+    Vue.component('follow-notification', FollowNotification);
+    Vue.component('like-post-notification', LikePostNotification);
+    Vue.component('comment-post-notification', CommentPostNotification);
+    Vue.component('recommend-post-notification', RecommendPostNotification);
+    Vue.component('download-notification', DownloadNotification);
 
+    let tempNotifications = [];
     let profileContainer;
     let rewardsContainer = {};
     let blockedContainer;
@@ -235,14 +246,13 @@ import Username from "../components/Username";
             walletModalSend.from = state.user.name;
         }
     }
+
     /**
      *
      * @param state
      * @param {Session} session
      * @param account
      * @param usernameFilter
-     * @param navSection
-     * @param walletSection
      */
     function updateProfileView(state, session, account, usernameFilter) {
         let navSection = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'projects';
@@ -301,6 +311,7 @@ import Username from "../components/Username";
                         checkedStoredPass: false,
                         error: null
                     },
+                    notifications: tempNotifications,
                     nextDeEnergize: nextDeEnergize,
                     savingsWithdrawNote: savingsWithdrawNote,
                     simpleView: false //No used, but is needed
@@ -764,13 +775,12 @@ import Username from "../components/Username";
         profileContainer.$forceUpdate();
         creaEvents.emit('crea.dom.ready');
     }
+
     /**
      *
      * @param state
      * @param {Session} session
      */
-
-
     function setUpModals(state, session) {
         if (session && session.account.username === state.user.name) {
             updateModalSendView(state, session);
@@ -969,12 +979,11 @@ import Username from "../components/Username";
             followerContainer.follower = follower;
         }
     }
+
     /**
      *
      * @param {Session} session
      */
-
-
     function fetchRewards(session) {
         let username = getPathPart().replace('@', '');
         fetchUserState(username, 'transfers', function (err, state) {
@@ -1081,6 +1090,7 @@ import Username from "../components/Username";
             }
         });
     }
+
     /**
      *
      * @param state
@@ -1088,8 +1098,6 @@ import Username from "../components/Username";
      * @param account
      * @param usernameFilter
      */
-
-
     function detectNav(state, session, account, usernameFilter) {
         let nav = getPathPart(null,1);
         let walletNav = 'balances';
@@ -1180,12 +1188,11 @@ import Username from "../components/Username";
             showAlert(title, message);
         }
     }
+
     /**
      *
      * @param {string} username
      */
-
-
     function fetchHistory(username) {
         setTimeout(function () {
             crea.api.getAccountHistory(username, -1, 50, function (err, result) {
@@ -1252,14 +1259,13 @@ import Username from "../components/Username";
             });
         });
     }
+
     /**
      *
      * @param {string} username
      * @param {string|Function} view
      * @param {Function} callback
      */
-
-
     function fetchUserState(username) {
         let view = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         let callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -1451,9 +1457,20 @@ import Username from "../components/Username";
     }
 
     creaEvents.on('crea.session.login', handleSession);
+
     creaEvents.on('crea.session.update', function (session, account) {
         --lastPage;
         handleSession(session, account);
+    });
+
+    creaEvents.on('crea.notifications.unread', function (notifications) {
+        if (profileContainer) {
+            profileContainer.notifications = notifications ? notifications : [];
+            profileContainer.$forceUpdate();
+        } else {
+            tempNotifications = notifications ? notifications : [];
+        }
+
     });
 
     function getProfileDiscussions(callback) {

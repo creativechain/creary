@@ -5,6 +5,7 @@ import Errors from "../lib/error";
 import Session from "../lib/session";
 import { cancelEventPropagation } from '../lib/util';
 import { catchError } from "../common/common";
+import HttpClient from "../lib/http";
 
 (function () {
 
@@ -87,9 +88,25 @@ import { catchError } from "../common/common";
         //console.log(navLang, CreaCookies.get('creary.language'));
     }
 
+    function fetchUnreadNotifications(session, account) {
+        if (session) {
+            let httpClient = new HttpClient(`/~api/notification/@${session.account.username}/unread`);
+            httpClient.on('done' + httpClient.id, function (data) {
+                console.log('Notifications', JSON.parse(data));
+                creaEvents.emit('crea.notifications.unread', JSON.parse(data));
+            });
+            httpClient.get({});
+        }
+    }
+
+    creaEvents.on('crea.notifications.update', function (session, account) {
+        fetchUnreadNotifications(session, account);
+    });
+
     creaEvents.on('crea.session.login', function (session, account) {
         globalLoading.show = false;
         updateCookies(session, account);
+        fetchUnreadNotifications(session, account);
     });
 
     creaEvents.on('crea.session.update', updateCookies);
@@ -138,5 +155,6 @@ import { catchError } from "../common/common";
         //Build modals
         creaEvents.emit('crea.modal.ready');
     });
+
 
 })();

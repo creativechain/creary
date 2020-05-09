@@ -520,6 +520,18 @@
         "NO_SEARCH_RESULTS_1": "Tu búsqueda no tiene resultados",
         "NO_SEARCH_RESULTS_2": "Revisa si hay fallos de escritura o prueba con otros términos de búsqueda."
     },
+    "NOTIFICATIONS": {
+        "TITLE" : "NOTIFICACIONES",
+        "NO_NOTIFICATIONS": "No se han encontrado notificaciones nuevas.",
+        "USER_FOLLOWING_YOU": "%s ha empezado aseguirte",
+        "USER_UNFOLLOWING_YOU": "%s ha dejado de seguirte",
+        "USER_LIKES_YOUR_POST": "%s le gusta tu publicación <a href=\"%s\">%s</a>",
+        "USER_COMMENTED_YOUR_POST": "%s ha comentado en tu publicación <a href=\"%s\">%s</a>",
+        "USER_LIKES_YOUR_COMMENT": "%s le gusta tu comentario",
+        "USER_RECOMMENDED_YOUR_POST": "%s ha recomendado tu publicación <a href=\"%s\">%s</a>",
+        "USER_DOWNLOADED_YOUR_CONTENT": "%s ha descargado una copia de tu proyecto <a href=\"%s\">%s</a>",
+        "USER_MENTIONED_YOU": "%s te ha mencionado en <a href=\"%s\">%s</a>"
+    },
     "LICENSE": {
         "FREECONTENT": "FreeContent (ContenidoLibre)",
         "ATTRIBUTION": "Attribution (Reconocimiento)",

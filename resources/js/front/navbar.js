@@ -84,7 +84,8 @@ import Avatar from "../components/Avatar";
                             error: null,
                             value: ''
                         }
-                    }
+                    },
+                    unreadNotifications: 0
                 },
                 mounted: function mounted() {
                     this.applyRightMenuEvents($);
@@ -285,7 +286,6 @@ import Avatar from "../components/Avatar";
     /**
      *
      * @param {Session} session
-     * @param account
      */
     function prepareNotifClient(session) {
         if (session) {
@@ -310,17 +310,23 @@ import Avatar from "../components/Avatar";
                 console.log('MQTT connected!');
 
                 //Subcribe to notifications messages
-                mqttClient.subscribe(`${username}/notifications`, function (err, granted) {
+                mqttClient.subscribe(`${username}/notification`, function (err, granted) {
                     console.log('Subscription topic', err, granted);
                 })
             });
 
             mqttClient.on('message', function (topic, message, packet) {
-                console.log('Message received', topic, message.toString('utf8'), packet)
+                console.log('Message received', topic, message.toString('utf8'), packet);
+                creaEvents.emit('crea.notifications.update', session);
             })
         }
 
     }
+
+    creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
+        navbarContainer.unreadNotifications = unreadNotifications ? unreadNotifications.length : 0;
+        navbarContainer.$forceUpdate();
+    });
 
     creaEvents.on('crea.posts', function () {
         navbarContainer.nav = getPathPart();
@@ -332,7 +338,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.login', function (session, account) {
         updateNavbarSession(session, account);
-        //prepareNotifClient(session, account);
+        prepareNotifClient(session);
     });
 
     creaEvents.on('crea.session.logout', function () {

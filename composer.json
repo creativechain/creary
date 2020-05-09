@@ -22,6 +22,7 @@
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^6.0",
+        "laravel/passport": "^9.1",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^6.0",
         "salmanzafar/laravel-mqtt": "^1.0",

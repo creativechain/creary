@@ -82,7 +82,7 @@
 
     <script>
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
-        window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/es/lang.json') !!};
+        window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/' . \Illuminate\Support\Facades\App::getLocale() . '/lang.json') !!};
     </script>
 
     {{--PRELOAD SCRIPTS - SEO IMPROVEMENTS--}}
@@ -463,7 +463,6 @@
                         </ul>
                     </div>
 
-
                     <div class="bar__module float-lg-right float-md-right">
                         <ul class="menu-horizontal text-left">
                             <li class="hidden-xs">
@@ -474,12 +473,12 @@
                             </li>
 
                             {{--Hide notifications--}}
-                            {{--<li>
-                                <a href="/profile.php?nav=notifications" class="navbar-notification icons-navbar" style="display: inline-grid;">
+                            <li v-if="session">
+                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="navbar-notification icons-navbar" style="display: inline-grid;">
                                     <i class="far fa-bell"></i>
-                                    <i class="fas fa-circle">5</i>
+                                    <i v-if="unreadNotifications > 0" class="fas fa-circle" style="font-size: 10px">@{{ unreadNotifications }}</i>
                                 </a>
-                            </li>--}}
+                            </li>
 
                             <li v-if="session">
                                 <!-- mobile-->

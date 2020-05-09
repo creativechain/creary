@@ -29,6 +29,18 @@ class CreaOperationsUtils
         return null;
     }
 
+    public static function comment_download($op) {
+        $data = self::parse($op);
+        if ($data->comment_author) {
+            //Only return notification data for comments in publications
+            $data->to = $data->comment_author;
+            return $data;
+        }
+
+        return null;
+    }
+
+
     public static function custom_json($op) {
         $data = self::parse($op);
         $json = json_decode($op[1]->json);

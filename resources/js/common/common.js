@@ -381,7 +381,14 @@ function getDiscussion(author, permlink, callback) {
         author = /[\w\.\d-]+/gm.exec(author)[0];
     }
 
-    crea.api.getDiscussion(author, permlink, callback);
+    crea.api.getDiscussion(author, permlink, function (err, discussion) {
+        if (!err) {
+            discussion = parsePost(discussion);
+            callback(null, discussion);
+        } else {
+            callback(err, null);
+        }
+    });
 }
 
 function recommendPost(author, permlink, reblog, callback) {

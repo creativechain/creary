@@ -520,6 +520,18 @@
         "NO_SEARCH_RESULTS_1": "Your search returned no results.",
         "NO_SEARCH_RESULTS_2": "Make sure you spell all keywords correctly or try different search terms."
     },
+    "NOTIFICATIONS": {
+        "TITLE" : "NOTIFICATIONS",
+        "NO_NOTIFICATIONS": "No new notifications found.",
+        "USER_FOLLOWING_YOU": "%s has started following you",
+        "USER_UNFOLLOWING_YOU": "%s has stopped following you",
+        "USER_LIKES_YOUR_POST": "%s likes your post <a href=\"%s\">%s</a>",
+        "USER_COMMENTED_YOUR_POST": "%s has commented in your post <a href=\"%s\">%s</a>",
+        "USER_LIKES_YOUR_COMMENT": "%s likes your comment",
+        "USER_RECOMMENDED_YOUR_POST": "%s has recommended your post <a href=\"%s\">%s</a>",
+        "USER_DOWNLOADED_YOUR_CONTENT": "%s has downloaded a copy of your project <a href=\"%s\">%s</a>",
+        "USER_MENTIONED_YOU": "%s mentioned you"
+    },
     "LICENSE": {
         "FREECONTENT": "FreeContent",
         "ATTRIBUTION": "Attribution",
