@@ -120,25 +120,22 @@ if (process.env.MQTT_TLS_ENABLE) {
 
     const fs = require('fs');
     const https = require('https');
-    const tls = require('tls');
 
     const options = {
         key: fs.readFileSync(process.env.MQTT_KEY_FILE),
         cert: fs.readFileSync(process.env.MQTT_CERT_FILE)
     };
 
-    let tlsServer = tls.createServer(options, mqttServer.handle);
     let httpsServer = https.createServer(options);
     ws.createServer( { server: httpsServer}, mqttServer.handle);
 
-    tlsServer.listen(port, function () {
+    netServer.listen(port, function () {
         console.log('MQTT Server listening on port', port);
 
         httpsServer.listen(wsPort, function () {
             console.log('WS Server listening on port', wsPort);
         })
-    })
-
+    });
 
 } else {
     const http = require('http');
