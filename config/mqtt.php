@@ -11,7 +11,7 @@ return [
     'host'     => env('MQTT_HOST','127.0.0.1'),
     'password' => env('MQTT_ADMIN_PASSWORD',''),
     'username' => env('MQTT_ADMIN_USER',''),
-    'certfile' => env('MQTT_CERT_FILE',''),
+    'certfile' => env('MQTT_KEY_FILE',''),
     'port'     => env('MQTT_PORT','1883'),
     'debug'    => env('mqtt_debug',false), //Optional Parameter to enable debugging set it to True
     'qos'      => env('mqtt_qos', 0), // set quality of service here
