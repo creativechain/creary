@@ -301,6 +301,7 @@ import Avatar from "../components/Avatar";
                 username: username,
                 password: account.getSignature(),
                 clean: true,
+                protocol: 'wss'
                 //protocolId: 'MQTT',
             };
 
