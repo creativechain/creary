@@ -60,7 +60,7 @@ class SendNotification extends Command
                     $notification = new CrearyNotification($data);
                     if ($notification) {
                         $cUser = CreaUser::query()
-                            ->updateOrCreate(['name' => $data->to]);
+                            ->updateOrCreate(['name' => $data->to], ['name' => $data->to]);
 
                         $cUser->save();
                         Notification::send($cUser, $notification);
