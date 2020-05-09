@@ -290,7 +290,7 @@ import Avatar from "../components/Avatar";
     function prepareNotifClient(session) {
         if (session) {
             let host = location.host;
-            let port = 1902;
+            let port = window.wsPort;
 
             let account = session.getAccount();
             let username = session.account.username;
