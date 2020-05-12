@@ -81,6 +81,7 @@
     </script>
 
     <script>
+        window.mqtt_enable = {!! env('MQTT_ENABLE') !!};
         window.wsPort = {!! env('MQTT_WS_PORT') !!};
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
         window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/' . \Illuminate\Support\Facades\App::getLocale() . '/lang.json') !!};

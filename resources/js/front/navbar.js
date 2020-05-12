@@ -339,7 +339,9 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.login', function (session, account) {
         updateNavbarSession(session, account);
-        prepareNotifClient(session);
+        if (window.mqtt_enable) {
+            prepareNotifClient(session);
+        }
     });
 
     creaEvents.on('crea.session.logout', function () {

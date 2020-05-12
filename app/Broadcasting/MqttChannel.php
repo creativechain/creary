@@ -34,6 +34,5 @@ class MqttChannel
         $mqtt = new Mqtt();
         $to = $message['to'];
         $mqtt->ConnectAndPublish("$to/notification", json_encode($message));
-
     }
 }
