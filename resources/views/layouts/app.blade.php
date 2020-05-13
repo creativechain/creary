@@ -476,9 +476,10 @@
 
                             {{--Hide notifications--}}
                             <li v-if="session">
-                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="navbar-notification icons-navbar" style="display: inline-grid;">
-                                    <i class="far fa-bell"></i>
-                                    <i v-if="unreadNotifications > 0" class="fas fa-circle" style="font-size: 10px">@{{ unreadNotifications }}</i>
+                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                    <span class="icon-notification"><i class="far fa-bell"></i></span>
+                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
                                 </a>
                             </li>
 

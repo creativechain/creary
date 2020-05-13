@@ -1,6 +1,12 @@
 @import "color";
 
 .view-wallet {
+  .boxed {
+    overflow: visible;
+    .tabs-content {
+      overflow: visible;
+    }
+  }
   #wallet-tabs {
     .wallet-balances-tab.active,
     .wallet-permissions-tab.active,
