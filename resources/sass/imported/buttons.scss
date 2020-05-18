@@ -28,6 +28,10 @@
 .search.icons-navbar {
   position: relative;
   top: 2px;
+  color: #AAAAAA;
+}
+.search.icons-navbar:hover {
+  color: white;
 }
 .bar-1 .menu-horizontal > li > .dropdown__trigger, .bar-1 .menu-horizontal > li > a {
   font-size: 14px;

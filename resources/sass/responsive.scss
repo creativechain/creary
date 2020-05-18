@@ -383,7 +383,15 @@
     }
   }
   .search.icons-navbar {
-    left: -10px;
+    left: -5px;
+    i {
+      color: #AAAAAA;
+    }
+  }
+  .search.icons-navbar:hover {
+    i {
+      color: white;
+    }
   }
   .menu-horizontal > li, .menu-vertical > li {
     padding: 5px;
@@ -410,7 +418,7 @@
     i {
       position: relative;
       top: -2px;
-      right: 10px ;
+      right: 0;
     }
   }
   .disconnected-search {
