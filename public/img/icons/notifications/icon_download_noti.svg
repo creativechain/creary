@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16.8" height="16.8" viewBox="0 0 16.8 16.8">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Trazado_1110" data-name="Trazado 1110" d="M0-63.7H16.8v16.8H0Z" transform="translate(0 63.698)" fill="#505050"/>
+    </clipPath>
+  </defs>
+  <g id="Grupo_9632" data-name="Grupo 9632" transform="translate(829 -2156)">
+    <g id="Grupo_9631" data-name="Grupo 9631" transform="translate(6.922 -0.16)">
+      <g id="Grupo_9628" data-name="Grupo 9628" transform="translate(-838 2154)">
+        <g id="Grupo_1911" data-name="Grupo 1911" transform="translate(0 0)">
+          <g id="Grupo_1827" data-name="Grupo 1827" transform="translate(2.078 2.16)">
+            <g id="Grupo_1609" data-name="Grupo 1609" transform="translate(0 0)" clip-path="url(#clip-path)">
+              <g id="Grupo_1607" data-name="Grupo 1607" transform="translate(0 0)">
+                <path id="Trazado_1108" data-name="Trazado 1108" d="M-23.449-42.544a6.848,6.848,0,0,1-6.841-6.841,6.848,6.848,0,0,1,6.841-6.841,6.848,6.848,0,0,1,6.841,6.841,6.848,6.848,0,0,1-6.841,6.841m0-15.241a8.409,8.409,0,0,0-8.4,8.4,8.41,8.41,0,0,0,8.4,8.4,8.41,8.41,0,0,0,8.4-8.4,8.41,8.41,0,0,0-8.4-8.4" transform="translate(31.849 57.785)" fill="#505050"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="Grupo_9629" data-name="Grupo 9629" transform="translate(-1286.901 1460.783)">
+      <line id="Línea_1847" data-name="Línea 1847" y2="7.094" transform="translate(466.5 699.5)" fill="none" stroke="#505050" stroke-linecap="round" stroke-width="1.5"/>
+      <path id="Trazado_13208" data-name="Trazado 13208" d="M-798.1,973.035l3.677,3.483,3.345-3.483" transform="translate(1261 -268.906)" fill="none" stroke="#505050" stroke-linecap="round" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

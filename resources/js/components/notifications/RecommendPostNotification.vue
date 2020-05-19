@@ -13,7 +13,7 @@
                         <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
                     </p>
                     <p v-if="recommender && discussion">
-                        <img src="/img/recommended/recomended-hover.svg" alt="" class="icon-notification-list" />
+                        <img src="/img/icons/notifications/icon_recommend_noti.svg" alt="" class="icon-notification-list" />
                         <span v-html="text"></span>
                         <!--<span>{{ data.body }}</span>-->
                     </p>
@@ -53,9 +53,9 @@
             text: function () {
                 let t = this.lang.NOTIFICATIONS.USER_RECOMMENDED_YOUR_POST ;
                 if (this.recommender.metadata && this.recommender.metadata.publicName) {
-                    return String.format(t, this.recommender.metadata.publicName, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.recommender.metadata.publicName);
                 } else {
-                    return String.format(t, this.recommender.name, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.recommender.name);
                 }
             }
         },

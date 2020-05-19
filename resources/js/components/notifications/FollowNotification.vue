@@ -13,7 +13,7 @@
                         <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
                     </p>
                     <p v-if="follower">
-                        <img src="img/icons/like_ACT_RED.svg" alt="" class="icon-notification-list" />
+                        <img src="/img/icons/notifications/icon_follow_noti.svg" alt="" class="icon-notification-list" />
                         <span>{{ text }}</span>
                     </p>
                 </div>

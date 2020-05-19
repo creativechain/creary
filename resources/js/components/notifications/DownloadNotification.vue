@@ -13,7 +13,7 @@
                         <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
                     </p>
                     <p v-if="downloader && discussion">
-                        <img src="/img/icons/downloads.svg" alt="" class="icon-notification-list" />
+                        <img src="/img/icons/notifications/icon_download_noti.svg" alt="" class="icon-notification-list" />
                         <span v-html="text"></span>
                         <!--<span>{{ data.body }}</span>-->
                     </p>
@@ -53,9 +53,9 @@
             text: function () {
                 let t = this.lang.NOTIFICATIONS.USER_DOWNLOADED_YOUR_CONTENT ;
                 if (this.downloader.metadata && this.downloader.metadata.publicName) {
-                    return String.format(t, this.downloader.metadata.publicName, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.downloader.metadata.publicName);
                 } else {
-                    return String.format(t, this.downloader.name, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.downloader.name);
                 }
             }
         },

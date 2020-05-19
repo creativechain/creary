@@ -522,15 +522,17 @@
     },
     "NOTIFICATIONS": {
         "TITLE" : "NOTIFICACIONES",
+        "BUTTON_MARK_READ": "Marcar todo como léido",
         "NO_NOTIFICATIONS": "No se han encontrado notificaciones nuevas.",
         "USER_FOLLOWING_YOU": "%s ha empezado aseguirte",
         "USER_UNFOLLOWING_YOU": "%s ha dejado de seguirte",
-        "USER_LIKES_YOUR_POST": "%s le gusta tu publicación <a href=\"%s\">%s</a>",
-        "USER_COMMENTED_YOUR_POST": "%s ha comentado en tu publicación <a href=\"%s\">%s</a>",
+        "USER_LIKES_YOUR_POST": "%s le gusta tu publicación (%s $)",
+        "USER_COMMENTED_YOUR_POST": "%s ha respondido en tu publicación",
+        "USER_COMMENTED_YOUR_COMMENT": "%s ha respondido a tu comentario",
         "USER_LIKES_YOUR_COMMENT": "%s le gusta tu comentario",
-        "USER_RECOMMENDED_YOUR_POST": "%s ha recomendado tu publicación <a href=\"%s\">%s</a>",
-        "USER_DOWNLOADED_YOUR_CONTENT": "%s ha descargado una copia de tu proyecto <a href=\"%s\">%s</a>",
-        "USER_MENTIONED_YOU": "%s te ha mencionado en <a href=\"%s\">%s</a>"
+        "USER_RECOMMENDED_YOUR_POST": "%s ha recomendado tu publicación",
+        "USER_DOWNLOADED_YOUR_CONTENT": "%s ha descargado una copia de tu proyecto",
+        "USER_MENTIONED_YOU": "%s te ha mencionado"
     },
     "LICENSE": {
         "FREECONTENT": "FreeContent (ContenidoLibre)",

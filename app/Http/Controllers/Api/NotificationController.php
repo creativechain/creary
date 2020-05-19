@@ -53,7 +53,7 @@ class NotificationController extends Controller
             ->first();
 
         if ($creaUser) {
-            return response(self::normalizeNotificationsReponse($creaUser->unreadNotifications));
+            return response(self::normalizeNotificationsReponse($creaUser->notifications));
         }
 
         return response(array());

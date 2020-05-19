@@ -4,6 +4,8 @@
 namespace App\Utils;
 
 
+use Illuminate\Support\Str;
+
 class CreaOperationsUtils
 {
     public static function parse($op) {
@@ -15,11 +17,24 @@ class CreaOperationsUtils
     public static function vote($op) {
         $data = self::parse($op);
         $data->to = $data->author;
+        $data->vote_value = CreaUtils::calculateVoteValue($data->voter, $data->weight);
+        return $data;
+    }
+
+    public static function mention($op) {
+        $data = self::parse($op);
+        if ($data->body) {
+            $results = array();
+            preg_match_all('(@[\w\.\d-]+)', $data->body, $results);
+            $data->mentions = $results[0];
+        }
+
         return $data;
     }
 
     public static function comment($op) {
-        $data = self::parse($op);
+        $data = self::mention($op);
+
         if ($data->parent_author) {
             //Only return notification data for comments in publications
             $data->to = $data->parent_author;

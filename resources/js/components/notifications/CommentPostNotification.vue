@@ -13,7 +13,7 @@
                         <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
                     </p>
                     <p v-if="commenter && discussion">
-                        <img src="/img/icons/comments.svg" alt="" class="icon-notification-list" />
+                        <img src="/img/icons/notifications/icon_comment_noti.svg" alt="" class="icon-notification-list" />
                         <span v-html="text"></span>
                         <!--<span>{{ data.body }}</span>-->
                     </p>
@@ -51,11 +51,11 @@
         },
         computed: {
             text: function () {
-                let t = this.lang.NOTIFICATIONS.USER_COMMENTED_YOUR_POST ;
+                let t = this.reply ? this.lang.NOTIFICATIONS.USER_COMMENTED_YOUR_COMMENT : this.lang.NOTIFICATIONS.USER_COMMENTED_YOUR_POST;
                 if (this.commenter.metadata && this.commenter.metadata.publicName) {
-                    return String.format(t, this.commenter.metadata.publicName, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.commenter.metadata.publicName);
                 } else {
-                    return String.format(t, this.commenter.name, this.discussion.permlink, this.discussion.title);
+                    return String.format(t, this.commenter.name);
                 }
             }
         },
@@ -64,6 +64,7 @@
                 commenter: null,
                 discussion: null,
                 ready: false,
+                reply: false,
                 lang: window.lang,
                 moment: window.moment,
             }
@@ -88,13 +89,22 @@
 
             });
 
-            getDiscussion(this.data.parent_author, this.data.parent_permlink, (err, discussion) => {
+            let onDiscussion = function (err, discussion) {
                 if (!err) {
+
+                    //Comment of comment
+                    if (discussion.parent_author && discussion.parent_permlink) {
+                        that.reply = true;
+                        return getDiscussion(discussion.parent_author,  discussion.parent_permlink, onDiscussion);
+                    }
+
                     that.discussion = discussion;
 
                     onReady();
                 }
-            })
+            };
+
+            getDiscussion(this.data.parent_author, this.data.parent_permlink, onDiscussion)
         },
         methods: {
             onFollow: function () {

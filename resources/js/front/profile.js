@@ -28,6 +28,7 @@ import LikePostNotification from "../components/notifications/LikePostNotificati
 import CommentPostNotification from "../components/notifications/CommentPostNotification";
 import RecommendPostNotification from "../components/notifications/RecommendPostNotification";
 import DownloadNotification from "../components/notifications/DownloadNotification";
+import MentionNotification from "../components/notifications/MentionNotification";
 
 (function () {
 
@@ -44,6 +45,7 @@ import DownloadNotification from "../components/notifications/DownloadNotificati
     Vue.component('comment-post-notification', CommentPostNotification);
     Vue.component('recommend-post-notification', RecommendPostNotification);
     Vue.component('download-notification', DownloadNotification);
+    Vue.component('mention-notification', MentionNotification);
 
     let tempNotifications = [];
     let profileContainer;
@@ -708,6 +710,7 @@ import DownloadNotification from "../components/notifications/DownloadNotificati
                             updateUserSession();
                         });
                     },
+                    markReadNotifications : markReadNotifications,
                     changePassword: function changePassword() {
                         let that = this;
 
@@ -1456,23 +1459,6 @@ import DownloadNotification from "../components/notifications/DownloadNotificati
         handleView(session, account);
     }
 
-    creaEvents.on('crea.session.login', handleSession);
-
-    creaEvents.on('crea.session.update', function (session, account) {
-        --lastPage;
-        handleSession(session, account);
-    });
-
-    creaEvents.on('crea.notifications.unread', function (notifications) {
-        if (profileContainer) {
-            profileContainer.notifications = notifications ? notifications : [];
-            profileContainer.$forceUpdate();
-        } else {
-            tempNotifications = notifications ? notifications : [];
-        }
-
-    });
-
     function getProfileDiscussions(callback) {
         if (!lastPage) {
             lastPage = 1;
@@ -1535,6 +1521,33 @@ import DownloadNotification from "../components/notifications/DownloadNotificati
             });
         });
     }
+
+    function markReadNotifications() {
+        let username = profileContainer.session.account.username;
+        let http = new HttpClient(`${window.location.protocol}//${window.location.host}/~api/notification/@${username}/markRead`);
+        http.when('done', function (data, textStatus) {
+            console.log(data, textStatus);
+            creaEvents.emit('crea.notifications.update', profileContainer.session);
+        });
+        http.get({});
+    }
+
+    creaEvents.on('crea.session.login', handleSession);
+
+    creaEvents.on('crea.session.update', function (session, account) {
+        --lastPage;
+        handleSession(session, account);
+    });
+
+    creaEvents.on('crea.notifications.all', function (notifications) {
+        if (profileContainer) {
+            profileContainer.notifications = notifications ? notifications : [];
+            profileContainer.$forceUpdate();
+        } else {
+            tempNotifications = notifications ? notifications : [];
+        }
+
+    });
 
     let onScrollCalling;
     creaEvents.on('crea.scroll.bottom', function () {

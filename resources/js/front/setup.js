@@ -90,10 +90,19 @@ import HttpClient from "../lib/http";
 
     function fetchUnreadNotifications(session, account) {
         if (session) {
-            let httpClient = new HttpClient(`/~api/notification/@${session.account.username}/unread`);
+            let httpClient = new HttpClient(`/~api/notification/@${session.account.username}`);
             httpClient.on('done' + httpClient.id, function (data) {
-                console.log('Notifications', JSON.parse(data));
-                creaEvents.emit('crea.notifications.unread', JSON.parse(data));
+                let notifications =  JSON.parse(data)
+                console.log('Notifications', notifications);
+                let unread = [];
+                notifications.forEach(function (n) {
+                    if (!n.read_at) {
+                        unread.push(n);
+                    }
+                });
+
+                creaEvents.emit('crea.notifications.all', notifications);
+                creaEvents.emit('crea.notifications.unread', unread);
             });
             httpClient.get({});
         }
