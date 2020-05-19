@@ -238,6 +238,13 @@
                                 <i class="stack-search"></i>
                             </div>
                         </li>
+                        <li v-if="session">
+                            <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                <span class="icon-notification"><i class="far fa-bell"></i></span>
+                                <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
+                            </a>
+                        </li>
                         <li class="list-inline-item">
                             <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
                                 <div class="user-avatar" >
