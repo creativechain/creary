@@ -1,6 +1,8 @@
-<div class="col-md-12">
+<div class="col-6">
     <h3 class="title-section-profile">{{ __('lang.NOTIFICATIONS.TITLE') }}</h3>
-    <div v-on:click="markReadNotifications" class="btn btn-primary active">
+</div>
+<div class="col-6 text-right">
+    <div v-on:click="markReadNotifications" class="btn btn--black">
         {{ __('lang.NOTIFICATIONS.BUTTON_MARK_READ') }}
     </div>
 </div>
