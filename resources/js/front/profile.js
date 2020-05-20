@@ -313,7 +313,11 @@ import MentionNotification from "../components/notifications/MentionNotification
                         checkedStoredPass: false,
                         error: null
                     },
-                    notifications: tempNotifications,
+                    notifications: {
+                        all: tempNotifications,
+                        unread: 0,
+                        page: 0
+                    },
                     nextDeEnergize: nextDeEnergize,
                     savingsWithdrawNote: savingsWithdrawNote,
                     simpleView: false //No used, but is needed
@@ -1541,12 +1545,17 @@ import MentionNotification from "../components/notifications/MentionNotification
 
     creaEvents.on('crea.notifications.all', function (notifications) {
         if (profileContainer) {
-            profileContainer.notifications = notifications ? notifications : [];
+            profileContainer.notifications.all = notifications ? notifications : [];
             profileContainer.$forceUpdate();
         } else {
             tempNotifications = notifications ? notifications : [];
         }
 
+    });
+
+    creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
+        profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+        profileContainer.$forceUpdate();
     });
 
     let onScrollCalling;
