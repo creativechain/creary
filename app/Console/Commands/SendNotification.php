@@ -77,6 +77,7 @@ class SendNotification extends Command
                             }
                         }
 
+                        $data->timestamp = $timestamp;
                         $notification = new CrearyNotification($data);
                         $cUser = CreaUser::query()
                             ->updateOrCreate(['name' => $data->to], ['name' => $data->to]);
