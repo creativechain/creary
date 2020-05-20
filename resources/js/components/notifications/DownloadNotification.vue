@@ -10,7 +10,7 @@
                 <div class="list-data-user">
                     <p v-if="downloader != null" style="display: block ruby">
                         <Username class="name color--link" v-bind:inline="1" v-bind:user="downloader.name" v-bind:name="downloader.metadata.publicName"></Username>
-                        <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
+                        <span>{{ toLocaleDate(data.created_at).fromNow() }}</span>
                     </p>
                     <p v-if="downloader && discussion">
                         <img src="/img/icons/notifications/icon_download_noti.svg" alt="" class="icon-notification-list" />
@@ -35,6 +35,7 @@
     import Avatar from "../Avatar";
     import Username from "../Username";
     import {getAccounts, getDiscussion} from "../../common/common";
+    import {toLocaleDate} from "../../lib/util";
 
     export default {
         components: {
@@ -97,6 +98,7 @@
             })
         },
         methods: {
+            toLocaleDate: toLocaleDate,
             onFollow: function () {
 
             }

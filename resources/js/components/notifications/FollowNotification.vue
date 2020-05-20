@@ -10,7 +10,7 @@
                 <div class="list-data-user">
                     <p v-if="follower != null" style="display: block ruby">
                         <Username class="name color--link" v-bind:inline="1" v-bind:user="follower.name" v-bind:name="follower.metadata.publicName"></Username>
-                        <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
+                        <span>{{ toLocaleDate(data.created_at).fromNow() }}</span>
                     </p>
                     <p v-if="follower">
                         <img src="/img/icons/notifications/icon_follow_noti.svg" alt="" class="icon-notification-list" />
@@ -36,6 +36,7 @@
     import Avatar from "../Avatar";
     import Username from "../Username";
     import {getAccounts} from "../../common/common";
+    import {toLocaleDate} from "../../lib/util";
 
     export default {
         components: {
@@ -88,6 +89,7 @@
             })
         },
         methods: {
+            toLocaleDate: toLocaleDate,
             onFollow: function () {
 
             }
