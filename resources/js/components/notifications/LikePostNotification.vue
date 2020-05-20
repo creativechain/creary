@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-3">
             <div v-if="discussion" class="row-img-notification">
-                <a v-bind:href="discussion.permlink">
+                <a v-bind:href="'/@' + discussion.link">
                     <div class="img-user-notification" v-lazy:background-image="discussion.metadata.featuredImage.url"></div>
                 </a>
             </div>
