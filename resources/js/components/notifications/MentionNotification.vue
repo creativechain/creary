@@ -1,6 +1,6 @@
 <template>
     <div class="row row-list-user">
-        <div class="col-md-9">
+        <div class="col-9 col-md-9">
             <div class="row-list-user-display">
                 <div v-if="mentioner != null" class="user-avatar">
                     <a v-bind:href="'/@' + mentioner.name">
@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <div class="list-data-user">
-                    <p v-if="mentioner != null" style="display: block ruby">
+                    <p v-if="mentioner != null" class="row-user-date" style="display: block ruby">
                         <Username class="name color--link" v-bind:inline="1" v-bind:user="mentioner.name" v-bind:name="mentioner.metadata.publicName"></Username>
                         <span>{{ moment(data.created_at, 'YYYY-MM-DD HH:mm:ss').fromNow() }}</span>
                     </p>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-3 col-md-3">
             <div v-if="discussion" class="row-img-notification">
                 <a v-bind:href="discussion.permlink">
                     <div class="img-user-notification" v-lazy:background-image="discussion.metadata.featuredImage.url"></div>

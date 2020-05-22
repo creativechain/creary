@@ -59,6 +59,9 @@ label {
     background-position: 50% 50%;
   }
 }
+.boxed {
+  padding: 0px 10px 10px;
+}
 .amount-price {
   span:nth-child(2) {
     margin-left: -2px;
@@ -325,9 +328,11 @@ a:hover {
   position: relative;
   line-height: 27px !important;
   color: #AAAAAA;
+  margin-right: 20px;
   .icon-notification {
     position: relative;
     top: 2px;
+    right: -8px;
   }
   .badge {
     background-color: #FF5666;
@@ -339,7 +344,7 @@ a:hover {
     color: white;
     position: relative;
     top: -10px;
-    left: -15px;
+    left: -5px;
   }
 }
 .notification-new:hover {
