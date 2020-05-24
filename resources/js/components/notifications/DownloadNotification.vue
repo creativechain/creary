@@ -1,6 +1,6 @@
 <template>
     <div class="row row-list-user">
-        <div class="col-md-9">
+        <div class="col-9 col-md-9">
             <div class="row-list-user-display">
                 <div v-if="downloader != null" class="user-avatar">
                     <a v-bind:href="'/@' + downloader.name">
@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <div class="list-data-user">
-                    <p v-if="downloader != null" style="display: block ruby">
+                    <p v-if="downloader != null" class="row-user-date" style="display: block ruby">
                         <Username class="name color--link" v-bind:inline="1" v-bind:user="downloader.name" v-bind:name="downloader.metadata.publicName"></Username>
                         <span>{{ toLocaleDate(data.created_at).fromNow() }}</span>
                     </p>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-3 col-md-3">
             <div v-if="discussion" class="row-img-notification">
                 <a v-bind:href="'/@' + discussion.link">
                     <div class="img-user-notification" v-lazy:background-image="discussion.metadata.featuredImage.url"></div>

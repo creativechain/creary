@@ -36,6 +36,14 @@
     width: 90%;
     margin: 0 5px;
     padding: 10px 0;
+    .row-user-date {
+      display: flex;
+      span {
+        position: relative;
+        top: 3px;
+        left: 10px;
+      }
+    }
   }
   .icon-notification-list {
     width: 16px;
@@ -45,6 +53,9 @@
     .img-empty {
       width: 300px;
     }
+  }
+  .boxed {
+    padding: 0px 10px 10px;
   }
 
 }

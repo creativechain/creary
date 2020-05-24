@@ -534,8 +534,13 @@
   .list-inline-item:not(:last-child) {
     margin-right: 0.5rem !important;
   }
-  .row-list-user {
-    padding-bottom: 10px;
+  #following-container, #follower-container {
+    .row-list-user {
+      padding-bottom: 10px;
+    }
+    .btn {
+      min-width: 100px;
+    }
   }
   .view-publish {
     .li-title-steps li:not(:last-child) {
@@ -642,6 +647,14 @@
       .alert__body {
         text-align: center;
       }
+    }
+  }
+  .boxed {
+    padding: 0px 10px 10px;
+  }
+  .view-notifications {
+    .row-list-user {
+      padding-bottom: 0;
     }
   }
 }

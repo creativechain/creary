@@ -1,6 +1,6 @@
 <template>
     <div class="row row-list-user align-items-center">
-        <div class="col-md-9">
+        <div class="col-9 col-md-9">
             <div class="row-list-user-display">
                 <div v-if="follower != null" class="user-avatar">
                     <a v-bind:href="'/@' + follower.name">
@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <div class="list-data-user">
-                    <p v-if="follower != null" style="display: block ruby">
+                    <p v-if="follower != null" class="row-user-date" style="display: block ruby">
                         <Username class="name color--link" v-bind:inline="1" v-bind:user="follower.name" v-bind:name="follower.metadata.publicName"></Username>
                         <span>{{ toLocaleDate(data.created_at).fromNow() }}</span>
                     </p>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 text-right">
+        <div class="col-3 col-md-3 text-right">
             <div v-if="follower != null && following != null" class="align-self-center">
                 <ButtonFollow v-on:follow="onFollow" v-bind:session="session"
                             v-bind:account="user"
