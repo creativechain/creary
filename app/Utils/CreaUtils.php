@@ -32,31 +32,30 @@ class CreaUtils
 
         $voterAccount = $voterState->accounts->{ $voter };
 
+        //dd($voterAccount);
+
         $vestingShares = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $voterAccount->vesting_shares));
         $receivedVestingShares = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $voterAccount->received_vesting_shares));
         $delegatedVestingShares = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $voterAccount->delegated_vesting_shares));
 
         $totalVests = $vestingShares + $receivedVestingShares - $delegatedVestingShares;
-        $totalVests *= 1000000;
+        $finalVests = $totalVests * 1e6;
 
-        $recentClaims = intval($rewardFund->recent_claims);
+        //dd($vestingShares, $receivedVestingShares, $delegatedVestingShares, $totalVests, $finalVests);
 
-        $x1 = $totalVests / $recentClaims;
+        $energy = ($voterAccount->voting_energy * $voteWeight / 10000) / 50;
+        $rshares = $energy * $finalVests / 10000;
 
         $rewardBalance = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $rewardFund->reward_balance));
-
-        $x2 = $x1 * $rewardBalance;
 
         $base = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $voterState->feed_price->base));
         $quote = floatval(StringUtils::evalRegexp('/(\d+\.\d+)/m', $voterState->feed_price->quote));
         $price = $base / $quote;
 
-        $x3 = $x2 * $price;
 
-        $maxVoteValue = $x3 * 0.02;
+        $estimate = $rshares / $rewardFund->recent_claims * $rewardBalance * $price;
 
-        $voteWeight = $voteWeight / 10000;
-        return $maxVoteValue * $voteWeight;
+        return $estimate;
 
     }
 }

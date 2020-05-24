@@ -15,6 +15,6 @@ class StringUtils
     public static function evalRegexp($regex, $str) {
         $matches = array();
         preg_match($regex, $str, $matches);
-        return $matches;
+        return $matches[0];
     }
 }

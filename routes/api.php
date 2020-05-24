@@ -32,3 +32,5 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
+/*Route::get('/votes/{creaUser}', 'CrearyController@testVotes')
+    ->where('creaUser', '^([\w\.\d-]+)$');*/
