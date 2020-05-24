@@ -45,6 +45,20 @@ class NotificationController extends Controller
      */
     public function index(Request $request, $creaUser) {
 
+        $validations = [
+            'page' => 'somentimes|min:1'
+        ];
+
+        $validatedData = Validator::make($request->all(), $validations);
+
+        if ($validatedData->fails()) {
+            return response()
+                ->json([
+                    'status' => 'error',
+                    'message' => $validatedData->errors()->first(),
+                    'error' => 'invalid_parameter'
+                ], 400);
+        }
         /**
          * @var CreaUser $creaUser
          */
@@ -53,7 +67,10 @@ class NotificationController extends Controller
             ->first();
 
         if ($creaUser) {
-            return response(self::normalizeNotificationsReponse($creaUser->notifications));
+            $n = $creaUser->notifications()
+                ->paginate(20);
+
+            return response(self::normalizeNotificationsReponse($n));
         }
 
         return response(array());
