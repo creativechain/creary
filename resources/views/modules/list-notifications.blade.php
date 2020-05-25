@@ -1,3 +1,19 @@
+<div class="w-100 padding-b-10 col-md-12" v-bind:class="{ hidden: !(session && state.user.name === session.account.username && hasRewardBalance()) }">
+    <div class="alert bg--primary">
+        <div class="alert__body">
+            <span>{{ __('lang.WALLET.PENDING_REWARDS') }}:  @{{ state.user.reward_crea_balance }},
+                @{{ state.user.reward_cbd_balance }} {{ __('lang.COMMON.AND') }}
+                @{{ getCGYReward() }}
+            </span>
+            <span class="row-liquid">
+                <a href="#" class="btn btn--sm btn--secondary" v-on:click="claimRewards">
+                    <span class="btn__text color-secondary font-weight-bold">{{ __('lang.BUTTON.CLAIM_REWARDS') }}</span>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
 <div class="col-6">
     <h3 class="title-section-profile">{{ __('lang.NOTIFICATIONS.TITLE') }}</h3>
 </div>
@@ -6,6 +22,7 @@
         {{ __('lang.NOTIFICATIONS.BUTTON_MARK_READ') }}
     </div>
 </div>
+
 <div class="col-md-12">
     <div class="boxed boxed--border row-list">
         <template v-for="n in notifications.all">

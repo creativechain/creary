@@ -2,11 +2,11 @@
     "CODE": "es",
     "COMMON": {
         "OR_CAP": "O",
-        "YES": "Yes",
+        "YES": "Si",
         "NO": "No",
-        "AND": "and",
-        "FOR": "for",
-        "MORE": "more"
+        "AND": "y",
+        "FOR": "por",
+        "MORE": "Más"
     },
     "ERROR": {
         "1": {

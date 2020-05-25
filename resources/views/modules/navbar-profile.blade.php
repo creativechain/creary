@@ -1,9 +1,10 @@
 <div class="col-md-12 text-center menu-secondary-profile">
     <ul class="list-inline">
         <li class="list-inline-item">
-            <a v-bind:href="'/@' + state.user.name + '/projects'" v-on:click="navigateTo($event, 'projects')" v-bind:class="{ active: navbar.section === 'projects' }">{{ __('lang.PROFILE.SECONDARY_MENU_PROJECTS') }}</a>
+            <a v-bind:href="'/@' + state.user.name + '/projects'" v-on:click="navigateTo($event, 'projects')" v-bind:class="{ active: navbar.section === 'projects' }">
+                {{ __('lang.PROFILE.SECONDARY_MENU_PROJECTS') }}
+            </a>
         </li>
-
 
         <li class="dropdown list-inline-item">
             <span class="dropdown__trigger">{{ __('lang.PROFILE.SECONDARY_MENU_REWARDS') }}</span>
@@ -29,8 +30,22 @@
             </div>
         </li>
 
+        <li v-if="isUserProfile()" class="list-inline-item">
+            <a v-bind:href="'/@' + state.user.name + '/notifications'" v-on:click="navigateTo($event, 'notifications')" v-bind:class="{ active: navbar.section === 'notifications' }">
+                {{ __('lang.PROFILE.SECONDARY_MENU_NOTIFICATIONS') }}
+            </a>
+        </li>
 
-        <li v-if="isUserProfile()" class="list-inline-item"><a v-bind:href="'/@' + state.user.name + '/blocked'" v-on:click="navigateTo($event, 'blocked')" v-bind:class="{ active: navbar.section === 'blocked' }">{{ __('lang.PROFILE.SECONDARY_MENU_BLOCKED') }}</a></li>
-        <li class="list-inline-item"><a v-bind:href="'/@' + state.user.name + '/wallet'" v-on:click="navigateTo($event, 'wallet')" v-bind:class="{ active: navbar.section === 'wallet' }">{{ __('lang.PROFILE.SECONDARY_MENU_WALLET') }}</a></li>
+        <li v-if="isUserProfile()" class="list-inline-item">
+            <a v-bind:href="'/@' + state.user.name + '/blocked'" v-on:click="navigateTo($event, 'blocked')" v-bind:class="{ active: navbar.section === 'blocked' }">
+                {{ __('lang.PROFILE.SECONDARY_MENU_BLOCKED') }}
+            </a>
+        </li>
+
+        <li class="list-inline-item">
+            <a v-bind:href="'/@' + state.user.name + '/wallet'" v-on:click="navigateTo($event, 'wallet')" v-bind:class="{ active: navbar.section === 'wallet' }">
+                {{ __('lang.PROFILE.SECONDARY_MENU_WALLET') }}
+            </a>
+        </li>
     </ul>
 </div>
