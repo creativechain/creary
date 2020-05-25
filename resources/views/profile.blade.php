@@ -42,7 +42,7 @@
                                             </p>
                                         </template>
                                     </div>
-                                    <div v-show="session && account.user.name === state.user.name && navbar.section === 'notifications'" class="row view-notifications order-0 order-md-1" >
+                                    <div v-show="session && account.user.name === state.user.name && navbar.section === 'notifications'" class="row view-notifications order-0 order-md-1 view-wallet" >
                                         @include('modules.list-notifications')
                                     </div>
                                     <div v-show="navbar.section === 'author-rewards'" >
