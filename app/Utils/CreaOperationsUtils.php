@@ -73,6 +73,11 @@ class CreaOperationsUtils
                 $data->following = $json[1]->following;
                 $data->what = $json[1]->what;
                 $data->to = $data->following;
+                if (count($data->what) <= 0) {
+                    //Unfollow operation, no notify
+                    return null;
+                }
+                break;
         }
 
         return $data;
