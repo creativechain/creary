@@ -424,7 +424,7 @@
             <div class="container pos-vertical-center content-slide-welcome ">
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
-                        <div class="welcome-content">
+                        <div class="welcome-content form-terms">
                             <div class="row">
                                 <div class="col-lg-10 offset-lg-1 col-md-12 ">
                                     <img class="logo-welcome" src="{{ asset('img/welcome/logo-welcome.png') }}" alt="" />
@@ -441,13 +441,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-10 offset-lg-1 col-md-12 col-terms">
-                                    <div class="input-checkbox">
-                                        <input id="welcome-check-terms" v-model="checkedTerms" type="checkbox" />
-                                        <label for="welcome-check-terms"></label>
-                                    </div>
-                                    <span v-bind:class="{ 'error-color-form': !checkedTerms }">
-                                    <a href="/terms_and_conditions" target="_blank">{{ __('lang.WELCOME.SLIDE8_CHECKBOX1') }}</a>
-                                </span>
+                                   <div class="row-checkbox-term">
+                                       <div class="input-checkbox">
+                                           <input id="welcome-check-terms" v-model="checkedTerms" type="checkbox" />
+                                           <label for="welcome-check-terms"></label>
+                                       </div>
+                                       <span v-bind:class="{ 'error-color-form': !checkedTerms }"></span>
+                                        <a href="/terms_and_conditions" target="_blank">{{ __('lang.WELCOME.SLIDE8_CHECKBOX1') }}</a>
+                                   </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -456,9 +457,8 @@
                                         <input v-model="checkedPolicy" id="welcome-check-policy" type="checkbox" name="agree_policy" />
                                         <label for="welcome-check-policy"></label>
                                     </div>
-                                    <span v-bind:class="{ 'error-color-form': !checkedPolicy }">
+                                    <span v-bind:class="{ 'error-color-form': !checkedPolicy }"></span>
                                     <a href="/privacy_policy" target="_blank">{{ __('lang.WELCOME.SLIDE8_CHECKBOX2') }}</a>
-                                </span>
                                 </div>
                             </div>
                             <div class="row">
