@@ -1,4 +1,4 @@
-<div class="w-100 padding-b-10 col-md-12" v-bind:class="{ hidden: !(session && state.user.name === session.account.username && hasRewardBalance()) }">
+<div class="w-100 padding-b-10" v-bind:class="{ hidden: !(session && state.user.name === session.account.username && hasRewardBalance()) }">
     <div class="alert bg--primary">
         <div class="alert__body">
             <span>{{ __('lang.WALLET.PENDING_REWARDS') }}:  @{{ state.user.reward_crea_balance }},
