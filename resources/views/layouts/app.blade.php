@@ -341,6 +341,13 @@
                                 </div>
                             </div>
                         </li>
+
+
+                        <li v-pre class="icon-menu-navbar-right">
+                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                <i class="stack-menu"></i>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

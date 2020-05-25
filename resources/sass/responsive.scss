@@ -139,9 +139,7 @@
   .social-list {
     display: flex;
     text-align: center;
-    width: 100px;
     margin: 0 auto !important;
-    min-width: 100px;
     li {
       width: auto;
       text-align: center;
@@ -244,6 +242,18 @@
       font-weight: normal;
       color: $color-white;
       text-transform: none;
+    }
+  }
+  .view-notifications {
+    .row-list-user {
+      .btn {
+        min-width: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .user-avatar {
+        margin: 15px auto;
+      }
     }
   }
 }
