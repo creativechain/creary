@@ -88,15 +88,15 @@ import Avatar from "../components/Avatar";
                     unreadNotifications: 0
                 },
                 mounted: function mounted() {
-                    this.applyRightMenuEvents($);
+                    //this.applyRightMenuEvents($);
                     $('#modal-login').parent().removeAttr('modal-attached');
                 },
                 methods: {
                     applyRightMenuEvents: function applyRightMenuEvents($) {
-                        /*                        mr.notifications.documentReady($);
-                                                mr.tabs.documentReady($);
-                                                mr.toggleClass.documentReady($);
-                                                console.log('applying menus');*/
+                        mr.notifications.documentReady($);
+                        mr.tabs.documentReady($);
+                        mr.toggleClass.documentReady($);
+                        console.log('applying menus');
                     },
                     closeLogin: function closeLogin() {
                         hideModal('#modal-login');
@@ -342,6 +342,13 @@ import Avatar from "../components/Avatar";
         if (window.mqtt_enable) {
             prepareNotifClient(session);
         }
+
+        //Enable toggle button
+/*        setTimeout(function () {
+            console.log('Activating right menu...');
+            mr.toggleClass.documentReady($);
+            mr.toggleClass.documentReady($);
+        }, 1e3);*/
     });
 
     creaEvents.on('crea.session.logout', function () {
