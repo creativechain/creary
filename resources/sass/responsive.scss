@@ -256,6 +256,9 @@
       }
     }
   }
+  .view-profile .view-notifications .row-img-notification {
+    top: 9px !important;
+  }
 }
 
 @media (max-width: 640px) {
@@ -575,6 +578,22 @@
     padding-top: 30px !important;
     padding-bottom: 50px !important;
   }
+  .view-notifications {
+    .list-data-user {
+      .row-user-date {
+        display: flex !important;
+        span {
+          position: relative;
+          top: 7px;
+          left: 10px;
+        }
+      }
+    }
+
+    .btn {
+      min-width: 100px;
+    }
+  }
   .view-profile {
     .ul-rewards {
       li {
@@ -586,8 +605,15 @@
         position: absolute;
       }
     }
-
+    .view-notifications {
+      .row-img-notification {
+        top: 0;
+      }
+    }
     .view-wallet {
+      .row-list-user {
+        padding: 5px 0 5px 0;
+      }
       .tabs-container-primary {
         .tabs-primary {
           display: flex;
@@ -598,7 +624,7 @@
 
       }
       .row-list-user {
-        padding-bottom: 0;
+        padding: 5px 0 5px 0;
         .list-data-user {
           padding: 3px;
           line-height: 13px;
@@ -661,11 +687,6 @@
   }
   .boxed {
     padding: 0px 10px 10px;
-  }
-  .view-notifications {
-    .row-list-user {
-      padding-bottom: 0;
-    }
   }
 }
 

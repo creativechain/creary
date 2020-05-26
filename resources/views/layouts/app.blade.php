@@ -496,7 +496,7 @@
                             </li>
 
                             {{--Hide notifications--}}
-                            <li v-if="session">
+                            <li v-if="session" class="d-none d-md-inline-block">
                                 <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
                                     <span class="icon-notification"><i class="far fa-bell"></i></span>
                                     <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
