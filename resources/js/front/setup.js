@@ -108,19 +108,23 @@ import HttpClient from "../lib/http";
         }
     }
 
+    function preSetup(session, account) {
+        updateCookies(session, account);
+        fetchUnreadNotifications(session, account);
+    }
+
     creaEvents.on('crea.notifications.update', function (session, account) {
         fetchUnreadNotifications(session, account);
     });
 
     creaEvents.on('crea.session.login', function (session, account) {
         globalLoading.show = false;
-        updateCookies(session, account);
-        fetchUnreadNotifications(session, account);
+        preSetup(session, account);
     });
 
-    creaEvents.on('crea.session.update', updateCookies);
+    creaEvents.on('crea.session.update', preSetup);
 
-    creaEvents.on('crea.session.logout', updateCookies);
+    creaEvents.on('crea.session.logout', preSetup);
 
     creaEvents.on('crea.modal.ready', function (remove) {
         setTimeout(function () {

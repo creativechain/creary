@@ -1554,8 +1554,8 @@ import MentionNotification from "../components/notifications/MentionNotification
     });
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
-        profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
-        profileContainer.$forceUpdate();
+        //profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+        //profileContainer.$forceUpdate();
     });
 
     let onScrollCalling;

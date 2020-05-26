@@ -23,7 +23,7 @@
             <div v-if="follower != null && following != null" class="align-self-center">
                 <ButtonFollow v-on:follow="onFollow" v-bind:session="session"
                             v-bind:account="user"
-                            v-bind:followuser="following.name" >
+                            v-bind:followuser="follower.name" >
 
                 </ButtonFollow>
             </div>
@@ -90,8 +90,8 @@
         },
         methods: {
             toLocaleDate: toLocaleDate,
-            onFollow: function () {
-
+            onFollow: function (error, result) {
+                this.$emit('follow', error, result)
             }
         }
     }

@@ -1,7 +1,8 @@
 <follow-notification v-if="n.type === 'follow'"
                      v-bind:session="session"
                      v-bind:user="account.user"
-                     v-bind:data="n">
+                     v-bind:data="n"
+                     v-on:follow="onFollow">
 
 </follow-notification>
 
