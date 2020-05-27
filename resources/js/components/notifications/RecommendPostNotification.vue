@@ -52,12 +52,12 @@
         },
         computed: {
             text: function () {
-                let t = this.lang.NOTIFICATIONS.USER_RECOMMENDED_YOUR_POST ;
-                if (this.recommender.metadata && this.recommender.metadata.publicName) {
+                return this.lang.NOTIFICATIONS.USER_RECOMMENDED_YOUR_POST ;
+                /*if (this.recommender.metadata && this.recommender.metadata.publicName) {
                     return String.format(t, this.recommender.metadata.publicName);
                 } else {
                     return String.format(t, this.recommender.name);
-                }
+                }*/
             }
         },
         data: function () {

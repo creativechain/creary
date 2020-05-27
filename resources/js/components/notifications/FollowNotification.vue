@@ -53,12 +53,12 @@
         },
         computed: {
             text: function () {
-                let t = this.data.what.length > 0 ? this.lang.NOTIFICATIONS.USER_FOLLOWING_YOU : this.lang.NOTIFICATIONS.USER_UNFOLLOWING_YOU;
-                if (this.follower.metadata && this.follower.metadata.publicName) {
+                return this.data.what.length > 0 ? this.lang.NOTIFICATIONS.USER_FOLLOWING_YOU : this.lang.NOTIFICATIONS.USER_UNFOLLOWING_YOU;
+                /*if (this.follower.metadata && this.follower.metadata.publicName) {
                     return String.format(t, this.follower.metadata.publicName);
                 } else {
                     return String.format(t, this.follower.name);
-                }
+                }*/
             }
         },
         data: function () {

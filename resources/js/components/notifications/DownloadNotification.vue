@@ -52,12 +52,12 @@
         },
         computed: {
             text: function () {
-                let t = this.lang.NOTIFICATIONS.USER_DOWNLOADED_YOUR_CONTENT ;
-                if (this.downloader.metadata && this.downloader.metadata.publicName) {
+                return this.lang.NOTIFICATIONS.USER_DOWNLOADED_YOUR_CONTENT ;
+                /*if (this.downloader.metadata && this.downloader.metadata.publicName) {
                     return String.format(t, this.downloader.metadata.publicName);
                 } else {
                     return String.format(t, this.downloader.name);
-                }
+                }*/
             }
         },
         data: function () {

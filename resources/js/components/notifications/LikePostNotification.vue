@@ -55,9 +55,9 @@
                 let voteValue = Asset.parseString(`${this.data.vote_value} CBD`);
                 let t = this.lang.NOTIFICATIONS.USER_LIKES_YOUR_POST ;
                 if (this.voter.metadata && this.voter.metadata.publicName) {
-                    return String.format(t, this.voter.metadata.publicName, voteValue.toPlainString());
+                    return String.format(t, /*this.voter.metadata.publicName,*/ voteValue.toPlainString());
                 } else {
-                    return String.format(t, this.voter.name, voteValue.toPlainString());
+                    return String.format(t, /*this.voter.name,*/ voteValue.toPlainString());
                 }
             }
         },
