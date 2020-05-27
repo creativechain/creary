@@ -47,7 +47,7 @@ import MentionNotification from "../components/notifications/MentionNotification
     Vue.component('download-notification', DownloadNotification);
     Vue.component('mention-notification', MentionNotification);
 
-    let tempNotifications = [];
+    let tempNotifications = { all: [], unread: 0, page: 0};
     let profileContainer;
     let rewardsContainer = {};
     let blockedContainer;
@@ -313,11 +313,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                         checkedStoredPass: false,
                         error: null
                     },
-                    notifications: {
-                        all: tempNotifications,
-                        unread: 0,
-                        page: 0
-                    },
+                    notifications: tempNotifications,
                     nextDeEnergize: nextDeEnergize,
                     savingsWithdrawNote: savingsWithdrawNote,
                     simpleView: false //No used, but is needed
@@ -1548,14 +1544,18 @@ import MentionNotification from "../components/notifications/MentionNotification
             profileContainer.notifications.all = notifications ? notifications : [];
             profileContainer.$forceUpdate();
         } else {
-            tempNotifications = notifications ? notifications : [];
+            tempNotifications.all = notifications ? notifications : [];
         }
 
     });
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
-        //profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
-        //profileContainer.$forceUpdate();
+        if (profileContainer) {
+            profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+            profileContainer.$forceUpdate();
+        } else {
+            tempNotifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+        }
     });
 
     let onScrollCalling;
