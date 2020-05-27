@@ -49,6 +49,7 @@ import MentionNotification from "../components/notifications/MentionNotification
 
     let tempNotifications = { all: [], unread: 0, page: 0};
     let profileContainer;
+    let hideProfileInfoClass = '';
     let rewardsContainer = {};
     let blockedContainer;
     let followingContainer;
@@ -293,6 +294,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                     },
                     profile: state.user.metadata,
                     walletTab: walletSection,
+                    hideProfileInfoClass: hideProfileInfoClass,
                     history: {
                         data: [],
                         accounts: {}
@@ -667,6 +669,17 @@ import MentionNotification from "../components/notifications/MentionNotification
                     navigateTo: function navigateTo(event, tab) {
                         cancelEventPropagation(event);
                         updateUrl('/@' + this.state.user.name + '/' + tab);
+
+                        //For check if need to hide profile info
+                        switch (tab) {
+                            case 'notifications':
+                            case 'wallet':
+                                this.hideProfileInfoClass = 'hidden-xs';
+                                break;
+                            default:
+                                this.hideProfileInfoClass = '';
+                        }
+
                         this.navbar.section = tab;
                     },
                     isUserProfile: function isUserProfile() {
@@ -1115,6 +1128,13 @@ import MentionNotification from "../components/notifications/MentionNotification
             case 'permissions':
                 walletNav = nav;
                 nav = 'wallet';
+        }
+
+        //For check if need to hide profile info
+        switch (nav) {
+            case 'notifications':
+            case 'wallet':
+                hideProfileInfoClass = 'hidden-xs';
         }
 
         nav = nav.toLowerCase();
