@@ -8,7 +8,9 @@ use App\Notifications\CrearyNotification;
 use App\Utils\CreaOperationsUtils;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class SendNotification extends Command
 {
@@ -57,10 +59,28 @@ class SendNotification extends Command
 
                 foreach ($ops as $op) {
                     $data = CreaOperationsUtils::{$op[0]}($op);
-                    $notification = new CrearyNotification($data);
-                    if ($notification) {
+
+                    if ($data) {
+                        if ($op[0] === 'comment') {
+                            $dataCloned = clone $data;
+                            $dataCloned->type = 'mention';
+
+                            foreach ($dataCloned->mentions as $userMentioned) {
+                                $userMentioned = Str::replaceFirst('@', '', $userMentioned);
+                                $dataCloned->to = $userMentioned;
+                                $notification = new CrearyNotification($dataCloned);
+                                $cUser = CreaUser::query()
+                                    ->updateOrCreate(['name' => $userMentioned], ['name' => $userMentioned]);
+
+                                $cUser->save();
+                                Notification::send($cUser, $notification);
+                            }
+                        }
+
+                        $data->timestamp = $timestamp;
+                        $notification = new CrearyNotification($data);
                         $cUser = CreaUser::query()
-                            ->updateOrCreate(['name' => $data->to]);
+                            ->updateOrCreate(['name' => $data->to], ['name' => $data->to]);
 
                         $cUser->save();
                         Notification::send($cUser, $notification);

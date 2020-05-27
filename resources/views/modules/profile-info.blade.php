@@ -1,4 +1,4 @@
-<div id="wallet-profile" class="boxed boxed--sm boxed--border menu-profile-user">
+<div id="wallet-profile" class="boxed boxed--sm boxed--border menu-profile-user" v-bind:class="hideProfileInfoClass">
     <div class="text-block text-center">
         <div class="user-avatar">
             <avatar v-bind:account="state.user"></avatar>

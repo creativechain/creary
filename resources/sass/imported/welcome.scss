@@ -110,6 +110,12 @@
     .content-slide-welcome {
       line-height: 5;
     }
+    .form-terms {
+      .row-checkbox-term {
+        line-height: 30px;
+        margin: 30px 0;
+      }
+    }
   }
 
   @media (min-width: 576px) and (max-width: 768px) {

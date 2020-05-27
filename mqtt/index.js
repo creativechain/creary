@@ -1,9 +1,7 @@
 const crea = require('@creativechain-fdn/crea-js');
 const aedes = require('aedes');
 const dotenv = require('dotenv');
-const http = require('http');
-const net = require('net');
-const ws = require('websocket-stream');
+
 
 //Load .env file
 dotenv.config();
@@ -112,15 +110,46 @@ mqttServer.on('closed', function (client) {
     console.log('Server closed', client);
 });
 
+const net = require('net');
+const ws = require('websocket-stream');
+
 const netServer = net.createServer(mqttServer.handle);
-const httpServer = http.createServer();
-ws.createServer({ server: httpServer }, mqttServer.handle);
 
-netServer.listen(port, function () {
-    console.log('MQTT Server listening on port', port);
+if (process.env.MQTT_TLS_ENABLE) {
+    console.log('Enabling security...');
 
-    httpServer.listen(wsPort, function () {
-        console.log('WS Server listening on port', wsPort)
+    const fs = require('fs');
+    const https = require('https');
+
+    const options = {
+        key: fs.readFileSync(process.env.MQTT_KEY_FILE),
+        cert: fs.readFileSync(process.env.MQTT_CERT_FILE)
+    };
+
+    let httpsServer = https.createServer(options);
+    ws.createServer( { server: httpsServer}, mqttServer.handle);
+
+    netServer.listen(port, function () {
+        console.log('MQTT Server listening on port', port);
+
+        httpsServer.listen(wsPort, function () {
+            console.log('WS Server listening on port', wsPort);
+        })
     });
-});
+
+} else {
+    const http = require('http');
+
+    const httpServer = http.createServer();
+    ws.createServer({ server: httpServer }, mqttServer.handle);
+
+    netServer.listen(port, function () {
+        console.log('MQTT Server listening on port', port);
+
+        httpServer.listen(wsPort, function () {
+            console.log('WS Server listening on port', wsPort);
+        });
+    });
+}
+
 

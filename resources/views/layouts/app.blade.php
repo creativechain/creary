@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ __('lang.CODE') }}">
 <head>
     <meta charset="utf-8">
@@ -81,8 +81,10 @@
     </script>
 
     <script>
+        window.mqtt_enable = {!! env('MQTT_ENABLE') !!};
+        window.wsPort = {!! env('MQTT_WS_PORT') !!};
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
-        window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/es/lang.json') !!};
+        window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/' . \Illuminate\Support\Facades\App::getLocale() . '/lang.json') !!};
     </script>
 
     {{--PRELOAD SCRIPTS - SEO IMPROVEMENTS--}}
@@ -236,11 +238,24 @@
                                 <i class="stack-search"></i>
                             </div>
                         </li>
+                        <li v-if="session">
+                            <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                <span class="icon-notification"><i class="far fa-bell"></i></span>
+                                <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
+                            </a>
+                        </li>
                         <li class="list-inline-item">
                             <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
                                 <div class="user-avatar" >
                                     <avatar v-bind:account="user"></avatar>
                                 </div>
+                            </div>
+                        </li>
+
+                        <li v-pre class="icon-menu-navbar-right">
+                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                <i class="stack-menu"></i>
                             </div>
                         </li>
                     </ul>
@@ -332,6 +347,13 @@
                                 </div>
                             </div>
                         </li>
+
+
+                        <li v-pre class="icon-menu-navbar-right">
+                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                <i class="stack-menu"></i>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -371,6 +393,7 @@
                             <!--- Links Mobil --->
 
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/projects'">{{ __('lang.PROFILE_MENU.PROJECTS') }}</a></li>
+                            <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/notifications'">{{ __('lang.PROFILE_MENU.NOTIFICATIONS') }}</a></li>
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/wallet'">{{ __('lang.PROFILE_MENU.WALLET') }}</a></li>
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/passwords'">{{ __('lang.PROFILE_MENU.CHANGE_PASSWORD') }}</a></li>
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/settings'">{{ __('lang.PROFILE_MENU.SETTINGS') }}</a></li>
@@ -463,7 +486,6 @@
                         </ul>
                     </div>
 
-
                     <div class="bar__module float-lg-right float-md-right">
                         <ul class="menu-horizontal text-left">
                             <li class="hidden-xs">
@@ -474,12 +496,13 @@
                             </li>
 
                             {{--Hide notifications--}}
-                            {{--<li>
-                                <a href="/profile.php?nav=notifications" class="navbar-notification icons-navbar" style="display: inline-grid;">
-                                    <i class="far fa-bell"></i>
-                                    <i class="fas fa-circle">5</i>
+                            <li v-if="session" class="d-none d-md-inline-block">
+                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                    <span class="icon-notification"><i class="far fa-bell"></i></span>
+                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
                                 </a>
-                            </li>--}}
+                            </li>
 
                             <li v-if="session">
                                 <!-- mobile-->
@@ -534,6 +557,7 @@
                                                 <div class="col-md-12 col-lg-8 dropdown__content">
                                                     <ul class="menu-vertical">
                                                         <li><a v-bind:href="'/@' + session.account.username + '/projects'">{{ __('lang.PROFILE_MENU.PROJECTS') }}</a></li>
+                                                        <li class="separate"><a v-bind:href="'/@' + session.account.username + '/notifications'">{{ __('lang.PROFILE_MENU.NOTIFICATIONS') }}</a></li>
                                                         <li class="separate"><a v-bind:href="'/@' + session.account.username + '/wallet'">{{ __('lang.PROFILE_MENU.WALLET') }}</a></li>
                                                         <li class="separate"><a v-bind:href="'/@' + session.account.username + '/passwords'">{{ __('lang.PROFILE_MENU.CHANGE_PASSWORD') }}</a></li>
                                                         <li class="separate"><a v-bind:href="'/@' + session.account.username + '/settings'">{{ __('lang.PROFILE_MENU.SETTINGS') }}</a></li>

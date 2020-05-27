@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BlockchainController extends Controller
 {
@@ -44,5 +45,11 @@ class BlockchainController extends Controller
             $totalSupply = str_replace(' CREA', '', $totalSupply);
             return response($totalSupply, 200, ['Content-Type' => 'text/plain']);
         }
+    }
+
+    public function markRead(Request $request, $creaUser) {
+        Gate::authorize('crea-notification', $creaUser);
+
+        return response('yeah');
     }
 }

@@ -1,70 +1,36 @@
-<div class="col-md-12">
-    <h3 class="title-section-profile">Notifications</h3>
+<div class="w-100 padding-b-10" v-bind:class="{ hidden: !(session && state.user.name === session.account.username && hasRewardBalance()) }">
+    <div class="alert bg--primary">
+        <div class="alert__body">
+            <span>{{ __('lang.WALLET.PENDING_REWARDS') }}:  @{{ state.user.reward_crea_balance }},
+                @{{ state.user.reward_cbd_balance }} {{ __('lang.COMMON.AND') }}
+                @{{ getCGYReward() }}
+            </span>
+            <span class="row-liquid">
+                <a href="#" class="btn btn--sm btn--secondary" v-on:click="claimRewards">
+                    <span class="btn__text color-secondary font-weight-bold">{{ __('lang.BUTTON.CLAIM_REWARDS') }}</span>
+                </a>
+            </span>
+        </div>
+    </div>
 </div>
-<div class="col-md-12">
-    <div class="boxed boxed--border row-list">
 
-        <div class="row row-list-user">
-            <div class="col-md-9">
-                <div class="row-list-user-display">
-                    <div class="user-avatar">
-                        <div class="img-user-avatar"></div>
-                    </div>
-                    <div class="list-data-user">
-                        <p>Comando C <span>4 days ago</span></p>
-                        <p>
-                            <img src="../img/icons/comments.svg" alt="" class="icon-notification-list" />
-                            <span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="row-img-notification">
-                    <div class="img-user-notification" style="background-image: url('/img/crea-web/publish/demo-vertical.jpg'); "></div>
-                </div>
+<div class="w-100">
+    <div class="row">
+        <div class="col-6">
+            <h3 class="title-section-profile">{{ __('lang.NOTIFICATIONS.TITLE') }}</h3>
+        </div>
+        <div v-if="notifications.unread" class="col-6 text-right">
+            <div v-on:click="markReadNotifications" class="btn btn--black">
+                {{ __('lang.NOTIFICATIONS.BUTTON_MARK_READ') }}
             </div>
         </div>
-
-        <div class="row row-list-user">
-            <div class="col-md-9">
-                <div class="row-list-user-display">
-                    <div class="user-avatar">
-                        <div class="img-user-avatar"></div>
-                    </div>
-                    <div class="list-data-user">
-                        <p>Comando C <span>4 days ago</span></p>
-                        <p><img src="../img/icons/like_ACT_RED.svg" alt="" class="icon-notification-list" /><span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="row-img-notification">
-                    <div class="img-user-notification" style="background-image: url('/img/crea-web/publish/demo-vertical.jpg'); "></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row row-list-user align-items-center">
-            <div class="col-md-9">
-                <div class="row-list-user-display">
-                    <div class="user-avatar">
-                        <div class="img-user-avatar"></div>
-                    </div>
-                    <div class="list-data-user">
-                        <p>Comando C <span>4 days ago</span></p>
-                        <p><img src="../img/icons/like_ACT_RED.svg" alt="" class="icon-notification-list" /><span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 text-right">
-                <div class="align-self-center">
-                    <a href="/publish.php" class="btn btn--sm btn--primary">
-                        <span class="btn__text">Follow</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+    </div>
+    <div v-if="notifications.all.length > 0" class="boxed boxed--border row-list">
+        <template v-for="n in notifications.all">
+            @include('modules.notification-row')
+        </template>
+    </div>
+    <div v-else>
+        {{ __('lang.NOTIFICATIONS.NO_NOTIFICATIONS') }}
     </div>
 </div>

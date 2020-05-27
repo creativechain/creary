@@ -103,4 +103,26 @@ class CrearyClient
         return $response->result;
     }
 
+    /**
+     * @param string $accountName
+     * @return mixed
+     */
+    public function getAccountState(string $accountName) {
+        $rpcData = $this->buildRpcData('condenser_api.get_state', array( "@$accountName"));
+
+        $response = $this->callRequest($rpcData);
+        return $response->result;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getRewardFund($name = 'post') {
+        $rpcData = $this->buildRpcData('condenser_api.get_reward_fund', array( $name ));
+
+        $response = $this->callRequest($rpcData);
+        return $response->result;
+    }
+
 }

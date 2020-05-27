@@ -13,6 +13,10 @@ use Illuminate\Support\Str;
 class CrearyController extends Controller
 {
 
+/*    public function testVotes(Request $request, $creaUser) {
+        return CreaUtils::calculateVoteValue($creaUser, 10000);
+    }*/
+
     /**
      * @param Request $request
      * @param $view

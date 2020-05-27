@@ -5,6 +5,7 @@ import Errors from "../lib/error";
 import Session from "../lib/session";
 import { cancelEventPropagation } from '../lib/util';
 import { catchError } from "../common/common";
+import HttpClient from "../lib/http";
 
 (function () {
 
@@ -87,14 +88,43 @@ import { catchError } from "../common/common";
         //console.log(navLang, CreaCookies.get('creary.language'));
     }
 
-    creaEvents.on('crea.session.login', function (session, account) {
-        globalLoading.show = false;
+    function fetchUnreadNotifications(session, account) {
+        if (session) {
+            let httpClient = new HttpClient(`/~api/notification/@${session.account.username}`);
+            httpClient.on('done' + httpClient.id, function (data) {
+                let notifications =  JSON.parse(data)
+                console.log('Notifications', notifications);
+                let unread = [];
+                notifications.forEach(function (n) {
+                    if (!n.read_at) {
+                        unread.push(n);
+                    }
+                });
+
+                creaEvents.emit('crea.notifications.all', notifications);
+                creaEvents.emit('crea.notifications.unread', unread);
+            });
+            httpClient.get({});
+        }
+    }
+
+    function preSetup(session, account) {
         updateCookies(session, account);
+        fetchUnreadNotifications(session, account);
+    }
+
+    creaEvents.on('crea.notifications.update', function (session, account) {
+        fetchUnreadNotifications(session, account);
     });
 
-    creaEvents.on('crea.session.update', updateCookies);
+    creaEvents.on('crea.session.login', function (session, account) {
+        globalLoading.show = false;
+        preSetup(session, account);
+    });
 
-    creaEvents.on('crea.session.logout', updateCookies);
+    creaEvents.on('crea.session.update', preSetup);
+
+    creaEvents.on('crea.session.logout', preSetup);
 
     creaEvents.on('crea.modal.ready', function (remove) {
         setTimeout(function () {
@@ -138,5 +168,6 @@ import { catchError } from "../common/common";
         //Build modals
         creaEvents.emit('crea.modal.ready');
     });
+
 
 })();

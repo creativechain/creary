@@ -27,13 +27,15 @@ class MqttChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $message = $notification->toMqtt($notifiable);
+        if (env('MQTT_ENABLE')) {
+            $message = $notification->toMqtt($notifiable);
 
-        // Send notification to the $notifiable instance...
+            // Send notification to the $notifiable instance...
 
-        $mqtt = new Mqtt();
-        $to = $message['to'];
-        $mqtt->ConnectAndPublish("$to/notification", json_encode($message));
+            $mqtt = new Mqtt();
+            $to = $message['to'];
+            $mqtt->ConnectAndPublish("$to/notification", json_encode($message));
+        }
 
     }
 }
