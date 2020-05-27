@@ -25,9 +25,12 @@
             </div>
         </div>
     </div>
-    <div class="boxed boxed--border row-list">
+    <div v-if="notifications.all.length > 0" class="boxed boxed--border row-list">
         <template v-for="n in notifications.all">
             @include('modules.notification-row')
         </template>
+    </div>
+    <div v-else>
+        {{ __('lang.NOTIFICATIONS.NO_NOTIFICATIONS') }}
     </div>
 </div>
