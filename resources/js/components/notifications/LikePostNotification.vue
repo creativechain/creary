@@ -53,7 +53,7 @@
         computed: {
             text: function () {
                 let voteValue = Asset.parseString(`${this.data.vote_value} CBD`);
-                let t = this.lang.NOTIFICATIONS.USER_LIKES_YOUR_POST ;
+                let t = this.reply ? this.lang.NOTIFICATIONS.USER_LIKES_YOUR_COMMENT : this.lang.NOTIFICATIONS.USER_LIKES_YOUR_POST;
                 if (this.voter.metadata && this.voter.metadata.publicName) {
                     return String.format(t, /*this.voter.metadata.publicName,*/ voteValue.toPlainString());
                 } else {
@@ -90,13 +90,22 @@
 
             });
 
-            getDiscussion(this.data.author, this.data.permlink, (err, discussion) => {
+            let onDiscussion = function (err, discussion) {
                 if (!err) {
+
+                    //Comment of comment
+                    if (discussion.parent_author && discussion.parent_permlink) {
+                        that.reply = true;
+                        return getDiscussion(discussion.parent_author,  discussion.parent_permlink, onDiscussion);
+                    }
+
                     that.discussion = discussion;
 
                     onReady();
                 }
-            })
+            };
+
+            getDiscussion(this.data.author, this.data.permlink, onDiscussion)
         },
         methods: {
             toLocaleDate: toLocaleDate,

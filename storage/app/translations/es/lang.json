@@ -527,9 +527,9 @@
         "USER_FOLLOWING_YOU": "Ha empezado aseguirte",
         "USER_UNFOLLOWING_YOU": "Ha dejado de seguirte",
         "USER_LIKES_YOUR_POST": "Le gusta tu publicación (%s $)",
+        "USER_LIKES_YOUR_COMMENT": "Le gusta tu comentario (%s $)",
         "USER_COMMENTED_YOUR_POST": "Ha respondido en tu publicación",
         "USER_COMMENTED_YOUR_COMMENT": "Ha respondido a tu comentario",
-        "USER_LIKES_YOUR_COMMENT": "Le gusta tu comentario",
         "USER_RECOMMENDED_YOUR_POST": "Ha recomendado tu publicación",
         "USER_DOWNLOADED_YOUR_CONTENT": "Ha descargado una copia de tu proyecto",
         "USER_MENTIONED_YOU": "Te ha mencionado"

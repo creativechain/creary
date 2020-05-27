@@ -526,10 +526,10 @@
         "NO_NOTIFICATIONS": "No new notifications found.",
         "USER_FOLLOWING_YOU": "Has started following you",
         "USER_UNFOLLOWING_YOU": "Has stopped following you",
-        "USER_LIKES_YOUR_POST": "Likes your post (%s $)",
+        "USER_LIKES_YOUR_POST": "Likes your post",
+        "USER_LIKES_YOUR_COMMENT": "Likes your comment (%s $)",
         "USER_COMMENTED_YOUR_POST": "Has replied in your post",
         "USER_COMMENTED_YOUR_COMMENT": "Has replied to your comment",
-        "USER_LIKES_YOUR_COMMENT": "Likes your comment",
         "USER_RECOMMENDED_YOUR_POST": "Has recommended your post",
         "USER_DOWNLOADED_YOUR_CONTENT": "Has downloaded a copy of your project",
         "USER_MENTIONED_YOU": "Mentioned you"
