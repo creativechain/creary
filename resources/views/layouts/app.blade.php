@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ __('lang.CODE') }}">
 <head>
     <meta charset="utf-8">
