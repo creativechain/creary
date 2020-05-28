@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <h3 class="title-section-profile title-list-historial" >{{ __('lang.WALLET.HISTORY') }}</h3>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12" style="overflow: hidden;">
         <hr class="mb-0">
     </div>
     <template v-for="op in history.data">
