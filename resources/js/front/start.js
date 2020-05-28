@@ -153,10 +153,10 @@ function createCookieInstance(attributes) {
         get: function(name) {
             return m.get(name);
         },
-        set: function(name, value) {
+        set: function(name, value, attributes) {
             m.set(name, value, attributes);
         },
-        remove: function(name) {
+        remove: function(name, attributes) {
             m.remove(name, attributes);
         }
     }

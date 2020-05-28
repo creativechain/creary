@@ -28,13 +28,21 @@ class AppServiceProvider extends ServiceProvider
         //
         $request = request();
 
-        $lang = $request->cookie('creary_language');
+        $langs = config('langs');
+        $lang = 'en';
 
-        if (!$lang) {
-            $lang = $request->getPreferredLanguage(['en', 'es']);
-            if (!$lang) {
-                $lang = 'en';
-            }
+        $cookieLang = $request->cookie('creary_language');
+        $navLang = $request->getPreferredLanguage(['en', 'es']);
+
+        if ($cookieLang) {
+            $lang = $cookieLang;
+        } else if ($navLang) {
+            $lang = $navLang;
+        }
+
+        //Force to use only available langs
+        if (!array_key_exists($lang, $langs)) {
+            $lang = 'en';
         }
 
         App::setLocale($lang);

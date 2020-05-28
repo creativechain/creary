@@ -72,7 +72,7 @@ import HttpClient from "../lib/http";
     function updateCookies(session, account) {
         console.log('Cookie session', session, account);
         if (session) {
-            CreaCookies.set('creary.username', session.account.username);
+            CreaCookies.set('creary.username', session.account.username, { expires: 365 });
         } else {
             CreaCookies.remove('creary.username')
         }
@@ -83,7 +83,7 @@ import HttpClient from "../lib/http";
         }
 
         //Set language
-        CreaCookies.set('creary.language', lang);
+        CreaCookies.set('creary.language', lang, { expires: 365 });
 
         //console.log(navLang, CreaCookies.get('creary.language'));
     }
