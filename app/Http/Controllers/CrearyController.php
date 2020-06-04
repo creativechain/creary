@@ -105,7 +105,10 @@ class CrearyController extends Controller
 
                 if ($metadata) {
                     //Set post preview
-                    if ($metadata->featuredImage && $metadata->featuredImage->url) {
+                    if ($metadata->sharedImage && $metadata->sharedImage->url) {
+                        $metas[] = $this->buildMeta('property', 'og:image', $post->metadata->sharedImage->url);
+                        $metas[] = $this->buildMeta('name', 'twitter:image', $post->metadata->sharedImage->url);
+                    } else if ($metadata->featuredImage && $metadata->featuredImage->url) {
                         $metas[] = $this->buildMeta('property', 'og:image', $post->metadata->featuredImage->url);
                         $metas[] = $this->buildMeta('name', 'twitter:image', $post->metadata->featuredImage->url);
                     }

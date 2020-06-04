@@ -27,15 +27,22 @@ import CKEditor from "../components/CKEditor";
             currency: 'CREA'
         };
         let featuredImage = {};
+        let sharedImage = {};
         let license = editablePost ? License.fromFlag(editablePost.metadata.license) : License.fromFlag(LICENSE.NO_LICENSE.flag);
 
         if (editablePost) {
             //
             //downloadFile = editablePost.download;
             let mFi = editablePost.metadata.featuredImage;
+            let mSi = editablePost.metadata.sharedImage;
+
             featuredImage = mFi.url ? mFi : mfi ? {
                 url: mFi
             } : featuredImage;
+
+            sharedImage = mSi.url ? mSi : mSi ? {
+                url: mSi
+            } : sharedImage;
         }
 
         publishContainer = new Vue({
@@ -56,6 +63,7 @@ import CKEditor from "../components/CKEditor";
                     show: false
                 },
                 featuredImage: featuredImage,
+                sharedImage: sharedImage,
                 title: editablePost ? editablePost.title : null,
                 description: editablePost ? editablePost.metadata.description : '',
                 adult: editablePost ? editablePost.metadata.adult : false,
@@ -249,6 +257,20 @@ import CKEditor from "../components/CKEditor";
                                 postUploads[file.hash] = loadedFile;
                                 that.error = null;
 
+                                if (file.type.indexOf('image/') > -1 && !that.sharedImage.hash) {
+
+                                    uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
+                                        if (!err) {
+                                            that.sharedImage = uploadedPreview;
+                                            console.log('Featured image loaded!');
+                                        } else {
+                                            console.error(err, loadedFile)
+                                        }
+
+                                    })
+
+                                }
+
                                 resizeImage(loadedFile, function (resizedFile) {
                                     let maximumPreviewSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
                                     postUploads[file.hash] = {
@@ -285,6 +307,17 @@ import CKEditor from "../components/CKEditor";
                     if (files.length > 0) {
                         globalLoading.show = true;
                         let loadedFile = files[0];
+
+                        uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
+                            if (!err) {
+                                that.sharedImage = uploadedPreview;
+                                console.log('Featured image loaded!');
+                            } else {
+                                console.error(err, loadedFile)
+                            }
+
+                        })
+
                         let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
                         resizeImage(loadedFile, function (resizedFile) {
                             uploadToIpfs(resizedFile, maximumSize, function (err, file) {
@@ -388,6 +421,7 @@ import CKEditor from "../components/CKEditor";
                 let files = postUploads[element.hash];
                 if (files.resized.name === publishContainer.featuredImage.name && files.resized.size === publishContainer.featuredImage.size) {
                     publishContainer.featuredImage = {};
+                    publishContainer.sharedImage = {};
                     delete postUploads[element.hash];
                 }
             }
@@ -404,6 +438,7 @@ import CKEditor from "../components/CKEditor";
                             if (!err) {
                                 console.log('Preview uploaded', uploadedPreview);
                                 publishContainer.featuredImage = uploadedPreview;
+                                publishContainer.sharedImage = uploadedPreview;
                                 console.log('Featured image loaded!');
                             } else {
                                 console.error(err, newFiles.resized);
@@ -444,6 +479,7 @@ import CKEditor from "../components/CKEditor";
                 tags: nTags,
                 adult: publishContainer.adult,
                 featuredImage: publishContainer.featuredImage,
+                sharedImage: publishContainer.sharedImage,
                 license: publishContainer.getLicense().getFlag()
             };
             let download = publishContainer.downloadFile;
