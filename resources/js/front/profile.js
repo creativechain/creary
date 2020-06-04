@@ -58,6 +58,7 @@ import MentionNotification from "../components/notifications/MentionNotification
     let walletModalDeEnergize;
     let defaultModalConfig;
     let lastPage = 1;
+    let notificationsMarkedAsRead = false;
 
     function updateModalDeEnergize(state, session) {
         console.log('Modal De-Energize', jsonify(jsonstring(state)));
@@ -1547,6 +1548,7 @@ import MentionNotification from "../components/notifications/MentionNotification
         let http = new HttpClient(`${window.location.protocol}//${window.location.host}/~api/notification/@${username}/markRead`);
         http.when('done', function (data, textStatus) {
             console.log(data, textStatus);
+            notificationsMarkedAsRead = true;
             creaEvents.emit('crea.notifications.update', profileContainer.session);
         });
         http.get({});
@@ -1576,6 +1578,14 @@ import MentionNotification from "../components/notifications/MentionNotification
         } else {
             tempNotifications.unread = unreadNotifications ? unreadNotifications.length : 0;
         }
+
+        if (!notificationsMarkedAsRead) {
+            setTimeout(function () {
+                console.log('Marking read notifications');
+                markReadNotifications();
+            }, 5e3);
+        }
+
     });
 
     let onScrollCalling;
