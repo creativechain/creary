@@ -520,7 +520,7 @@
                                         <ul class="float-left mt-3">
                                             <li class="li-blockchain-certificate">
                                                 <template v-for="i in getLicense().getIcons('white')">
-                                                    <img v-lazy="i" alt="" />
+                                                    <img v-bind:src="i" alt="" />
                                                 </template>
                                             </li>
                                         </ul>
