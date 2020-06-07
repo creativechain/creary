@@ -36,13 +36,8 @@ import CKEditor from "../components/CKEditor";
             let mFi = editablePost.metadata.featuredImage;
             let mSi = editablePost.metadata.sharedImage;
 
-            featuredImage = mFi.url ? mFi : mfi ? {
-                url: mFi
-            } : featuredImage;
-
-            sharedImage = mSi.url ? mSi : mSi ? {
-                url: mSi
-            } : sharedImage;
+            featuredImage = (mFi && mFi.url) ? mFi : featuredImage;
+            sharedImage = (mSi && mSi.url) ? mSi : sharedImage;
         }
 
         publishContainer = new Vue({
