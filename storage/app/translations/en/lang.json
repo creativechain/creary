@@ -349,8 +349,11 @@
 
     },
     "WITNESS": {
-        "VOTE_WITNESSES": "WITNESSES",
-        "VOTE_INFORMATION": "INFORMATION",
+        "WITNESSES": "WITNESSES",
+        "INFORMATION": "INFORMATION",
+        "OPERABILITY": "OPERABILITY",
+        "ACTIVE": "ACTIVE",
+        "DISABLED": "DISABLED",
         "VOTE_TITLE": "Vote for Witnesses",
         "HOW_TO": "<a href='https://creaproject.io/set-crea-witness-node/' target='_blank'>How to set a CREA witness node</a>"
     },

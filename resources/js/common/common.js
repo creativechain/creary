@@ -75,6 +75,9 @@ let CONSTANTS = {
         MAX_OTHER_PROJECTS: 12,
         MAX_COMMENT_SHOWN: 10,
         COMMENT_SHOW_INTERVAL: 10
+    },
+    WITNESS: {
+        DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10
     }
 };
 

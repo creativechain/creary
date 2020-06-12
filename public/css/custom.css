@@ -136,3 +136,7 @@ p > ul > li {
     background-color: DodgerBlue !important;
     color: #ffffff;
 }
+
+.color--grey {
+    color: #999!important;
+}

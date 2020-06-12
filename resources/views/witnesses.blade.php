@@ -17,8 +17,9 @@
                         <thead>
                         <tr>
                             <th style="width: 10%;"></th>
-                            <th>{{ __('lang.WITNESS.VOTE_WITNESSES') }}</th>
-                            <th>{{ __('lang.WITNESS.VOTE_INFORMATION') }}</th>
+                            <th>{{ __('lang.WITNESS.WITNESSES') }}</th>
+                            <th>{{ __('lang.WITNESS.OPERABILITY') }}</th>
+                            <th>{{ __('lang.WITNESS.INFORMATION') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -32,6 +33,12 @@
                                                   v-on:vote="onVote"></witness-like>
                                 </td>
                                 <td><a v-bind:href="'/@' + x">@{{ x }}</a></td>
+                                <td v-if="state.witnesses[x].isDisabled" class="color--grey">
+                                    {{  __('lang.WITNESS.DISABLED') }} (@{{ state.witnesses[x].last_block_date.fromNow() }})
+                                </td>
+                                <td v-else class="color--primary">
+                                    {{  __('lang.WITNESS.ACTIVE') }}
+                                </td>
                                 <td><a v-bind:href="state.witnesses[x].url">@{{ state.witnesses[x].url }}</a> </td>
                             </tr>
                         </template>

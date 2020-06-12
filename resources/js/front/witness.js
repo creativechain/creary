@@ -1,7 +1,7 @@
 /**
  * Created by ander on 7/11/18.
  */
-import { updateUserSession, catchError } from "../common/common";
+import {updateUserSession, catchError, CONSTANTS} from "../common/common";
 
 //Import components
 import WitnessLike from "../components/WitnessLike";
@@ -39,6 +39,16 @@ import WitnessLike from "../components/WitnessLike";
     function fetchWitness(session, account) {
         crea.api.getState('/~witnesses', function (err, result) {
             if (!catchError(err)) {
+                let witnesses = result.witnesses;
+                for (let x in witnesses) {
+                    let w = witnesses[x];
+                    let disabledSeconds = ((result.props.head_block_number - w.last_confirmed_block_num) * 3);
+                    w.last_block_date = moment().subtract(disabledSeconds, 'seconds');
+                    w.isDisabled = ((result.props.head_block_number - w.last_confirmed_block_num) * 3) > CONSTANTS.WITNESS.DISABLED_SECONDS_THRESHOLD;
+                    witnesses[x] = w;
+                }
+
+                result.witnesses = witnesses;
                 let wKeys = Object.keys(result.witnesses);
                 wKeys.sort(function (w1, w2) {
                     return result.witnesses[w2].votes - result.witnesses[w1].votes;
