@@ -257,10 +257,10 @@ import MentionNotification from "../components/notifications/MentionNotification
      * @param {Session} session
      * @param account
      * @param usernameFilter
+     * @param navSection
+     * @param walletSection
      */
-    function updateProfileView(state, session, account, usernameFilter) {
-        let navSection = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'projects';
-        let walletSection = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'balance';
+    function updateProfileView(state, session, account, usernameFilter, navSection = 'projects', walletSection = 'balance') {
         //console.log('Updating profile', jsonify(jsonstring(account)), jsonify(jsonstring(state)));
         let withdrawingSavings = state.user ? state.user.savings_withdraw_requests : 0;
 

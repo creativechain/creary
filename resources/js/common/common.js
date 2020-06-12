@@ -115,6 +115,7 @@ function updateUrl(url, title, data) {
     }
 
     window.history.pushState(data, title, url);
+    currentPage.pathname = url;
 }
 
 /**
