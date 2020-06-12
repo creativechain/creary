@@ -682,6 +682,9 @@ import MentionNotification from "../components/notifications/MentionNotification
                         }
 
                         this.navbar.section = tab;
+                        if (tab === 'notifications') {
+                            this.markReadNotifications();
+                        }
                     },
                     isUserProfile: function isUserProfile() {
                         if (this.session) {
@@ -1146,6 +1149,15 @@ import MentionNotification from "../components/notifications/MentionNotification
         fetchBlockeds(session, account);
         fetchFollowing(state, session, account);
         fetchFollowers(state, session, account);
+
+        if (nav === 'notifications') {
+            if (!notificationsMarkedAsRead) {
+                setTimeout(function () {
+                    console.log('Marking read notifications');
+                    markReadNotifications();
+                }, 5e3);
+            }
+        }
     }
 
     function sendAccountUpdate(event, keys, callback) {
@@ -1578,14 +1590,6 @@ import MentionNotification from "../components/notifications/MentionNotification
         } else {
             tempNotifications.unread = unreadNotifications ? unreadNotifications.length : 0;
         }
-
-        if (!notificationsMarkedAsRead) {
-            setTimeout(function () {
-                console.log('Marking read notifications');
-                markReadNotifications();
-            }, 5e3);
-        }
-
     });
 
     let onScrollCalling;
