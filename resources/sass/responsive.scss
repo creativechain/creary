@@ -313,6 +313,14 @@
 
     max-height: 100%;
   }
+  #modal-post #post-navigation-view .modal-content {
+      /* overflow: scroll; */
+      /* overflow-x: hidden; */
+      /* overflow-y: hidden; */
+      overflow: unset;
+      max-height: 100%;
+  }
+
   #modal-post #post-navigation-view .modal-content section .row-content-post .img-post-view .upload-img img {
     margin-bottom: 0;
     max-width: 100%;
