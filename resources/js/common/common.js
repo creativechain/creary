@@ -111,14 +111,17 @@ function showProfile(username) {
 }
 
 function updateUrl(url, title, data) {
-    if (!title) {
-        title = '';
-    } else {
-        $('title').html(title);
-    }
+    title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE ;
+    console.log('Title:', title);
+    $('title').html(title);
+
+    currentPage.parentUrl = window.location.pathname;
+    currentPage.parentTitle = currentPage.title;
 
     window.history.pushState(data, title, url);
+
     currentPage.pathname = url;
+    currentPage.title = title ? title : document.title;
 }
 
 /**

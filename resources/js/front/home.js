@@ -765,13 +765,6 @@ import ButtonFollow from "../components/ButtonFollow";
         }
     });
 
-    creaEvents.on('crea.content.filter', function (filter) {
-        currentPage = {
-            pathname: filter,
-            title: document.title
-        };
-    });
-
     creaEvents.on('crea.dom.ready', function () {
         $("#view-changer").click(function () {
             homePosts.toggleSimpleView();

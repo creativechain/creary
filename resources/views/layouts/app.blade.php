@@ -53,32 +53,34 @@
     </script>
 
 
-    {{--<!-- Global site tag (gtag.js) - Google Ads: 785576980 -->--}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-785576980"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    @if (env('APP_ENV') !== 'local')
+        {{--<!-- Global site tag (gtag.js) - Google Ads: 785576980 -->--}}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-785576980"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-        gtag('config', 'AW-785576980');
-    </script>
+            gtag('config', 'AW-785576980');
+        </script>
 
-    {{-- <!-- Event snippet for Registro Creary botón conversion page
-     In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->--}}
-    <script>
-        function gtag_report_conversion(url) {
-            var callback = function () {
-                if (typeof(url) != 'undefined') {
-                    window.location = url;
-                }
-            };
-            gtag('event', 'conversion', {
-                'send_to': 'AW-785576980/zEkCCM_DkZcBEJToy_YC',
-                'event_callback': callback
-            });
-            return false;
-        }
-    </script>
+        {{-- <!-- Event snippet for Registro Creary botón conversion page
+         In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->--}}
+        <script>
+            function gtag_report_conversion(url) {
+                var callback = function () {
+                    if (typeof(url) != 'undefined') {
+                        window.location = url;
+                    }
+                };
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-785576980/zEkCCM_DkZcBEJToy_YC',
+                    'event_callback': callback
+                });
+                return false;
+            }
+        </script>
+    @endif
 
     <script>
         window.mqtt_enable = {!! env('MQTT_ENABLE') !!};

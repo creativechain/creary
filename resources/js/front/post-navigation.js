@@ -42,11 +42,11 @@ import ButtonFollow from "../components/ButtonFollow";
     let session, userAccount;
 
     function onVueReady() {
-/*        --vueInstances;
+        /*        --vueInstances;
 
-        if (vueInstances === 0) {
-            creaEvents.emit('crea.dom.ready');
-        }*/
+                if (vueInstances === 0) {
+                    creaEvents.emit('crea.dom.ready');
+                }*/
     }
 
     function setUp(state) {
@@ -837,10 +837,10 @@ import ButtonFollow from "../components/ButtonFollow";
     });
 
     creaEvents.on('crea.content.prepare', function () {
-       currentPage = {
-           pathname: window.location.pathname,
-           title: document.title
-       }
+        currentPage = {
+            pathname: window.location.pathname,
+            title: document.title
+        }
     });
 
     creaEvents.on('crea.modal.ready', function () {
@@ -851,11 +851,10 @@ import ButtonFollow from "../components/ButtonFollow";
                 $('body').css({ overflow: 'hidden'});
 
             }).on('modalClosed.modals.mr', function () {
-                console.log('Closing modal');
+                console.log('Closing modal', currentPage);
                 $('body').css({ overflow: ''});
-                updateUrl(currentPage.pathname, currentPage.title);
+                updateUrl(currentPage.parentUrl, currentPage.parentTitle);
             })
         }, 1000);
     });
-
 })();
