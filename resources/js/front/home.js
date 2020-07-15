@@ -624,15 +624,17 @@ import ButtonFollow from "../components/ButtonFollow";
                                 console.error(err);
                             } else {
                                 //Get new accounts
-                                let discussions = result.discussions; //Remove first duplicate post
+                                let discussions = result.discussions;
 
+                                //Remove first duplicate post
                                 discussions.shift();
+                                let topDiscussions = [];
                                 let accounts = [];
 
                                 let reblogsFetched = 0;
                                 let onAllReblogs = function () {
                                     reblogsFetched++;
-                                    if (reblogsFetched >= discussions.length) {
+                                    if (reblogsFetched >= topDiscussions.length) {
                                         //Get new accounts
                                         getAccounts(accounts, function (err, newAccounts) {
                                             if (!catchError(err)) {
@@ -642,7 +644,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                                 }); //Update Posts
 
                                                 let discuss = homePosts.discuss;
-                                                discussions.forEach(function (d) {
+                                                topDiscussions.forEach(function (d) {
                                                     let permlink = d.author + '/' + d.permlink;
                                                     homePosts.state.content[permlink] = d;
 
@@ -651,7 +653,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                                                 homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
                                                 homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                                                lastPage = discussions[discussions.length - 1];
+                                                lastPage = topDiscussions[topDiscussions.length - 1];
                                                 homePosts.$forceUpdate();
                                                 creaEvents.emit('navigation.state.update', homePosts.state);
                                             }
@@ -664,13 +666,26 @@ import ButtonFollow from "../components/ButtonFollow";
 
                                 for (let x = 0; x < discussions.length; x++) {
                                     let d = discussions[x];
+                                    //For /now discussions, check post active date
+                                    if (category === 'now') {
+                                        let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
+                                        let postPayoutDate = moment(d.last_payout, 'YYYY-MM-DDTHH:mm:ss');
+                                        if (postCreatedDate.isAfter(postPayoutDate)) {
+                                            //Post is active
+                                            topDiscussions.push(d);
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        topDiscussions.push(d);
+                                    }
 
-                                    (function (x, d, discussions) {
+                                    (function (x, d) {
                                         let http = new HttpClient(apiOptions.apiUrl + String.format('/creary/%s/%s', d.author, d.permlink));
 
                                         let onReblogs = function (reblogs) {
 
-                                            discussions[x] = parsePost(d, reblogs);
+                                            topDiscussions[x] = parsePost(d, reblogs);
 
                                             if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
                                                 accounts.push(d.author);
@@ -694,9 +709,9 @@ import ButtonFollow from "../components/ButtonFollow";
                                         };
 
                                         http.get({});
-                                    })(x, d, discussions)
-
+                                    })(topDiscussions.length-1, d)
                                 }
+
                             }
                         });
                     })
