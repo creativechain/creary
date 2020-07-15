@@ -1,5 +1,5 @@
 <template>
-    <div class="img-user-avatar" v-lazy:background-image="getDefaultAvatar(account)"></div>
+    <div class="img-user-avatar" v-bind:style="{ 'background-image': 'url(' + ( getDefaultAvatar(account)) + ')' }"></div>
 </template>
 
 <script>
