@@ -712,7 +712,7 @@ import ButtonFollow from "../components/ButtonFollow";
         state = clone(state);
         console.log(discuss, category, state, post);
 
-        let postUrl = "/" + post.metadata.tags[0] + '/@' + post.author + '/' + post.permlink;
+        let postUrl = "/" + post.parent_permlink + '/@' + post.author + '/' + post.permlink;
         let postRoute = post.author + '/' + post.permlink;
         crea.api.getState(postUrl, function (err, postState) {
             if (!err) {
