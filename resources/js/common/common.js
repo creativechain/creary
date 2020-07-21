@@ -115,8 +115,13 @@ function updateUrl(url, title, data) {
     console.log('Title:', title);
     $('title').html(title);
 
-    currentPage.parentUrl = window.location.pathname;
-    currentPage.parentTitle = currentPage.title;
+    let currentLocation = window.location.pathname;
+
+    if (currentLocation !== url) {
+        //If is different location, not change
+        currentPage.parentUrl = currentLocation;
+        currentPage.parentTitle = currentPage.title;
+    }
 
     window.history.pushState(data, title, url);
 
