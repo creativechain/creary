@@ -51,7 +51,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
     function setUp(state) {
 
-        updateUrl(state.post.url, 'Creary - ' + state.post.title, state);
+        updateUrl(state.post.url, 'Creary - ' + state.post.title, state, true);
         console.log(clone(state));
 
         if (!postContainer) {

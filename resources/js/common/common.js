@@ -110,14 +110,14 @@ function showProfile(username) {
     }
 }
 
-function updateUrl(url, title, data) {
+function updateUrl(url, title, data, isModal = false) {
     title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE ;
     console.log('Title:', title);
     $('title').html(title);
 
     let currentLocation = window.location.pathname;
 
-    if (currentLocation !== url) {
+    if (currentLocation !== url || !isModal) {
         //If is different location, not change
         currentPage.parentUrl = currentLocation;
         currentPage.parentTitle = currentPage.title;
