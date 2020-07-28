@@ -281,6 +281,10 @@ import ButtonFollow from "../components/ButtonFollow";
                     }
                 }
             });
+
+            setTimeout(function () {
+                creaEvents.emit('crea.dom.ready');
+            }, 200);
         } else {
             homePosts.session = session;
             homePosts.account = account;
@@ -293,7 +297,7 @@ import ButtonFollow from "../components/ButtonFollow";
         }
 
         homePosts.$forceUpdate();
-        creaEvents.emit('crea.dom.ready');
+
     }
 
     creaEvents.on('crea.posts', function (urlFilter, filter, state) {

@@ -351,6 +351,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
+        console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready', true);
     });
 

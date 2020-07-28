@@ -141,6 +141,7 @@ import HttpClient from "../lib/http";
     });
 
     creaEvents.on('crea.dom.ready', function () {
+        console.log('DOM ready received');
         $.holdReady(false);
         $(window).scroll(function (event) {
             let scrollHeight = $(document).height();
@@ -166,6 +167,7 @@ import HttpClient from "../lib/http";
         $('[data-toggle="popover"]').popover();
 
         //Build modals
+        console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready');
     });
 
