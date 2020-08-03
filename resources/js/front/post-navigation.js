@@ -853,7 +853,7 @@ import ButtonFollow from "../components/ButtonFollow";
             }).on('modalClosed.modals.mr', function () {
                 console.log('Closing modal', currentPage);
                 $('body').css({ overflow: ''});
-                updateUrl(currentPage.parentUrl, currentPage.parentTitle);
+                updateUrl(currentPage.homeUrl, currentPage.homeTitle);
             })
         }, 1000);
     });

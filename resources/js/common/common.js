@@ -117,11 +117,16 @@ function updateUrl(url, title, data, isModal = false) {
 
     let currentLocation = window.location.pathname;
 
-    if (currentLocation !== url || !isModal) {
+    if (isInHome()) {
+        currentPage.homeUrl = currentLocation;
+        currentPage.homeTitle = currentPage.title;
+    }
+
+/*    if (currentLocation !== url || !isModal) {
         //If is different location, not change
         currentPage.parentUrl = currentLocation;
         currentPage.parentTitle = currentPage.title;
-    }
+    }*/
 
     window.history.pushState(data, title, url);
 
