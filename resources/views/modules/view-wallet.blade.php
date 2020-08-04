@@ -165,7 +165,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                                 <div class="col-6 col-sm-4 col-md-4 text-right">
-                                                                                                                    <div class="btn btn--sm btn--primary" v-on:click="sendCrea">
+                                                                                                                    <div class="btn btn--sm btn--primary" v-bind:class="{disabled: !config.confirmed && toExchange}" v-on:click="sendCrea" v-bind:disabled="!config.confirmed && toExchange">
                                                                                                                         <span class="btn__text">@{{ config.confirmed ? config.button : lang.BUTTON.CONFIRM }}</span>
                                                                                                                     </div>
                                                                                                                 </div>
