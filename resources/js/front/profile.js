@@ -232,6 +232,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 switch (that.config.op) {
                                     case 'transfer_from_savings_crea':
                                     case 'transfer_from_savings_cbd':
+                                    case 'transfer_cbd':
                                         that.toExchange = SAVINGS_BLACK_LIST.includes(username);
                                         break;
                                     default:
@@ -408,7 +409,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CBD,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
-                                    exchange_text: lang.WALLET.TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CBD,
                                     to: this.session.account.username,
@@ -420,7 +421,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CREA,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
-                                    exchange_text: lang.WALLET.TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CREA,
                                     to: this.session.account.username,
@@ -444,6 +445,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_CBD_TITLE,
                                     text: this.lang.WALLET.TRANSFER_CBD_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.SEND,
                                     nai: apiOptions.symbol.CBD,
                                     total_amount: Asset.parseString(this.state.user.cbd_balance)

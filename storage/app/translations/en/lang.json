@@ -419,7 +419,7 @@
         "TRANSFER_FROM_SAVINGS_TITLE_CREA": "Withdraw CREA",
         "TRANSFER_FROM_SAVINGS_TITLE_CBD": "Withdraw CBD",
         "TRANSFER_FROM_SAVINGS_TEXT": "The withdrawal has a period of 3 days of waiting.",
-        "TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT": "We don't recommend sending balance to an exchange from the savings section. Use the transfer function. ",
+        "WARNING_TRANSFER_TO_EXCHANGE_TEXT": "We don't recommend sending balance to an exchange from this section. Use the transfer function.",
         "UPDATE_TITLE": "Update your wallet",
         "BALANCES_CREA_TITLE": "CREA",
         "TRANSFER_CBD_TEXT": "Move funds to another CBD account.",
