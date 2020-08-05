@@ -420,6 +420,7 @@
         "TRANSFER_FROM_SAVINGS_TITLE_CBD": "Withdraw CBD",
         "TRANSFER_FROM_SAVINGS_TEXT": "The withdrawal has a period of 3 days of waiting.",
         "WARNING_TRANSFER_TO_EXCHANGE_TEXT": "We don't recommend sending balance to an exchange from this section. Use the transfer function.",
+        "WARNING_DE_ENERGIZE": "IMPORTANT: when you de-energize your CREA Energy (CGY) you lose your power in the network. This means that your rewards as curator and holder will decrease proportionally.",
         "UPDATE_TITLE": "Update your wallet",
         "BALANCES_CREA_TITLE": "CREA",
         "TRANSFER_CBD_TEXT": "Move funds to another CBD account.",

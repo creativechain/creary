@@ -254,6 +254,7 @@
                                                                                                     <div class="modal-close modal-close-cross"></div>
                                                                                                     <div class="text-block">
                                                                                                         <h3>De-Energize</h3>
+                                                                                                        <p class="error-color-form">{{ __('lang.WALLET.WARNING_DE_ENERGIZE') }}</p>
                                                                                                         <!--<div class="slide-energize">
                                                                                                             <slider :initvalue="sliderValue" v-bind:max="maxPowerDown" v-on:change="onAmount"></slider>
                                                                                                         </div>-->
