@@ -187,7 +187,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                         this.amount = this.config.total_amount.toPlainString();
                     },
                     sendCrea: function sendCrea() {
-                        if (this.toError || !this.amount) {//TODO: SHOW ERRORS
+                        if (this.toError || this.toExchange || !this.amount) {//TODO: SHOW ERRORS
                         } else if (this.config.confirmed) {
                             let that = this;
                             let amountData = {
