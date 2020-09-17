@@ -17,7 +17,14 @@ class CreaOperationsUtils
     public static function vote($op) {
         $data = self::parse($op);
         $data->to = $data->author;
-        $data->vote_value = CreaUtils::calculateVoteValue($data->voter, $data->weight);
+        $weight = intval($data->weight);
+
+        //Notify only likes
+        if ($weight > 0) {
+            $data->vote_value = CreaUtils::calculateVoteValue($data->voter, $data->weight);
+
+        }
+
         return $data;
     }
 
