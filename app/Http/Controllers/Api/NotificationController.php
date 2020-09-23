@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\CreaUser;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
@@ -16,12 +17,14 @@ class NotificationController extends Controller
 {
 
     /**
-     * @param $userNotifications
+     * @param LengthAwarePaginator $userNotifications
      * @return array
      */
     public static function normalizeNotificationsReponse($userNotifications) {
-        $notifications = array();
 
+        $notifications = $userNotifications->toArray();
+
+        $data = array();
         foreach ($userNotifications as $notification) {
             $nData = $notification->data;
             unset($nData['required_auths']);
@@ -30,11 +33,11 @@ class NotificationController extends Controller
             $nData['created_at'] = $notification->created_at->format('Y-m-d H:i:s');
             if ($notification->read_at) {
                 $nData['read_at'] = $notification->read_at->format('Y-m-d H:i:s');
-
             }
-            $notifications[] = $nData;
+            $data[] = $nData;
         }
 
+        $notifications['data'] = $data;
         return $notifications;
     }
 
@@ -91,7 +94,7 @@ class NotificationController extends Controller
             ->first();
 
         if ($creaUser) {
-            return response(self::normalizeNotificationsReponse($creaUser->unreadNotifications));
+            return response(self::normalizeNotificationsReponse($creaUser->unreadNotifications()->paginate(5)));
         }
 
         return response(array());

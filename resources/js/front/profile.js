@@ -1576,21 +1576,26 @@ import MentionNotification from "../components/notifications/MentionNotification
     });
 
     creaEvents.on('crea.notifications.all', function (notifications) {
-        if (profileContainer) {
-            profileContainer.notifications.all = notifications ? notifications : [];
-            profileContainer.$forceUpdate();
-        } else {
-            tempNotifications.all = notifications ? notifications : [];
-        }
+        globalLoading.show = false;
 
+        if (notifications) {
+            if (profileContainer) {
+                let latestNotifs = profileContainer.notifications.all;
+                profileContainer.notifications.all = latestNotifs.concat(notifications.data);
+
+                profileContainer.$forceUpdate();
+            } else {
+                tempNotifications.all = notifications.data;
+            }
+        }
     });
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
         if (profileContainer) {
-            profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+            profileContainer.notifications.unread = unreadNotifications.total;
             profileContainer.$forceUpdate();
         } else {
-            tempNotifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+            tempNotifications.unread = unreadNotifications.total;
         }
     });
 
@@ -1599,34 +1604,40 @@ import MentionNotification from "../components/notifications/MentionNotification
         if (!onScrollCalling) {
             onScrollCalling = true;
 
-            getProfileDiscussions(function (err, discussions) {
+            if (profileContainer.navbar.section === 'notifications') {
+                globalLoading.show = true;
+                creaEvents.emit('crea.notifications.more', profileContainer.session);
+            } else {
+                getProfileDiscussions(function (err, discussions) {
 
-                //Remove first duplicate post
-                //discussions.shift();
+                    //Remove first duplicate post
+                    //discussions.shift();
 
-                //Sort discussions
-                //Nodes return discussion ordered by last update
-                discussions.sort(function (k1, k2) {
-                    let d1 = toLocaleDate(k1.created);
-                    let d2 = toLocaleDate(k2.created);
-                    return d2.valueOf() - d1.valueOf();
+                    //Sort discussions
+                    //Nodes return discussion ordered by last update
+                    discussions.sort(function (k1, k2) {
+                        let d1 = toLocaleDate(k1.created);
+                        let d2 = toLocaleDate(k2.created);
+                        return d2.valueOf() - d1.valueOf();
+                    });
+
+
+                    for (let x = 0; x < discussions.length; x++) {
+                        let d = discussions[x];
+
+                        let permlink = d.author + '/' + d.permlink;
+                        profileContainer.state.content[permlink] = d;
+                        profileContainer.state.discussion_idx[''].profile.push(permlink);
+                    }
+
+                    profileContainer.state.discussions = profileContainer.state.discussion_idx[''].profile;
+                    profileContainer.$forceUpdate();
+                    onScrollCalling = false;
+
+                    creaEvents.emit('navigation.state.update', profileContainer.state);
                 });
+            }
 
-
-                for (let x = 0; x < discussions.length; x++) {
-                    let d = discussions[x];
-
-                    let permlink = d.author + '/' + d.permlink;
-                    profileContainer.state.content[permlink] = d;
-                    profileContainer.state.discussion_idx[''].profile.push(permlink);
-                }
-
-                profileContainer.state.discussions = profileContainer.state.discussion_idx[''].profile;
-                profileContainer.$forceUpdate();
-                onScrollCalling = false;
-
-                creaEvents.emit('navigation.state.update', profileContainer.state);
-            });
         }
     });
 

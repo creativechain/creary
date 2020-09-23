@@ -323,7 +323,7 @@ import Avatar from "../components/Avatar";
     }
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
-        navbarContainer.unreadNotifications = unreadNotifications ? unreadNotifications.length : 0;
+        navbarContainer.unreadNotifications = unreadNotifications.total;
         navbarContainer.$forceUpdate();
     });
 
