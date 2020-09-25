@@ -49,7 +49,7 @@ class NotificationController extends Controller
     public function index(Request $request, $creaUser) {
 
         $validations = [
-            'page' => 'somentimes|min:1'
+            'page' => 'sometimes|min:1'
         ];
 
         $validatedData = Validator::make($request->all(), $validations);
