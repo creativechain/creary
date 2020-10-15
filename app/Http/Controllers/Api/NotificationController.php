@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -107,6 +108,8 @@ class NotificationController extends Controller
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function markRead(Request $request, $creaUser) {
+
+        Log::debug("Mark all notificacions as read for user $creaUser");
         /**
          * @var CreaUser $creaUser
          */
@@ -114,7 +117,10 @@ class NotificationController extends Controller
             ->where('name', Str::replaceFirst('@', '', $creaUser))
             ->first();
 
-        $creaUser->unreadNotifications->markAsRead();
+        if ($creaUser) {
+            $creaUser->unreadNotifications->markAsRead();
+        }
+
         return response(array(
             'status' => 'ok',
             'message' => 'All notfications read'
