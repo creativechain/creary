@@ -86,7 +86,25 @@
         <div class="container"  style="background-color: white">
             <div class="row background-content-post row-content-post">
                 <div class="col-md-12 img-post-view content-post" >
-                    <div v-if="!state.author.buzz.blocked">
+                    <div v-if="state.author.profile_blocked" >
+                        <p class="error-color-form font-weight-bold">
+                            {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_TITLE') }}
+                        </p>
+                        <span>
+                            {{ __('lang.PUBLICATION.BLOCKED_PROFILE_ALERT_MESSAGE') }}
+                        </span>
+
+                    </div>
+                    <div v-else-if="state.author.buzz.blocked" >
+                        <p class="error-color-form font-weight-bold">
+                            {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_TITLE') }}
+                        </p>
+                        <span>
+                            {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_MESSAGE') }}
+                        </span>
+
+                    </div>
+                    <div v-else>
                         <template v-for="el in state.post.body">
                             <div v-if="el != null">
                                 <div v-if="el.type.indexOf('text/html') > -1" v-html="linkfy(el.value)" style="word-break: break-word;">
@@ -120,15 +138,6 @@
                                 </div>
                             </div>
                         </template>
-                    </div>
-                    <div v-else >
-                        <p class="error-color-form font-weight-bold">
-                            {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_TITLE') }}
-                        </p>
-                        <span>
-                            {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_MESSAGE') }}
-                        </span>
-
                     </div>
                 </div>
             </div>

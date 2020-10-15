@@ -164,7 +164,8 @@
         "RECOMMENDED_BY": "Recommended by",
         "RECOMMEND_MORE": "and %s more",
         "BLOCKED_USER_ALERT_TITLE": "Attention!",
-        "BLOCKED_USER_ALERT_MESSAGE": "This user has been reported by many well reputed users of our community. There are different reasons to report users:\n                                Identity supplantation, copyright infringement, spam, fraud or other behaviors considered malicious or negatives for the community."
+        "BLOCKED_USER_ALERT_MESSAGE": "This user has been reported by many well reputed users of our community. There are different reasons to report users:\n                                Identity supplantation, copyright infringement, spam, fraud or other behaviors considered malicious or negatives for the community.",
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "This profile has received report Identity Theft or copyright infringement. To activate the visualization of the projects, contact legal@creary.net."
     },
     "PROFILE_MENU": {
         "LOGOUT": "Logout",

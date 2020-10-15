@@ -164,7 +164,8 @@
         "RECOMMENDED_BY": "Recomendado por",
         "RECOMMEND_MORE": "y %s más",
         "BLOCKED_USER_ALERT_TITLE": "¡Atención!",
-        "BLOCKED_USER_ALERT_MESSAGE": "Este usuario ha sido reportado por muchos usuarios de buena reputación de nuestra comunidad. Existen diferentes razones para reportar a los usuarios:\n                                Suplantación de identidad, incumplimiento de copyright, spam, fraude u otros comportamientos considerados maliciosos o negativos para la comunidad."
+        "BLOCKED_USER_ALERT_MESSAGE": "Este usuario ha sido reportado por muchos usuarios de buena reputación de nuestra comunidad. Existen diferentes razones para reportar a los usuarios:\n                                Suplantación de identidad, incumplimiento de copyright, spam, fraude u otros comportamientos considerados maliciosos o negativos para la comunidad.",
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "Este perfil ha recibido alguna denuncia de suplantación de identidad o infracción de derechos de autor. Para activar la visualización de los proyectos contacta con legal@creary.net."
     },
     "PROFILE_MENU": {
         "LOGOUT": "Cerrar sesión",

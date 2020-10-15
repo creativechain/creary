@@ -28,12 +28,15 @@
                                         <h3>{{ __('lang.PROFILE.NO_POSTS_PROFILE') }}</h3>
                                     </div>
                                     <div v-show="navbar.section === 'projects'" class="row project-profile">
-                                        <template v-if="!state.user.buzz.blocked">
-                                            <template v-for="p in state.discussion_idx[''].profile">
-                                                @include('modules.post-view-card')
-                                            </template>
+                                        <template v-if="state.user.profile_blocked">
+                                            <h3 class="error-color-form font-weight-bold">
+                                                {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_TITLE') }}
+                                            </h3>
+                                            <p>
+                                                {{ __('lang.PUBLICATION.BLOCKED_PROFILE_ALERT_MESSAGE') }}
+                                            </p>
                                         </template>
-                                        <template v-else>
+                                        <template v-else-if="state.user.buzz.blocked">
                                             <h3 class="error-color-form font-weight-bold">
                                                 {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_TITLE') }}
                                             </h3>
@@ -41,6 +44,13 @@
                                                 {{ __('lang.PUBLICATION.BLOCKED_USER_ALERT_MESSAGE') }}
                                             </p>
                                         </template>
+                                        <template v-else>
+                                            <template v-for="p in state.discussion_idx[''].profile">
+                                                @include('modules.post-view-card')
+                                            </template>
+                                        </template>
+
+
                                     </div>
                                     <div v-show="session && account.user.name === state.user.name && navbar.section === 'notifications'" class="row view-notifications order-0 order-md-1 view-wallet" >
                                         @include('modules.list-notifications')
