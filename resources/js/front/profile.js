@@ -1578,13 +1578,16 @@ import MentionNotification from "../components/notifications/MentionNotification
     creaEvents.on('crea.notifications.all', function (notifications) {
         globalLoading.show = false;
 
-        if (notifications) {
+        console.log('All notifications ->', notifications);
+        if (notifications && notifications.data) {
             if (profileContainer) {
+                console.log('Container prepared', clone(profileContainer.notifications));
                 let latestNotifs = profileContainer.notifications.all;
                 profileContainer.notifications.all = latestNotifs.concat(notifications.data);
 
                 profileContainer.$forceUpdate();
             } else {
+                console.log('Container unprepared');
                 tempNotifications.all = notifications.data;
             }
         }
