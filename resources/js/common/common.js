@@ -78,7 +78,8 @@ let CONSTANTS = {
     },
     WITNESS: {
         DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10
-    }
+    },
+    BLOCKED_ACCOUNTS: ['rhsteele']
 };
 
 creaEvents.on('crea.session.login', function (session, account) {
@@ -110,18 +111,23 @@ function showProfile(username) {
     }
 }
 
-function updateUrl(url, title, data) {
+function updateUrl(url, title, data, isModal = false) {
     title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE ;
     console.log('Title:', title);
     $('title').html(title);
 
     let currentLocation = window.location.pathname;
 
-    if (currentLocation !== url) {
+    if (isInHome()) {
+        currentPage.homeUrl = currentLocation;
+        currentPage.homeTitle = currentPage.title;
+    }
+
+/*    if (currentLocation !== url || !isModal) {
         //If is different location, not change
         currentPage.parentUrl = currentLocation;
         currentPage.parentTitle = currentPage.title;
-    }
+    }*/
 
     window.history.pushState(data, title, url);
 
@@ -268,10 +274,11 @@ function parseAccount(account) {
         account.buzz.level_name = CONSTANTS.BUZZ.LEVELS[account.buzz.level -1];
         account.buzz.level_title = lang.BUZZ[account.buzz.level -1];
         account.buzz.blocked = account.buzz.formatted <= CONSTANTS.BUZZ.USER_BLOCK_THRESHOLD;
+        account.profile_blocked = CONSTANTS.BLOCKED_ACCOUNTS.includes(account.name);
 
         account.metadata = jsonify(account.json_metadata);
 
-        if (account.buzz.blocked) {
+        if (account.buzz.blocked || account.profile_blocked ) {
             account.metadata.avatar = {};
         } else {
             account.metadata.avatar = account.metadata.avatar || {};

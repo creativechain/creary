@@ -323,7 +323,7 @@ import Avatar from "../components/Avatar";
     }
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
-        navbarContainer.unreadNotifications = unreadNotifications ? unreadNotifications.length : 0;
+        navbarContainer.unreadNotifications = unreadNotifications.total;
         navbarContainer.$forceUpdate();
     });
 
@@ -351,6 +351,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
+        console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready', true);
     });
 

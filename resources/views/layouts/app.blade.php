@@ -570,8 +570,8 @@
                                 </div>
                             </li>
 
-                            <li v-if="!session" class="hidden-xs">
-                                <div  class="modal-instance">
+                            <li v-show="!session" class="hidden-xs">
+                                <div v-if="!session" class="modal-instance">
                                     <a href="#modal-login" class="modal-trigger log-in" data-modal-id="modal-login-d">{{ __('lang.BUTTON.LOGIN') }}</a>
 
                                     <div id="modal-login" class="modal-container">

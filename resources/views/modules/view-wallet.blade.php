@@ -165,7 +165,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                                 <div class="col-6 col-sm-4 col-md-4 text-right">
-                                                                                                                    <div class="btn btn--sm btn--primary" v-on:click="sendCrea">
+                                                                                                                    <div class="btn btn--sm btn--primary" v-bind:class="{disabled: !config.confirmed && toExchange}" v-on:click="sendCrea" v-bind:disabled="!config.confirmed && toExchange">
                                                                                                                         <span class="btn__text">@{{ config.confirmed ? config.button : lang.BUTTON.CONFIRM }}</span>
                                                                                                                     </div>
                                                                                                                 </div>
@@ -254,6 +254,7 @@
                                                                                                     <div class="modal-close modal-close-cross"></div>
                                                                                                     <div class="text-block">
                                                                                                         <h3>De-Energize</h3>
+                                                                                                        <p class="error-color-form">{{ __('lang.WALLET.WARNING_DE_ENERGIZE') }}</p>
                                                                                                         <!--<div class="slide-energize">
                                                                                                             <slider :initvalue="sliderValue" v-bind:max="maxPowerDown" v-on:change="onAmount"></slider>
                                                                                                         </div>-->

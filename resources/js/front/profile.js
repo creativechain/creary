@@ -187,7 +187,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                         this.amount = this.config.total_amount.toPlainString();
                     },
                     sendCrea: function sendCrea() {
-                        if (this.toError || !this.amount) {//TODO: SHOW ERRORS
+                        if (this.toError || this.toExchange || !this.amount) {//TODO: SHOW ERRORS
                         } else if (this.config.confirmed) {
                             let that = this;
                             let amountData = {
@@ -232,6 +232,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 switch (that.config.op) {
                                     case 'transfer_from_savings_crea':
                                     case 'transfer_from_savings_cbd':
+                                    case 'transfer_cbd':
                                         that.toExchange = SAVINGS_BLACK_LIST.includes(username);
                                         break;
                                     default:
@@ -408,7 +409,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CBD,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
-                                    exchange_text: lang.WALLET.TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CBD,
                                     to: this.session.account.username,
@@ -420,7 +421,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CREA,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
-                                    exchange_text: lang.WALLET.TRANSFER_FROM_SAVINGS_EXCHANGE_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CREA,
                                     to: this.session.account.username,
@@ -444,6 +445,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_CBD_TITLE,
                                     text: this.lang.WALLET.TRANSFER_CBD_TEXT,
+                                    exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.SEND,
                                     nai: apiOptions.symbol.CBD,
                                     total_amount: Asset.parseString(this.state.user.cbd_balance)
@@ -1574,21 +1576,29 @@ import MentionNotification from "../components/notifications/MentionNotification
     });
 
     creaEvents.on('crea.notifications.all', function (notifications) {
-        if (profileContainer) {
-            profileContainer.notifications.all = notifications ? notifications : [];
-            profileContainer.$forceUpdate();
-        } else {
-            tempNotifications.all = notifications ? notifications : [];
-        }
+        globalLoading.show = false;
 
+        console.log('All notifications ->', notifications);
+        if (notifications && notifications.data) {
+            if (profileContainer) {
+                console.log('Container prepared', clone(profileContainer.notifications));
+                let latestNotifs = profileContainer.notifications.all;
+                profileContainer.notifications.all = latestNotifs.concat(notifications.data);
+
+                profileContainer.$forceUpdate();
+            } else {
+                console.log('Container unprepared');
+                tempNotifications.all = notifications.data;
+            }
+        }
     });
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
         if (profileContainer) {
-            profileContainer.notifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+            profileContainer.notifications.unread = unreadNotifications.total;
             profileContainer.$forceUpdate();
         } else {
-            tempNotifications.unread = unreadNotifications ? unreadNotifications.length : 0;
+            tempNotifications.unread = unreadNotifications.total;
         }
     });
 
@@ -1597,34 +1607,40 @@ import MentionNotification from "../components/notifications/MentionNotification
         if (!onScrollCalling) {
             onScrollCalling = true;
 
-            getProfileDiscussions(function (err, discussions) {
+            if (profileContainer.navbar.section === 'notifications') {
+                globalLoading.show = true;
+                creaEvents.emit('crea.notifications.more', profileContainer.session);
+            } else {
+                getProfileDiscussions(function (err, discussions) {
 
-                //Remove first duplicate post
-                //discussions.shift();
+                    //Remove first duplicate post
+                    //discussions.shift();
 
-                //Sort discussions
-                //Nodes return discussion ordered by last update
-                discussions.sort(function (k1, k2) {
-                    let d1 = toLocaleDate(k1.created);
-                    let d2 = toLocaleDate(k2.created);
-                    return d2.valueOf() - d1.valueOf();
+                    //Sort discussions
+                    //Nodes return discussion ordered by last update
+                    discussions.sort(function (k1, k2) {
+                        let d1 = toLocaleDate(k1.created);
+                        let d2 = toLocaleDate(k2.created);
+                        return d2.valueOf() - d1.valueOf();
+                    });
+
+
+                    for (let x = 0; x < discussions.length; x++) {
+                        let d = discussions[x];
+
+                        let permlink = d.author + '/' + d.permlink;
+                        profileContainer.state.content[permlink] = d;
+                        profileContainer.state.discussion_idx[''].profile.push(permlink);
+                    }
+
+                    profileContainer.state.discussions = profileContainer.state.discussion_idx[''].profile;
+                    profileContainer.$forceUpdate();
+                    onScrollCalling = false;
+
+                    creaEvents.emit('navigation.state.update', profileContainer.state);
                 });
+            }
 
-
-                for (let x = 0; x < discussions.length; x++) {
-                    let d = discussions[x];
-
-                    let permlink = d.author + '/' + d.permlink;
-                    profileContainer.state.content[permlink] = d;
-                    profileContainer.state.discussion_idx[''].profile.push(permlink);
-                }
-
-                profileContainer.state.discussions = profileContainer.state.discussion_idx[''].profile;
-                profileContainer.$forceUpdate();
-                onScrollCalling = false;
-
-                creaEvents.emit('navigation.state.update', profileContainer.state);
-            });
         }
     });
 

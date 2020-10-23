@@ -40,14 +40,27 @@ class CrearyClient
      * @param string $method
      * @param array $params
      * @return array
+     * @throws \Exception
      */
-    private function buildRpcData(string $method, array $params) {
+    private function buildRpcData(string $method, array $params = []) {
         return array(
             'jsonrpc' => '2.0',
             'method' => $method,
             'params' => $params,
             'id' => random_int(0, 999999999)
         );
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function getGlobalProperties() {
+        $rpcData = $this->buildRpcData('condenser_api.get_dynamic_global_properties');
+
+        $response = $this->callRequest($rpcData);
+
+        return $response->result;
     }
 
     /**

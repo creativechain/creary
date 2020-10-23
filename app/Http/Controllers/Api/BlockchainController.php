@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Crea\CrearyClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class BlockchainController extends Controller
 {
@@ -15,36 +17,62 @@ class BlockchainController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function getTotalSupply(Request $request) {
-        $curl = curl_init();
+    public function getCurrentSupply(Request $request) {
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env('CREA_NODE'),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "{\"jsonrpc\":\"2.0\", \"method\":\"condenser_api.get_dynamic_global_properties\", \"params\": [],  \"id\":1}",
-            CURLOPT_HTTPHEADER => array(
-                "Content-Type: application/json",
-            ),
-        ));
+        try {
+            $client = new CrearyClient();
+            $props = $client->getGlobalProperties();
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return response($err, 500);
-        } else {
-            $result = json_decode($response, true)['result'];
-            $totalSupply = $result['current_supply'];
-            $totalSupply = str_replace(' CREA', '', $totalSupply);
-            return response($totalSupply, 200, ['Content-Type' => 'text/plain']);
+            $currentSupply = str_replace(' CREA', '', $props->current_supply);
+            return response($currentSupply, 200, ['Content-Type' => 'text/plain']);
+        } catch (\Exception $e) {
+            Log::error('Error getting global properties', $e->getTrace());;
         }
+
+        return response('Service in Maintenance', 503);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getTotalSupply(Request $request) {
+
+
+        try {
+            $client = new CrearyClient();
+            $props = $client->getGlobalProperties();
+
+            $totalSupply = str_replace(' CREA', '', $props->virtual_supply);
+            return response($totalSupply, 200, ['Content-Type' => 'text/plain']);
+        } catch (\Exception $e) {
+            Log::error('Error getting global properties', $e->getTrace());;
+        }
+
+        return response('Service in Maintenance', 503);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getSupply(Request $request) {
+
+        try {
+            $client = new CrearyClient();
+            $props = $client->getGlobalProperties();
+
+            $virtualSupply = str_replace(' CREA', '', $props->virtual_supply);
+            $currentSupply = str_replace(' CREA', '', $props->current_supply);
+            return response([
+                'current_supply' => $currentSupply,
+                'total_supply' => $virtualSupply,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error getting global properties', $e->getTrace());;
+        }
+
+        return response('Service in Maintenance', 503);
     }
 
     public function markRead(Request $request, $creaUser) {

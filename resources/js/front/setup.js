@@ -88,21 +88,43 @@ import HttpClient from "../lib/http";
         //console.log(navLang, CreaCookies.get('creary.language'));
     }
 
+    let unreadNotifications = null;
+    let allNotifications = null;
+
     function fetchUnreadNotifications(session, account) {
         if (session) {
-            let httpClient = new HttpClient(`/~api/notification/@${session.account.username}`);
+            let url = `/~api/notification/@${session.account.username}/unread`;
+            let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
-                let notifications =  JSON.parse(data)
-                console.log('Notifications', notifications);
-                let unread = [];
-                notifications.forEach(function (n) {
-                    if (!n.read_at) {
-                        unread.push(n);
-                    }
-                });
+                unreadNotifications =  JSON.parse(data);
+                console.log('Notifications', unreadNotifications);
 
-                creaEvents.emit('crea.notifications.all', notifications);
-                creaEvents.emit('crea.notifications.unread', unread);
+                //creaEvents.emit('crea.notifications.all', notifications);
+                creaEvents.emit('crea.notifications.unread', unreadNotifications);
+            });
+            httpClient.get({});
+        }
+    }
+
+    function fetchAllNotifications(session, account) {
+        if (session) {
+            let url = `/~api/notification/@${session.account.username}`;
+            if (allNotifications) {
+                //If next page is not provided, not call
+                if (!allNotifications.next_page_url) {
+                    creaEvents.emit('crea.notifications.all', false);
+                    return false;
+                }
+
+                url = allNotifications.next_page_url || url;
+            }
+            let httpClient = new HttpClient(url);
+            httpClient.on('done' + httpClient.id, function (data) {
+                allNotifications =  JSON.parse(data);
+                console.log('Notifications', allNotifications);
+
+                creaEvents.emit('crea.notifications.all', allNotifications);
+                //creaEvents.emit('crea.notifications.unread', unread);
             });
             httpClient.get({});
         }
@@ -110,11 +132,18 @@ import HttpClient from "../lib/http";
 
     function preSetup(session, account) {
         updateCookies(session, account);
+        fetchAllNotifications(session, account);
         fetchUnreadNotifications(session, account);
     }
 
     creaEvents.on('crea.notifications.update', function (session, account) {
+        fetchAllNotifications(session, account);
         fetchUnreadNotifications(session, account);
+    });
+
+    creaEvents.on('crea.notifications.more', function (session, account) {
+        console.log('Getting more notifications');
+        fetchAllNotifications(session, account);
     });
 
     creaEvents.on('crea.session.login', function (session, account) {
@@ -141,6 +170,7 @@ import HttpClient from "../lib/http";
     });
 
     creaEvents.on('crea.dom.ready', function () {
+        console.log('DOM ready received');
         $.holdReady(false);
         $(window).scroll(function (event) {
             let scrollHeight = $(document).height();
@@ -166,6 +196,7 @@ import HttpClient from "../lib/http";
         $('[data-toggle="popover"]').popover();
 
         //Build modals
+        console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready');
     });
 

@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::get('/blockchain/totalSupply', 'Api\BlockchainController@getTotalSupply')->name('crea.supply');
+Route::get('/blockchain/supply', 'Api\BlockchainController@getSupply')->name('crea.supply');
+Route::get('/blockchain/currentSupply', 'Api\BlockchainController@getCurrentSupply')->name('crea.supply.current');
+Route::get('/blockchain/totalSupply', 'Api\BlockchainController@getTotalSupply')->name('crea.supply.total');
 Route::get('/blockchain/test', 'Api\BlockchainController@markRead');
 
 Route::group(['prefix' => 'notification'], function () {
