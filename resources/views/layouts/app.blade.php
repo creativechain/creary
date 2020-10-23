@@ -232,35 +232,33 @@
                 </div>
 
                 <!--logueado -->
-                <div class="col-9 col-md-10 text-right" v-if="session">
-                    <ul class="list-inline">
-                        <li class="">
-                            <!-- desktop-->
+                <div class="col-9 col-md-10 text-right navbar-rwd" v-if="session">
+                    <div class="cajas-iconos-navbar">
+                        <div class="cajas text-white text-center">
                             <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
                                 <i class="stack-search"></i>
                             </div>
-                        </li>
-                        <li v-if="session">
+                        </div>
+                        <div class="cajas text-white text-center">
                             <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
                                 <span class="icon-notification"><i class="far fa-bell"></i></span>
                                 <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
 
                             </a>
-                        </li>
-                        <li class="list-inline-item">
+                        </div>
+                        <div class="cajas text-white text-center">
                             <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
                                 <div class="user-avatar" >
                                     <avatar v-bind:account="user"></avatar>
                                 </div>
                             </div>
-                        </li>
-
-                        <li v-pre class="icon-menu-navbar-right">
+                        </div>
+                        <div class="cajas text-white text-center">
                             <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
-                                <i class="stack-menu"></i>
+                                <i class="stack-menu" style="    font-size: 26px;"></i>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- invitado -->
@@ -352,7 +350,7 @@
 
 
                         <li v-pre class="icon-menu-navbar-right">
-                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                            <div class="icons-navbar navbar-menu-icon" style="position: relative;top: 2px;" data-notification-link="side-menu">
                                 <i class="stack-menu"></i>
                             </div>
                         </li>

@@ -1,19 +1,27 @@
 <div class="col-xl-2-cust col-xl-3-cust col-lg-4-cust col-sm-6 col-md-4 col-lg-3 col-xl-2 masonry__item" v-bind:class="{ 'row-simple-view': simpleView }">
     <div class="card card-2 card-home">
 
-        <div class="card__top">
-            <a v-bind:href="state.content[p].url" v-on:click="openPost(state.content[p], $event)">
-                <div v-if="!state.accounts[state.content[p].author].buzz.blocked" class="img-post-list"
-                     v-lazy:background-image="getFeaturedImage(state.content[p]).url">
+        <div class="square-card">
+            <div class="content-card">
+                <div class="card__top">
+                    <a v-bind:href="state.content[p].url" v-on:click="openPost(state.content[p], $event)">
+                        <div v-if="!state.accounts[state.content[p].author].buzz.blocked" class="img-post-list"
+                             v-lazy:background-image="getFeaturedImage(state.content[p]).url">
 
+                        </div>
+                        <div v-else class="img-post-list" v-lazy:background-image="'{{ asset('img/crea-web/image-block-creary.jpg') }}'">
+
+                        </div>
+                    </a>
+
+                    <recommend v-if="session" v-bind:feed="isFeed()" v-bind:user="account.user" v-bind:session="session" v-bind:post="state.content[p]"></recommend>
                 </div>
-                <div v-else class="img-post-list" v-lazy:background-image="'{{ asset('img/crea-web/image-block-creary.jpg') }}'">
-
-                </div>
-            </a>
-
-            <recommend v-if="session" v-bind:feed="isFeed()" v-bind:user="account.user" v-bind:session="session" v-bind:post="state.content[p]"></recommend>
+            </div>
         </div>
+
+
+
+
 
         <div class="card__body">
             <h4 v-on:click="openPost(state.content[p])">@{{ state.content[p].title }}</h4>
