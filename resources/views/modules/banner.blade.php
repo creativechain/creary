@@ -2,9 +2,9 @@
     <div class="row-close" v-on:click="showBanner = false">
         <a class="cursor"><i class="fas fa-times"></i></a>
     </div>
-    <div class="container post-container-home">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-8 text-center text-md-left">
                 <h1 v-html="'{{ __('lang.BANNER.TITLE') }}'"></h1>
                 <h3 class="font-weight-normal">{{ __('lang.BANNER.SUBTITLE') }}</h3>
                 <a href="/welcome" class="btn btn--sm btn-primary">
@@ -13,8 +13,11 @@
                     </span>
                 </a>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4 text-center text-md-left">
                 <img alt="background" src="{{ asset('img/crea-web/banner-crea-art-by-samson.png') }}"/>
+                <div class="firma-banner">
+                    <a href="https://creary.net/@samson.img"><span>Art by Samson</span></a>
+                </div>
             </div>
         </div>
     </div>

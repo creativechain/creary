@@ -63,8 +63,8 @@
 
     },
     "BANNER": {
-        "TITLE": "La red social que recompensa tu creatividad",
-        "SUBTITLE": "Bienvenido a la comunidad descentralizada de portfolios creativos que recompensa a artistas y curadores.  ¡Be creative!"
+        "TITLE": "La red social que <br/> recompensa tu creatividad",
+        "SUBTITLE": "Siente el poder de la comunidad"
     },
     "TRENDING": {
         "PAYOUTS": "PAGOS",

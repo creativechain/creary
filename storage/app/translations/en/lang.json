@@ -63,8 +63,8 @@
 
     },
     "BANNER": {
-        "TITLE": "The social network that rewards your creativity",
-        "SUBTITLE": "Welcome to the decentralized community of creative portfolios, that rewards artists and curators. Be creative!"
+        "TITLE": "The social network <br/> that rewards your creativity",
+        "SUBTITLE": "Feel the power of the community"
     },
     "TRENDING": {
         "PAYOUTS": "PAYOUTS",

@@ -21,6 +21,13 @@
   .btn {
     min-width: 155px;
   }
+  #slide-home h1 {
+    font-size: 2.2rem;
+  }
+  #slide-home h3 {
+    color: black;
+    font-size: 1.475rem;
+  }
 }
 
 
@@ -34,13 +41,13 @@
 
 @media (max-width: 412px) {
   #slide-home {
-    padding: 90px 0 108px !important;
+    padding: 90px 0 0 !important;
   }
 }
 
 @media (max-width: 360px) {
   #slide-home {
-    padding: 60px 0 105px !important;
+    padding: 60px 0 0 !important;
   }
   .post-view {
     #post-view {
@@ -98,8 +105,7 @@
     float: right;
   }
   #slide-home {
-    padding: 60px 0 105px;
-    min-height: 384px;
+    padding: 60px 0 0;
   }
 
   .bar + nav.bar {
@@ -818,7 +824,6 @@
   }
   #slide-home {
     padding: 60px 0 0;
-    min-height: 360px;
   }
   .post-like-count {
     .dropdown__container {
