@@ -5,7 +5,7 @@
     <div class="container post-container-home">
         <div class="row align-items-center">
             <div class="col-12 col-md-8">
-                <h1 v-html="{{ __('lang.BANNER.TITLE') }}"></h1>
+                <h1 v-html="'{{ __('lang.BANNER.TITLE') }}'"></h1>
                 <h3 class="font-weight-normal">{{ __('lang.BANNER.SUBTITLE') }}</h3>
                 <a href="/welcome" class="btn btn--sm btn-primary">
                     <span class="btn__text font-weight-bold">
