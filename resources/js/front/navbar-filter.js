@@ -1,74 +1,65 @@
-var metrics = {};
-var scrollOffset = 0;
+mr = (function (mr, $, window, document){
+    "use strict";
 
-var container = document.getElementById("outer");
-var bar = document.getElementById("bar");
+    mr.sliders = mr.sliders || {};
 
-function setMetrics() {
-    metrics = {
-        bar: bar.scrollWidth||0,
-        container: container.clientWidth||0,
-        left: parseInt(bar.offsetLeft),
-        getHidden() {
-            return (this.bar+this.left)-this.container
-        }
-    }
+    mr.sliders.documentReady = function($){
 
-    updateArrows();
-}
+        $('.slider').each(function(index){
 
-function doSlide(direction){
-    setMetrics();
-    var pos = metrics.left;
-    if (direction==="right") {
-        amountToScroll = -(Math.abs(pos) + Math.min(metrics.getHidden(), metrics.container));
-    }
-    else {
-        amountToScroll = Math.min(0, (metrics.container + pos));
-    }
-    bar.style.left = amountToScroll + "px";
-    setTimeout(function(){
-        setMetrics();
-    },400)
-}
+            var slider = $(this);
+            var sliderInitializer = slider.find('ul.slides');
+            sliderInitializer.find('>li').addClass('slide');
+            var childnum = sliderInitializer.find('li').length;
 
-function updateArrows() {
-    if (metrics.getHidden() === 0) {
-        document.getElementsByClassName("toggleRight")[0].classList.add("text-light");
-    }
-    else {
-        document.getElementsByClassName("toggleRight")[0].classList.remove("text-light");
-    }
+            var themeDefaults = {
+                cellSelector: '.slide',
+                cellAlign: 'left',
+                wrapAround: true,
+                pageDots: false,
+                prevNextButtons: false,
+                autoPlay: true,
+                draggable: (childnum < 2 ? false: true),
+                imagesLoaded: true,
+                accessibility: true,
+                rightToLeft: false,
+                initialIndex: 0,
+                freeScroll: false
+            };
 
-    if (metrics.left === 0) {
-        document.getElementsByClassName("toggleLeft")[0].classList.add("text-light");
-    }
-    else {
-        document.getElementsByClassName("toggleLeft")[0].classList.remove("text-light");
-    }
-}
+            // Attribute Overrides - options that are overridden by data attributes on the slider element
+            var ao = {};
+            ao.pageDots = (slider.attr('data-paging') === 'true' && sliderInitializer.find('li').length > 1) ? true : undefined;
+            ao.prevNextButtons = slider.attr('data-arrows') === 'true'? true: undefined;
+            ao.draggable = slider.attr('data-draggable') === 'false'? false : undefined;
+            ao.autoPlay = slider.attr('data-autoplay') === 'false'? false: (slider.attr('data-timing') ? parseInt(slider.attr('data-timing'), 10): undefined);
+            ao.accessibility = slider.attr('data-accessibility') === 'false'? false : undefined;
+            ao.rightToLeft = slider.attr('data-rtl') === 'true'? true : undefined;
+            ao.initialIndex = slider.attr('data-initial') ? parseInt(slider.attr('data-initial'), 10) : undefined;
+            ao.freeScroll = slider.attr('data-freescroll') === "true" ? true: undefined;
 
-function adjust(){
-    bar.style.left = 0;
-    setMetrics();
-}
+            // Set data attribute to inidicate the number of children in the slider
+            slider.attr('data-children',childnum);
 
-document.getElementsByClassName("toggleRight")[0].addEventListener("click", function(e){
-    e.preventDefault()
-    doSlide("right")
-});
 
-document.getElementsByClassName("toggleLeft")[0].addEventListener("click", function(e){
-    e.preventDefault()
-    doSlide("left")
-});
+            $(this).data('sliderOptions', jQuery.extend({}, themeDefaults, mr.sliders.options, ao));
 
-window.addEventListener("resize",function(){
-    // reset to left pos 0 on window resize
-    adjust();
-});
+            $(sliderInitializer).flickity($(this).data('sliderOptions'));
 
-creaEvents.on('crea.content.loaded', function () {
-    setMetrics();
-})
+            $(sliderInitializer).on( 'scroll.flickity', function( event, progress ) {
+                if(slider.find('.is-selected').hasClass('controls--dark')){
+                    slider.addClass('controls--dark');
+                }else{
+                    slider.removeClass('controls--dark');
+                }
+            });
+        });
 
+        if(mr.parallax.update){ mr.parallax.update(); }
+
+    };
+
+    mr.components.documentReadyDeferred.push(mr.sliders.documentReady);
+    return mr;
+
+}(mr, jQuery, window, document));

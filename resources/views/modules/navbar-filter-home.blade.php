@@ -1,11 +1,31 @@
 <div class="col-6 col-md-2">
-    <div class="input-select">
-        <select>
-            <option selected="" value="Default">Select An Option</option>
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Larger">Large</option>
-        </select>
+    <div class="dropdown">
+        <span class="dropdown__trigger">Trigger Dropdown <i class="stack-down-open"></i></span>
+        <div class="dropdown__container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-lg-2 dropdown__content">
+                        <ul class="list-inline navbar-followin-home">
+                            <li class="list-inline-item w-100" v-if="session" v-bind:class="{'active': isUserFeed()}">
+                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
+                            </li>
+                            <li class="list-inline-item w-100" v-bind:class="{'active': nav === 'popular'}">
+                                <a href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>
+                            </li>
+                            <li class="list-inline-item w-100" v-bind:class="{'active': nav === 'skyrockets'}">
+                                <a href="/skyrockets" v-on:click="retrieveHotContent">{{ __('lang.HOME.MENU_SKYROCKETS') }}</a>
+                            </li>
+                            <li class="list-inline-item w-100" v-bind:class="{'active': nav === 'now'}">
+                                <a href="/now" v-on:click="retrieveNowContent">{{ __('lang.HOME.MENU_NOW') }}</a>
+                            </li>
+                            <li class="list-inline-item w-100" v-bind:class="{'active': nav === 'promoted'}">
+                                <a href="/promoted" v-on:click="retrievePromotedContent">{{ __('lang.HOME.MENU_PROMOTED') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!--end row-->
+            </div><!--end container-->
+        </div><!--end dropdown container-->
     </div>
 </div>
 <div class="col-12 col-md-9">
@@ -14,62 +34,32 @@
 
 
     <div class="container">
-        <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-                <a href="#" class="btn-left btn-link p-2 toggleLeft"> < <i class="mdi mdi-chevron-left"></i></a>
+        <div class="row">
+            <div class="col">
+                <div class="slider slider--inline-arrows slider--arrows-hover text-center" data-arrows="true">
+                    <ul class="slides">
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-1.png" />
+                        </li>
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-2.png" />
+                        </li>
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-3.png" />
+                        </li>
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-4.png" />
+                        </li>
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-5.png" />
+                        </li>
+                        <li class="col-md-3 col-6">
+                            <img alt="Image" class="image--xxs" src="img/partner-6.png" />
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex-grow-1 position-relative overflow-hidden" id="outer">
-                <ul class="nav nav-fill text-uppercase position-relative flex-nowrap" id="bar">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Self</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">World</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Lifestyle</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Bio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Politics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Local</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Science</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Tech</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Health</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Food</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Design</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Culture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Travel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">More</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="flex-shrink-0">
-                <a href="#" class="btn-right btn-link toggleRight p-2"> > <i class="mdi mdi-chevron-right"></i></a>
-            </div>
+            <!--end of col-->
         </div>
     </div>
 
