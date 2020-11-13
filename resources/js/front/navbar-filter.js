@@ -68,4 +68,7 @@ window.addEventListener("resize",function(){
     adjust();
 });
 
-setMetrics();
+creaEvents.on('crea.content.loaded', function () {
+    setMetrics();
+})
+

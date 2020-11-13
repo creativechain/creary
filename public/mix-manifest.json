@@ -10,6 +10,7 @@
     "/js/control/market.js": "/js/control/market.js",
     "/js/control/modals.js": "/js/control/modals.js",
     "/js/control/navbar.js": "/js/control/navbar.js",
+    "/js/control/navbar-filter.js": "/js/control/navbar-filter.js",
     "/js/control/navbar-mobile.js": "/js/control/navbar-mobile.js",
     "/js/control/post.js": "/js/control/post.js",
     "/js/control/post-navigation.js": "/js/control/post-navigation.js",

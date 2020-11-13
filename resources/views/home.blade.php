@@ -12,6 +12,8 @@
                     @include('modules.navbar-filter-home')
                 </div>
             </div>
+            <script src="{{ asset('js/control/navbar-filter.js') }}"></script>
+
         </section>
 
         <section v-cloak id="navbar-mobile" class="cta cta-4 space--xxs border--bottom d-block d-sm-block d-md-none navbar-filter mobile">
