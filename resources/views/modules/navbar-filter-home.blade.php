@@ -39,22 +39,22 @@
                 <div class="slider slider--inline-arrows slider--arrows-hover text-center" data-arrows="true">
                     <ul class="slides">
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-1.png" />
+                            hola
                         </li>
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-2.png" />
+                            hola
                         </li>
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-3.png" />
+                            hola
                         </li>
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-4.png" />
+                            hola
                         </li>
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-5.png" />
+                            hola
                         </li>
                         <li class="col-md-3 col-6">
-                            <img alt="Image" class="image--xxs" src="img/partner-6.png" />
+                            hola
                         </li>
                     </ul>
                 </div>
