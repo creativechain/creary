@@ -8,7 +8,7 @@
 
         <section class="cta cta-4 space--xxs border--bottom d-none d-md-block navbar-filter">
             <div class="container post-container-home">
-                <div class="row align-items-end">
+                <div class="row align-items-end align-items-center">
                     @include('modules.navbar-filter-home')
                 </div>
             </div>

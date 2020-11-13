@@ -1,0 +1,67 @@
+.navbar-filter {
+  .input-select:after {
+    line-height: 25px;
+  }
+
+
+
+
+  .nav {
+    transition: all 0.4s;
+    left: 0;
+  }
+  .overflow-hidden {
+    overflow: hidden!important;
+  }
+  .nav {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+  }
+  .nav-fill {
+    .nav-item {
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      text-align: center;
+      .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+        font-size: 14px;
+        color: $color-menu-a-navbar;
+      }
+    }
+
+  }
+
+
+
+
+
+  .input-select:focus {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+
+  .button-filter {
+     width: auto;
+     min-width: auto;
+     color: $color-dark-primary;
+     border-color: $background-checkbox;
+   }
+  .button-filter:hover {
+    width: auto;
+    min-width: auto;
+    color: white;
+    svg {
+      g {
+        path {
+          fill: white;
+          stroke: white;
+        }
+      }
+    }
+  }
+}
