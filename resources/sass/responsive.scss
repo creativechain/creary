@@ -714,7 +714,7 @@
     padding-top: 75px !important;
   }
   .navbar-filter {
-    padding-top: 25px !important;
+    padding-top: 65px !important;
   }
   .project-profile {
     .masonry__item {
@@ -1157,3 +1157,100 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 991.98px) and (min-width: 768px) {
+  .navbar-filter {
+    padding-top: 65px !important;
+    .flickity-prev-next-button {
+      top: 15px;
+      margin-top: 0;
+    }
+  }
+}
+
+
+@media (min-width: 768px) {
+  .flickity-prev-next-button.next {
+    background: rgba(255,255,255,0);
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(249,249,249,0)), color-stop(33%, rgba(253,253,253,1)), color-stop(100%, rgba(249,249,249,1))) !important;;
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgb(249 249 249) 25%, rgb(249 249 249) 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=1 );
+  }
+  .flickity-prev-next-button.previous {
+    background: rgba(255,255,255,0);
+    background: -moz-linear-gradient(right, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(249,249,249,0)), color-stop(33%, rgba(253,253,253,1)), color-stop(100%, rgba(249,249,249,1))) !important;;
+    background: -webkit-linear-gradient(right, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -o-linear-gradient(right, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: -ms-linear-gradient(right, rgba(255,255,255,0) 0%, rgba(249,249,249,1) 25%, rgba(249,249,249,1) 100%) !important;;
+    background: linear-gradient(to left, rgba(255,255,255,0) 0%, rgb(249 249 249) 25%, rgb(249 249 249) 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=1 );
+  }
+}
+
+
+@media (width: 768px) {
+  .flickity-prev-next-button {
+    top: 0;
+    margin-top: 15px;
+  }
+  .button-filter {
+    height: 30px;
+    max-height: 30px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+@media (min-width: 320px) and (max-width: 767px) {
+  body {
+    background: #ffffff !important;
+  }
+  .navbar-filter {
+
+    .select-slider {
+      border-top: solid 1px #ECECEC;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+  }
+  .flickity-prev-next-button.previous  {
+    background: rgba(255, 255, 255, 0) !important;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(249, 249, 249, 0)), color-stop(33%, #ffffff), color-stop(100%, #ffffff)) !important;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, #ffffff 25%, #ffffff 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#ffffff", endColorstr="#ffffff", GradientType=1 );
+  }
+  .flickity-prev-next-button.next {
+    background: rgba(255, 255, 255, 0) !important;;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(249, 249, 249, 0)), color-stop(33%, #ffffff), color-stop(100%, #ffffff)) !important;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, #ffffff 25%, #ffffff 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#ffffff", endColorstr="#ffffff", GradientType=1 );
+  }
+  .flickity-prev-next-button {
+    top: 0;
+    margin-top: 15px;
+  }
+
+
+
+
+  .notification-new {
+    top: 2px;
+  }
+
+
+}

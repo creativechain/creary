@@ -6,17 +6,16 @@
             @include('modules.banner')
         </div>
 
-        <section class="cta cta-4 space--xxs border--bottom d-none d-md-block navbar-filter">
+        <section class="cta cta-4 space--xxs border--bottom navbar-filter">
             <div class="container post-container-home">
-                <div class="row align-items-end align-items-center">
-                    @include('modules.navbar-filter-home')
-                </div>
+                @include('modules.navbar-filter-home')
+
             </div>
             <script src="{{ asset('js/control/navbar-filter.js') }}"></script>
 
         </section>
 
-        <section v-cloak id="navbar-mobile" class="cta cta-4 space--xxs border--bottom d-block d-sm-block d-md-none navbar-filter mobile">
+        <!--<section v-cloak id="navbar-mobile" class="cta cta-4 space--xxs border--bottom d-block d-sm-block d-md-none navbar-filter mobile">
             <div class="container post-container-home">
                 <div class="row align-items-end">
                     <div class="col-md-12 text-center">
@@ -40,7 +39,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>-->
         <script src="{{ asset('js/control/navbar-mobile.js') }}"></script>
 
         <div v-cloak id="home-posts">

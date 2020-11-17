@@ -23,7 +23,9 @@
   -webkit-transform: translate3d(0, 0, 0);
 }
 .icons-navbar {
-  font-size: 20px !important;
+  i {
+    font-size: 20px !important;
+  }
 }
 .search.icons-navbar {
   color: #AAAAAA;

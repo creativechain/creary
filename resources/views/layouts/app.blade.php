@@ -217,6 +217,15 @@
                 <input v-model="search" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
+
+
+
+        @include('modules.vista-resultados-navbar')
+
+
+
+
+
     </form>
 </div>
 
@@ -373,22 +382,6 @@
                 <div class="col-12 col-md-10 col-lg-10  text-center text-left-xs text-left-sm">
                     <div class="bar__module">
                         <ul class="menu-horizontal text-left">
-                            <li v-if="session" class="d-none d-md-inline-block" v-bind:class="{'active': isUserFeed()}">
-                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
-                            </li>
-                            <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'popular'}">
-                                <a  href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>
-                            </li>
-                            <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'skyrockets'}">
-                                <a href="/skyrockets" v-on:click="retrieveHotContent">{{ __('lang.HOME.MENU_SKYROCKETS') }}</a>
-                            </li>
-                            <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'now'}">
-                                <a href="/now" v-on:click="retrieveNowContent">{{ __('lang.HOME.MENU_NOW') }}</a>
-                            </li>
-                            <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'promoted'}">
-                                <a href="/promoted" v-on:click="retrievePromotedContent">{{ __('lang.HOME.MENU_PROMOTED') }}</a>
-                            </li>
-
 
                             <!--- Links Mobil --->
 
@@ -488,10 +481,12 @@
 
                     <div class="bar__module float-lg-right float-md-right">
                         <ul class="menu-horizontal text-left">
-                            <li class="hidden-xs">
-                                <!-- desktop-->
-                                <div data-notification-link="search-box" class="search icons-navbar">
-                                    <i class="stack-search"></i>
+                            <li>
+                                <div class="dropdown dropdown-search">
+                                    <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i> Buscar...</span>
+
+                                    @include('modules.vista-resultados-navbar')
+
                                 </div>
                             </li>
 
@@ -504,7 +499,7 @@
                                 </a>
                             </li>
 
-                            <li v-if="session">
+                            <li v-if="session" >
                                 <!-- mobile-->
                                 <a class="btn btn--sm btn--primary type--uppercase hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="margin: 10px auto 20px !important;">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
@@ -512,7 +507,7 @@
                                     </span>
                                 </a>
                                 <!-- desktop-->
-                                <a class="btn btn--sm btn--primary type--uppercase  hidden-xs w-100 ml-0" href="/publish">
+                                <a class="btn btn--sm btn--primary type--uppercase  hidden-xs w-100 ml-0 button-publish-desk" href="/publish">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
                                         {{ __('lang.BUTTON.PUBLISH') }}
                                     </span>
