@@ -209,10 +209,10 @@
     </div>
 </div>
 
-<div v-cloak id="navbar-search" class="notification pos-top pos-right search-box bg--white border--bottom" data-animation="from-top"
+<div v-cloak id="navbar-search" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
      data-notification-link="search-box">
     <form v-on:submit="performSearch">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
                 <input v-model="search" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
@@ -485,7 +485,10 @@
                                 <div class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i> Buscar...</span>
 
-                                    @include('modules.vista-resultados-navbar')
+                                    <div class="dropdown__container">
+                                        @include('modules.vista-resultados-navbar')
+                                    </div>
+
 
                                 </div>
                             </li>

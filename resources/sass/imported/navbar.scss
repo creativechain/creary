@@ -282,6 +282,81 @@ span.icons-navbar {
 
 
 
+.search-box {
+  .row-input {
+    padding: 22px;
+  }
+
+  .container-result-search {
+    .ul-text {
+      border-bottom: solid 2px #EAEAEA;
+      li {
+        padding: 4px 10px;
+        border-bottom: solid 1px #EAEAEA;
+        margin-bottom: 0;
+        a {
+          font-size: 12px;
+          font-weight: bold;
+          color: #23221C !important;
+        }
+      }
+    }
+    .row-name-img {
+
+      .ul-name-img {
+        li {
+          padding: 4px 10px;
+          border-bottom: solid 1px #EAEAEA;
+          .row-flex {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            align-items: flex-start;
+            .media-body {
+              line-height: 16px;
+              margin-left: 5px;
+              -webkit-box-flex: 1;-ms-flex: 1;flex: 1;
+              .dropdown-autor-span-name {
+                font-size: 12px;
+                font-weight: bold;
+                color: #23221C !important;
+              }
+            }
+          }
+        }
+      }
+      .see-all-members {
+        padding: 10px;
+        a {
+          color: $color-blue-primary !important;
+          font-weight: 300;
+        }
+      }
+    }
+    .user-avatar {
+      height: 30px;
+      width: 30px;
+      overflow: hidden;
+      min-height: 30px;
+      min-width: 30px;
+      border-radius: 50px;
+      margin-bottom: -12px;
+    }
+    .img-user-avatar {
+      background-image: url('/img/crea-web/publish/demo-vertical.jpg');
+      background-size: cover;
+      width: 30px;
+      height: 30px;
+      background-position: 50% 50%;
+    }
+  }
+
+}
+
+
+
 @media all and (min-width: 768px){
   h2+.slider,.h2+.slider{
     margin-top: 10px;
