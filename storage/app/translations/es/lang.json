@@ -165,7 +165,8 @@
         "RECOMMEND_MORE": "y %s más",
         "BLOCKED_USER_ALERT_TITLE": "¡Atención!",
         "BLOCKED_USER_ALERT_MESSAGE": "Este usuario ha sido reportado por muchos usuarios de buena reputación de nuestra comunidad. Existen diferentes razones para reportar a los usuarios:\n                                Suplantación de identidad, incumplimiento de copyright, spam, fraude u otros comportamientos considerados maliciosos o negativos para la comunidad.",
-        "BLOCKED_PROFILE_ALERT_MESSAGE": "Este perfil ha recibido alguna denuncia de suplantación de identidad o infracción de derechos de autor. Para activar la visualización de los proyectos contacta con legal@creary.net."
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "Este perfil ha recibido alguna denuncia de suplantación de identidad o infracción de derechos de autor. Para activar la visualización de los proyectos contacta con legal@creary.net.",
+        "BENEFICIARIES": "BENEFICIARIOS"
     },
     "PROFILE_MENU": {
         "LOGOUT": "Cerrar sesión",
@@ -346,7 +347,12 @@
         "NO_TITLE_TAG_OR_IMAGE": "Debes añadir una imagen destacada, un título y una etiqueta como mínimo",
         "RELOAD_DOWNLOAD_FILE": "Es necesario volver a cargar el archivo de descarga:",
         "PUBLISH_NOT_AVAILABLE_TITLE": "Publicaciones en Mantenimiento",
-        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "En estos momentos las publicaciones se encuentra en mantenimiento. Podras volver a publicar tus obras muy pronto."
+        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "En estos momentos las publicaciones se encuentra en mantenimiento. Podras volver a publicar tus obras muy pronto.",
+        "ADD_VIDEO": "Añadir video",
+        "VIDEO_SUPPORT": "(Youtube, Vimeo)",
+        "MAIN_CATEGORY": "CATEGORÍA PRINCIPAL",
+        "SELECT_A_CATEGORY": "Selecciona una categoría de la lista",
+        "BENEFICIARIES": "BENEFICIARIOS"
 
     },
     "WITNESS": {

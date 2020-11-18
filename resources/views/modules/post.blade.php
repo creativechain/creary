@@ -518,7 +518,7 @@
                     <div class="boxed boxed--border box-comment  mt--2">
                         <div class="row row-publish-description">
                             <div class="col-md-12">
-                                <p class="title mb-1">BENEFICIARIO</p>
+                                <p class="title mb-1">{{ __('lang.PUBLICATION.BENEFICIARIES') }}</p>
                                 <span class="description">creary (70%), protus (20%), creativechain (10%)</span>
                             </div>
                         </div>
@@ -534,7 +534,7 @@
                                         <hr>
                                         <p>Blockchain: <a v-bind:href="'https://creascan.net' + state.post.url + '/data'" target="_blank">Project Data</a> </p>
                                         <p>Timestamp: @{{ new Date(state.post.created + "Z").toLocaleString() }}</p>
-                                        <p>License: <a v-bind:href="getLicense().getLink()" target="_blank">@{{ getLicense().getTags() }}</a></p>
+                                        <p>{{ __('lang.PUBLICATION.LICENSE') }}: <a v-bind:href="getLicense().getLink()" target="_blank">@{{ getLicense().getTags() }}</a></p>
                                         <ul class="float-left mt-3">
                                             <li class="li-blockchain-certificate">
                                                 <template v-for="i in getLicense().getIcons('white')">

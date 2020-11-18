@@ -61,10 +61,10 @@
             </div>
 
             <div class="col-md-12">
-                <label>CATEGORIA PRINCIPAL</label>
+                <label>{{ __('lang.PUBLISH.MAIN_CATEGORY') }}</label>
                 <div class="input-select">
                     <select>
-                        <option selected="" value="Default">Selecciona una categoría de la lista</option>
+                        <option selected="" value="Default">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
                         <option value="Small">Small</option>
                         <option value="Medium">Medium</option>
                         <option value="Larger">Large</option>
@@ -73,9 +73,6 @@
 
             </div>
 
-
-
-
             <div class="col-md-12">
                 <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
                 <input id="publish-tags" class="validate-required"
@@ -83,7 +80,7 @@
             </div>
 
             <div class="col-md-12">
-                <label for="">BENEFICIARIOS</label>
+                <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
                         <input type="text" name="input" placeholder="70" disabled="" class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>

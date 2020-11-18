@@ -87,8 +87,8 @@
 
                                 <div class="col-4 text-center">
                                     <div class="button-add-video" ></div>
-                                    <p class="title">Añadir Video</p>
-                                    <p class="disabled">(Youtube, Vimeo)</p>
+                                    <p class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
                                 </div>
 
                                 <div class="col-4 text-center">
@@ -104,8 +104,8 @@
                                 </div>
                                 <div class="col-4 text-center">
                                     <div class="button-add-video img-disabled-video"></div>
-                                    <p class="title disabled">Añadir Video</p>
-                                    <p class="disabled">(Youtube, Vimeo)</p>
+                                    <p class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
                                 </div>
                                 <div class="col-4 text-center">
                                     <div v-bind:class="{ 'img-disabled-text': editor.show }" class="button-add-text modal-trigger" data-modal-id="modal-login-d"></div>

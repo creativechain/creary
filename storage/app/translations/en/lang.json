@@ -165,7 +165,8 @@
         "RECOMMEND_MORE": "and %s more",
         "BLOCKED_USER_ALERT_TITLE": "Attention!",
         "BLOCKED_USER_ALERT_MESSAGE": "This user has been reported by many well reputed users of our community. There are different reasons to report users:\n                                Identity supplantation, copyright infringement, spam, fraud or other behaviors considered malicious or negatives for the community.",
-        "BLOCKED_PROFILE_ALERT_MESSAGE": "This profile has received report Identity Theft or copyright infringement. To activate the visualization of the projects, contact legal@creary.net."
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "This profile has received report Identity Theft or copyright infringement. To activate the visualization of the projects, contact legal@creary.net.",
+        "BENEFICIARIES": "BENEFICIARIES"
     },
     "PROFILE_MENU": {
         "LOGOUT": "Logout",
@@ -346,7 +347,13 @@
         "NO_TITLE_TAG_OR_IMAGE": "You must add a featured image, a title and at least one tag",
         "RELOAD_DOWNLOAD_FILE": "It's necessary to reload the download file: %s",
         "PUBLISH_NOT_AVAILABLE_TITLE": "Maintenance Publications",
-        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "The publications are currently under maintenance. You will can publish your works again very soon."
+        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "The publications are currently under maintenance. You will can publish your works again very soon.",
+        "ADD_VIDEO": "Add video",
+        "VIDEO_SUPPORT": "(Youtube, Vimeo)",
+        "MAIN_CATEGORY": "MAIN CATEGORY",
+        "SELECT_A_CATEGORY": "Select a category from the list",
+        "BENEFICIARIES": "BENEFICIARIES"
+
 
     },
     "WITNESS": {
