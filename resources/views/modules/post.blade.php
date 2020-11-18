@@ -508,9 +508,18 @@
                     <div class="boxed boxed--border box-comment  mt--2">
                         <div class="row row-publish-description">
                             <div class="col-md-12">
-                                <p class="title">@{{ state.post.title }}</p>
+                                <p class="title mb-1">@{{ state.post.title }}</p>
                                 <span class="description">@{{ state.post.metadata.description }}</span>
                                 <p class="date-publish description mt-4">@{{ formatDate(state.post.created) }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="boxed boxed--border box-comment  mt--2">
+                        <div class="row row-publish-description">
+                            <div class="col-md-12">
+                                <p class="title mb-1">BENEFICIARIO</p>
+                                <span class="description">creary (70%), protus (20%), creativechain (10%)</span>
                             </div>
                         </div>
                     </div>

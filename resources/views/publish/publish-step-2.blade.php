@@ -49,42 +49,96 @@
         </div>
 
         <form action="" class="row">
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
-                    <input v-model="title" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.TITLE" v-on:input="removeTitleEmojis"
-                           class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TITLE') }}" />
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
+                <input v-model="title" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.TITLE" v-on:input="removeTitleEmojis"
+                       class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TITLE') }}" />
+            </div>
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
+                <input v-model="description" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.DESCRIPTION" v-on:input="removeDescriptionEmojis"
+                       class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_DESCRIPTION') }}" />
+            </div>
+
+            <div class="col-md-12">
+                <label>CATEGORIA PRINCIPAL</label>
+                <div class="input-select">
+                    <select>
+                        <option selected="" value="Default">Selecciona una categoría de la lista</option>
+                        <option value="Small">Small</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Larger">Large</option>
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
-                    <input v-model="description" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.DESCRIPTION" v-on:input="removeDescriptionEmojis"
-                           class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_DESCRIPTION') }}" />
-                </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
-                    <input id="publish-tags" class="validate-required"
-                           type="text" value="" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TAGS') }}" />
-                </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.QUESTION') }}</label>
-                    <div class="input-radio-step-2">
-                        <div class="input-radio">
-                            <span class="input__label">{{ __('lang.COMMON.YES') }}</span>
-                            <input id="radio-1" type="radio" name="adult" v-model="adult" v-bind:value="true" />
-                            <label for="radio-1"></label>
-                        </div>
-                        <div class="input-radio">
-                            <span class="input__label">{{ __('lang.COMMON.NO') }}</span>
-                            <input id="radio-2" type="radio" name="adult" v-model="adult" v-bind:value="false"/>
-                            <label for="radio-2"></label>
-                        </div>
+
+            </div>
+
+
+
+
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
+                <input id="publish-tags" class="validate-required"
+                       type="text" value="" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TAGS') }}" />
+            </div>
+
+            <div class="col-md-12">
+                <label for="">BENEFICIARIOS</label>
+                <div class="d-flex mb-3">
+                    <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
+                        <input type="text" name="input" placeholder="70" disabled="" class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                    </div>
+
+                    <div class="input-icon">
+                        <i class="material-icons email">alternate_email</i>
+                        <input type="text" name="input" placeholder="Creary" class="disabled"/>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <p class="error-color-form">
-                        @{{ error || "" }}
-                    </p>
+
+                <div class="d-flex mb-3">
+                    <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
+                        <input type="number" name="input" placeholder="30" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                    </div>
+
+                    <div class="input-icon">
+                        <i class="material-icons email">alternate_email</i>
+                        <input type="text" name="input" placeholder="csmanolo" />
+                    </div>
+                    <div class="input-icon">
+                        <a href="" class="close"><i class="material-icons email">close</i></a>
+                    </div>
                 </div>
-            </form>
+
+                <div class="btn btn--sm">
+                    <span class="btn__text text__dark">Add account</span>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.QUESTION') }}</label>
+                <div class="input-radio-step-2">
+                    <div class="input-radio">
+                        <span class="input__label">{{ __('lang.COMMON.YES') }}</span>
+                        <input id="radio-1" type="radio" name="adult" v-model="adult" v-bind:value="true" />
+                        <label for="radio-1"></label>
+                    </div>
+                    <div class="input-radio">
+                        <span class="input__label">{{ __('lang.COMMON.NO') }}</span>
+                        <input id="radio-2" type="radio" name="adult" v-model="adult" v-bind:value="false"/>
+                        <label for="radio-2"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <p class="error-color-form">
+                    @{{ error || "" }}
+                </p>
+            </div>
+        </form>
     </div>
 </div>
 
