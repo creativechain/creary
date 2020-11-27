@@ -103,6 +103,10 @@
         padding: 10px 15px;
         a {
           color: #686771;
+          img {
+            width: 20px;
+            margin-right: 10px;
+          }
         }
       }
       li:hover {
@@ -394,9 +398,13 @@ span.icons-navbar {
     height: 21px;
   }
   .dropdown.dropdown-popular .dropdown__container:before {
-    height: 0px;
+    height: 0;
   }
-
+  .row-filter-select {
+    .dropdown__container:before {
+      height: 0;
+    }
+  }
 }
 
 

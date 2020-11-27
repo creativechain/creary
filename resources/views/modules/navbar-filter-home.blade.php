@@ -147,13 +147,10 @@
                         <div class="col-md-6 dropdown__content p-0">
                             <ul class="ul-select">
                                 <li>
-                                    <a href="">
-                                        <img alt="license copyright" v-lazy="'{{ asset('img/icons/license/copyright.png') }}'"/>
-                                        All
-                                    </a>
+                                    <a href=""><img src="/img/icons/license/copyright.png" alt="">CopyRight</a>
                                 </li>
-                                <li><a href="">Free downloads</a></li>
-                                <li><a href="">Payment downloads</a></li>
+                                <li><a href=""><img src="/img/icons/license/creativecommons.png" alt="">Creative Commons</a></li>
+                                <li><a href=""><img src="/img/icons/license/freecontent.png" alt="">Free Content</a></li>
                             </ul>
                         </div>
                     </div><!--end row-->
