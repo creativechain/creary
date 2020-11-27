@@ -240,49 +240,53 @@
                     </a>
                 </div>
 
-                <!--logueado -->
+                <!--logueado responsive -->
                 <div class="col-9 col-md-10 text-right navbar-rwd" v-if="session">
-                    <div class="cajas-iconos-navbar">
-                        <div class="cajas text-white text-center">
-                            <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
-                                <i class="stack-search"></i>
-                            </div>
-                        </div>
-                        <div class="cajas text-white text-center">
-                            <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
-                                <span class="icon-notification"><i class="far fa-bell"></i></span>
-                                <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
 
-                            </a>
-                        </div>
-                        <div class="cajas text-white text-center">
-                            <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
-                                <div class="user-avatar" >
-                                    <avatar v-bind:account="user"></avatar>
+                    <div class="cajas-iconos-navbar">
+                        <ul class="list-inline" style="display: inline-flex;align-items: center;justify-content: flex-end;">
+                            <li class="list-inline-item">
+                                <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
+                                    <img alt="search" v-lazy="'{{ asset('img/navbar/search-icon.png') }}'"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="cajas text-white text-center">
-                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
-                                <i class="stack-menu" style="    font-size: 26px;"></i>
-                            </div>
-                        </div>
+                            </li>
+                            <li class="list-inline-item">
+                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                    <span class="icon-notification">
+                                        <img alt="search" v-lazy="'{{ asset('img/navbar/notification-icon.png') }}'"/>
+                                    </span>
+                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
+                                    <div class="user-avatar" >
+                                        <avatar v-bind:account="user"></avatar>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-inline-item">
+                                <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                    <img alt="search" v-lazy="'{{ asset('img/navbar/icon-menu.png') }}'"/>
+                                </div>
+                            </li>
+                        </ul>
+
                     </div>
                 </div>
 
                 <!-- invitado -->
                 <div class="col-9 col-md-10 text-right" v-if="!session">
-                    <ul class="list-inline">
-                        <li class="">
-                            <!-- desktop-->
-                            <div data-notification-link="search-box" class="search icons-navbar disconnected-search">
-                                <i class="stack-search"></i>
+                    <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
+                        <li class="list-inline-item">
+                            <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
+                                <img alt="search" v-lazy="'{{ asset('img/navbar/search-icon.png') }}'"/>
                             </div>
                         </li>
-
-                        <li>
+                        <li class="list-inline-item">
                             <div v-if="!session" class="modal-instance w-100">
-                                <a class="btn btn--sm type--uppercase modal-trigger log-in mt-1" href="#modal-login-d" data-modal-id="modal-login-d" style="line-height: 30px;width: 100%;">
+                                <a class="btn btn--sm type--uppercase modal-trigger log-in" href="#modal-login-d" data-modal-id="modal-login-d">
                                     <span class="btn__text btn-publish-navbar">
                                         {{ __('lang.BUTTON.LOGIN') }}
                                     </span>
@@ -356,11 +360,9 @@
                                 </div>
                             </div>
                         </li>
-
-
-                        <li v-pre class="icon-menu-navbar-right">
-                            <div class="icons-navbar navbar-menu-icon" style="position: relative;top: 2px;" data-notification-link="side-menu">
-                                <i class="stack-menu"></i>
+                        <li class="list-inline-item">
+                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                <img alt="search" v-lazy="'{{ asset('img/navbar/icon-menu.png') }}'"/>
                             </div>
                         </li>
                     </ul>
@@ -480,7 +482,7 @@
                     </div>
 
                     <div class="bar__module float-lg-right float-md-right">
-                        <ul class="menu-horizontal text-left">
+                        <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
                             <li>
                                 <div class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i> Buscar...</span>
@@ -488,34 +490,34 @@
                                     <div class="dropdown__container">
                                         @include('modules.vista-resultados-navbar')
                                     </div>
-
-
                                 </div>
                             </li>
-
-                            {{--Hide notifications--}}
-                            <li v-if="session" class="d-none d-md-inline-block">
-                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
-                                    <span class="icon-notification"><i class="far fa-bell"></i></span>
-                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
-
-                                </a>
-                            </li>
-
                             <li v-if="session" >
                                 <!-- mobile-->
-                                <a class="btn btn--sm btn--primary type--uppercase hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="margin: 10px auto 20px !important;">
+                                <a class="btn btn--sm btn--primary hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="margin: 10px auto 20px !important;">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
                                         {{ __('lang.BUTTON.PUBLISH') }}
                                     </span>
                                 </a>
                                 <!-- desktop-->
-                                <a class="btn btn--sm btn--primary type--uppercase  hidden-xs w-100 ml-0 button-publish-desk" href="/publish">
+                                <a class="btn btn--sm btn--primary  hidden-xs w-100 ml-0 button-publish-desk" href="/publish">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
                                         {{ __('lang.BUTTON.PUBLISH') }}
                                     </span>
                                 </a>
                             </li>
+
+                            {{--Hide notifications--}}
+                            <li v-if="session" class="d-none d-md-inline-block">
+                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                    <span class="icon-notification">
+                                        <img alt="search" v-lazy="'{{ asset('img/navbar/notification-icon.png') }}'"/>
+                                    </span>
+                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
+                                </a>
+                            </li>
+
 
                             <li v-if="!session" class="hidden-xs">
                                 <a class="btn btn--sm type--uppercase" href="/welcome">
@@ -525,17 +527,17 @@
                                 </a>
                             </li>
 
-                            <li v-if="!session" class="hidden-xs">
+                            <!--<li v-if="!session" class="hidden-xs">
                                 <div class="hidden-sm hidden-md hidden-lg navbar-submenu-mobile">
                                     <a href="#0" data-notification-link="side-menu">
                                         <i class="stack-menu"></i>
                                     </a>
                                 </div>
-                            </li>
+                            </li>-->
 
                             <li v-if="session" class="li-avatar-navbar hidden-xs">
 
-                                <div class="dropdown">
+                                <div class="dropdown dropdown-avatare">
                                     <span class="dropdown__trigger">
                                         <div class="user-avatar" >
                                             <avatar v-bind:account="user"></avatar>
@@ -644,12 +646,22 @@
                                     </div>
                                 </div>
                             </li>
-                            <li v-pre class="hidden-xs icon-menu-navbar-right">
+
+                            <li class="list-inline-item">
                                 <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
-                                    <i class="stack-menu"></i>
+                                    <img alt="search" v-lazy="'{{ asset('img/navbar/icon-menu.png') }}'"/>
                                 </div>
                             </li>
                         </ul>
+
+
+
+
+
+
+
+
+
                     </div>
                 </div>
             </div>

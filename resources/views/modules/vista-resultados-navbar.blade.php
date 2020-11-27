@@ -1,7 +1,7 @@
 <div class="container container-result-search">
     <div class="row">
         <div class="col-md-3 col-lg-2 dropdown__content p-0">
-            <ul class="menu-vertical ul-text">
+            <ul class="menu-vertical ul-text text-left">
                 <li><a href="#">Art</a></li>
                 <li><a href="#">Artist</a></li>
                 <li><a href="#">Artivism</a></li>
@@ -17,7 +17,7 @@
                             <div class="user-avatar size-25-avatar">
                                 <div class="img-user-avatar size-25-avatar" style="background-image: url('https://ipfs.creary.net/ipfs/QmewEDxRgkjQ9uVCEuPtA1qPUn8pfJe3NQFTh1v2xy3vpR');"></div>
                             </div>
-                            <div class="media-body text-truncate">
+                            <div class="media-body text-truncate text-left">
                                 <p class="dropdown-autor-span-name mb-0">Yago Partal</p>
                                 <p class="dropdown-user-span-name mb-0">@yagopartal</p>
                             </div>
@@ -30,7 +30,7 @@
                             <div class="user-avatar size-25-avatar">
                                 <div class="img-user-avatar size-25-avatar" style="background-image: url('https://ipfs.creary.net/ipfs/QmewEDxRgkjQ9uVCEuPtA1qPUn8pfJe3NQFTh1v2xy3vpR');"></div>
                             </div>
-                            <div class="media-body text-truncate">
+                            <div class="media-body text-truncate text-left">
                                 <p class="dropdown-autor-span-name mb-0">Yago Partal</p>
                                 <p class="dropdown-user-span-name mb-0">@yagopartal</p>
                             </div>
@@ -43,7 +43,7 @@
                             <div class="user-avatar size-25-avatar">
                                 <div class="img-user-avatar size-25-avatar" style="background-image: url('https://ipfs.creary.net/ipfs/QmewEDxRgkjQ9uVCEuPtA1qPUn8pfJe3NQFTh1v2xy3vpR');"></div>
                             </div>
-                            <div class="media-body text-truncate">
+                            <div class="media-body text-truncate text-left">
                                 <p class="dropdown-autor-span-name mb-0">Yago Partal</p>
                                 <p class="dropdown-user-span-name mb-0">@yagopartal</p>
                             </div>

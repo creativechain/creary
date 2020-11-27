@@ -204,30 +204,17 @@
   }
 
   .navbar-rwd {
-
     ul {
-      li:nth-child(1) {
-        width: 40px;
-        text-align: center;
-        .search {
-          left: 0;
-        }
-      }
+
       li:nth-child(2) {
-        width: 40px;
-        text-align: center;
         position: relative;
-        top: 2px;
-        right: -8px;
         .notification-new {
           .badge {
-            left: 19px;
+            left: 10px;
           }
         }
       }
       li:nth-child(3){
-        width: 60px;
-        margin-right: 0 !important;
         .li-avatar-navbar-mobile {
           position: initial;
           text-align: center;
@@ -235,6 +222,9 @@
             display: inline-block;
           }
         }
+      }
+      .li-avatar-navbar-mobile .user-avatar {
+        margin: -3px auto -10px;
       }
     }
   }
@@ -264,6 +254,14 @@
 }
 
 @media (max-width: 767px) {
+  .navbar-rwd ul .list-inline-item:not(:last-child) {
+    margin-right: 2rem !important;
+  }
+  .ul-navbar-invitado {
+    .list-inline-item:not(:last-child) {
+      margin-right: 2rem !important;
+    }
+  }
   .post-view {
     .dropdown-price {
       .dropdown__container {
@@ -407,7 +405,7 @@
     }
   }
   .main-container {
-    top: 50px;
+    top: 47px;
   }
 
   .disconnected-search {
@@ -519,6 +517,7 @@
   }
   .list-inline:not(.social-list):not(.list-inline--images) li {
     display: inline-block;
+    margin-bottom: 0 !important;
   }
   .list-inline-item:not(:last-child) {
     margin-right: 0.5rem !important;
@@ -661,41 +660,6 @@
       }
     }
   }
-
-  .cajas-iconos-navbar {
-    width: 80%;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-justify-content: flex-end;
-    -ms-flex-pack: start;
-    justify-content: flex-end;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    -webkit-align-items: flex-end;
-    -ms-flex-align: start;
-    align-items: center;
-    margin: 0px 0px 0px auto;
-    .cajas {
-      -webkit-order: 0;
-      -ms-flex-order: 0;
-      order: 0;
-      -webkit-flex: 0 1 25%;
-      -ms-flex: 0 1 25%;
-      flex: 0 1 25%;
-      -webkit-align-self: auto;
-      -ms-flex-item-align: auto;
-      align-self: auto;
-    }
-  }
-
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -923,13 +887,13 @@
     margin-right: 0;
     .icon-notification {
       position: relative;
-      top: 2px;
-      right: -14px;
+      top: 0;
+      left: 0;
     }
     .badge {
       position: absolute;
       top: -4px;
-      left: 22px;
+      right: 0;
     }
   }
   .search.icons-navbar {
@@ -1245,12 +1209,6 @@
     margin-top: 15px;
   }
 
-
-
-
-  .notification-new {
-    top: 2px;
-  }
 
 
 }

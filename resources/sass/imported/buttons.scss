@@ -65,10 +65,7 @@
   border-color: transparent;
   font-weight: normal;
 }
-.btn-publish-navbar{
-  position: relative;
-  top: -4px;
-}
+
 .btn {
   border-radius: 25px;
   padding-top: 0;
@@ -83,6 +80,9 @@
   max-height: 25px;
   font-weight: normal;
 
+}
+.button-publish-desk {
+  height: 25px;
 }
 .btn:not([class*='primary']):hover {
   border-color: #333333;

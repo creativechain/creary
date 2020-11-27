@@ -1,6 +1,6 @@
 <div class="row align-items-end align-items-center">
     <div class="col-6 col-md-2 order-0 order-md-0">
-        <div class="dropdown">
+        <div class="dropdown dropdown-popular">
             <span class="dropdown__trigger">Popular <i class="stack-down-open"></i></span>
             <div class="dropdown__container">
                 <div class="container">
@@ -140,13 +140,18 @@
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">Licenses</span>
         <div class="dropdown">
-            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> Trigger Dropdown </span>
+            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> Select License </span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 dropdown__content p-0">
                             <ul class="ul-select">
-                                <li><a href="">All</a></li>
+                                <li>
+                                    <a href="">
+                                        <img alt="license copyright" v-lazy="'{{ asset('img/icons/license/copyright.png') }}'"/>
+                                        All
+                                    </a>
+                                </li>
                                 <li><a href="">Free downloads</a></li>
                                 <li><a href="">Payment downloads</a></li>
                             </ul>
@@ -159,7 +164,7 @@
     <div class="col-12 col-md-6 mt-3 mt-md-0">
         <span class="font-weight-bold">Downloads</span>
         <div class="dropdown">
-            <span class="dropdown__trigger filter">Trigger Dropdown <i class="stack-down-open"></i></span>
+            <span class="dropdown__trigger filter">Select downloads <i class="stack-down-open"></i></span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">
