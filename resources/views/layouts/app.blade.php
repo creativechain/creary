@@ -209,6 +209,8 @@
     </div>
 </div>
 
+
+<!-- search mobile -->
 <div v-cloak id="navbar-search" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
      data-notification-link="search-box">
     <form v-on:submit="performSearch">
@@ -217,52 +219,145 @@
                 <input v-model="search" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
-
-
-
         @include('modules.vista-resultados-navbar')
-
-
-
-
-
     </form>
 </div>
+<!-- fin search mobile -->
+
+
+
+
+
 
 <!--end of notification-->
 <div v-cloak id="navbar-container" class="nav-container background-navbar-dark">
-    <div class="bar bar--sm visible-xs">
-        <div class="container">
-            <div class="row">
-                <div class="col-3 col-md-2">
-                    <a href="/">
-                        <img class="logo" alt="logo" v-lazy="'{{ asset('img/logo_creary_beta.svg') }}'"/>
-                    </a>
-                </div>
+    <div class="visible-xs">
+        <div class="bar bar--sm">
+            <div class="container">
+                <div class="row">
+                    <div class="col-3 col-md-2">
+                        <a href="/">
+                            <img class="logo" alt="logo" v-lazy="'{{ asset('img/logo_creary_beta.svg') }}'"/>
+                        </a>
+                    </div>
 
-                <!--logueado responsive -->
-                <div class="col-9 col-md-10 text-right navbar-rwd" v-if="session">
+                    <!-- logueado responsive -->
+                    <div class="col-9 col-md-10 text-right navbar-rwd" v-if="session">
 
-                    <div class="cajas-iconos-navbar">
-                        <ul class="list-inline" style="display: inline-flex;align-items: center;justify-content: flex-end;">
+                        <div class="cajas-iconos-navbar">
+                            <ul class="list-inline" style="display: inline-flex;align-items: center;justify-content: flex-end;">
+                                <li class="list-inline-item">
+                                    <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
+                                        <img alt="search" v-lazy="'{{ asset('img/navbar/search-icon.png') }}'"/>
+                                    </div>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
+                                    <span class="icon-notification">
+                                        <img alt="search" v-lazy="'{{ asset('img/navbar/notification-icon.png') }}'"/>
+                                    </span>
+                                        <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
+                                        <div class="user-avatar" >
+                                            <avatar v-bind:account="user"></avatar>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-inline-item">
+                                    <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
+                                        <img alt="search" v-lazy="'{{ asset('img/navbar/icon-menu.png') }}'"/>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <!-- invitado -->
+                    <div class="col-9 col-md-10 text-right" v-if="!session">
+                        <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
                             <li class="list-inline-item">
                                 <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
                                     <img alt="search" v-lazy="'{{ asset('img/navbar/search-icon.png') }}'"/>
                                 </div>
                             </li>
                             <li class="list-inline-item">
-                                <a v-bind:href="'/@' + session.account.username + '/notifications'" class="icons-navbar notification-new">
-                                    <span class="icon-notification">
-                                        <img alt="search" v-lazy="'{{ asset('img/navbar/notification-icon.png') }}'"/>
+                                <div v-if="!session" class="modal-instance w-100">
+                                    <a class="btn btn--sm type--uppercase modal-trigger log-in" href="#modal-login-d" data-modal-id="modal-login-d">
+                                    <span class="btn__text btn-publish-navbar">
+                                        {{ __('lang.BUTTON.LOGIN') }}
                                     </span>
-                                    <span v-if="unreadNotifications > 0" class="badge">@{{ unreadNotifications }}</span>
+                                    </a>
 
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
-                                    <div class="user-avatar" >
-                                        <avatar v-bind:account="user"></avatar>
+                                    <div id="modal-login-d" class="modal-container">
+                                        <div class="modal-content section-modal">
+                                            <section class="unpad">
+                                                <div class="container">
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-md-6">
+                                                            <div class="boxed boxed--lg bg--white text-center feature">
+                                                                <div class="modal-close modal-close-cross"></div>
+                                                                <h3>{{ __('lang.LOGIN.TITLE') }}</h3>
+                                                                <div class="feature__body">
+                                                                    <form action="#0" v-on:submit="login" class="content-login">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 text-left">
+                                                                                <input v-model="loginForm.username.value"
+                                                                                       v-on:input="checkUsername"
+                                                                                       type="text" placeholder="{{ __('lang.LOGIN.USERNAME') }}"/>
+                                                                                <span class="error-color-form">@{{ loginForm.username.error || " " }}</span>
+                                                                            </div>
+                                                                            <div class="col-md-12 text-left">
+                                                                                <input v-model="loginForm.password.value"
+                                                                                       type="password" placeholder="{{ __('lang.LOGIN.PASSWORD_OR_WIF') }}"/>
+                                                                                <span class="error-color-form">@{{ loginForm.password.error || " " }}</span>
+                                                                            </div>
+                                                                            <div class="col m-2">
+                                                                                <div class="btn btn--transparent w-100">
+                                                                                <span class="btn__text color--dark font-weight-bold" v-on:click="closeLogin">
+                                                                                    {{ __('lang.BUTTON.CANCEL') }}
+                                                                                </span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col m-2">
+                                                                                <div class="btn btn--primary w-100" v-on:click="login">
+                                                                                <span class="btn__text font-weight-bold">
+                                                                                    {{ __('lang.BUTTON.LOGIN') }}
+                                                                                </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 text-center">
+                                                                                <h3 class="login-description">{{ __('lang.LOGIN.NOT_USER') }}</h3>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-8 offset-md-2 text-center">
+                                                                                <span>{{ __('lang.LOGIN.TEXT') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row mt-3">
+                                                                            <div class="col-md-8 offset-md-2 text-center">
+                                                                                <a class="btn btn--black" href="/welcome">
+                                                                                <span class="btn__text color--white font-weight-bold">
+                                                                                    {{ __('lang.BUTTON.SIGN_UP') }}
+                                                                                </span>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -272,106 +367,28 @@
                                 </div>
                             </li>
                         </ul>
-
                     </div>
-                </div>
-
-                <!-- invitado -->
-                <div class="col-9 col-md-10 text-right" v-if="!session">
-                    <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
-                        <li class="list-inline-item">
-                            <div data-notification-link="search-box" class="search icons-navbar logged-in-search">
-                                <img alt="search" v-lazy="'{{ asset('img/navbar/search-icon.png') }}'"/>
-                            </div>
-                        </li>
-                        <li class="list-inline-item">
-                            <div v-if="!session" class="modal-instance w-100">
-                                <a class="btn btn--sm type--uppercase modal-trigger log-in" href="#modal-login-d" data-modal-id="modal-login-d">
-                                    <span class="btn__text btn-publish-navbar">
-                                        {{ __('lang.BUTTON.LOGIN') }}
-                                    </span>
-                                </a>
-
-                                <div id="modal-login-d" class="modal-container">
-                                    <div class="modal-content section-modal">
-                                        <section class="unpad">
-                                            <div class="container">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-md-6">
-                                                        <div class="boxed boxed--lg bg--white text-center feature">
-                                                            <div class="modal-close modal-close-cross"></div>
-                                                            <h3>{{ __('lang.LOGIN.TITLE') }}</h3>
-                                                            <div class="feature__body">
-                                                                <form action="#0" v-on:submit="login" class="content-login">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 text-left">
-                                                                            <input v-model="loginForm.username.value"
-                                                                                   v-on:input="checkUsername"
-                                                                                   type="text" placeholder="{{ __('lang.LOGIN.USERNAME') }}"/>
-                                                                            <span class="error-color-form">@{{ loginForm.username.error || " " }}</span>
-                                                                        </div>
-                                                                        <div class="col-md-12 text-left">
-                                                                            <input v-model="loginForm.password.value"
-                                                                                   type="password" placeholder="{{ __('lang.LOGIN.PASSWORD_OR_WIF') }}"/>
-                                                                            <span class="error-color-form">@{{ loginForm.password.error || " " }}</span>
-                                                                        </div>
-                                                                        <div class="col m-2">
-                                                                            <div class="btn btn--transparent w-100">
-                                                                                <span class="btn__text color--dark font-weight-bold" v-on:click="closeLogin">
-                                                                                    {{ __('lang.BUTTON.CANCEL') }}
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col m-2">
-                                                                            <div class="btn btn--primary w-100" v-on:click="login">
-                                                                                <span class="btn__text font-weight-bold">
-                                                                                    {{ __('lang.BUTTON.LOGIN') }}
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-12 text-center">
-                                                                            <h3 class="login-description">{{ __('lang.LOGIN.NOT_USER') }}</h3>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-8 offset-md-2 text-center">
-                                                                            <span>{{ __('lang.LOGIN.TEXT') }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row mt-3">
-                                                                        <div class="col-md-8 offset-md-2 text-center">
-                                                                            <a class="btn btn--black" href="/welcome">
-                                                                                <span class="btn__text color--white font-weight-bold">
-                                                                                    {{ __('lang.BUTTON.SIGN_UP') }}
-                                                                                </span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-inline-item">
-                            <div class="icons-navbar navbar-menu-icon" data-notification-link="side-menu">
-                                <img alt="search" v-lazy="'{{ asset('img/navbar/icon-menu.png') }}'"/>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <nav id="menu1" class="bar bar--sm bar-1 hidden-xs bar--absolute pos-fixed bg-dark" data-scroll-class="90vh:pos-fixed">
+
+
+
+
+
+    <div class="hidden-xs">
+
+    </div>
+
+
+    <nav id="menu1" class="bar bar--sm bar-1 bar--absolute pos-fixed bg-dark hidden-xs" data-scroll-class="90vh:pos-fixed">
+
+
+
+
+
         <div class="container">
             <div class="row">
                 <div class="col-2 col-md-2 col-lg-2 hidden-xs">
@@ -381,8 +398,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-12 col-md-10 col-lg-10  text-center text-left-xs text-left-sm">
+                <div class="col-12 col-md-10 col-lg-10  text-center text-left-xs text-left-sm" >
                     <div class="bar__module">
+
                         <ul class="menu-horizontal text-left">
 
                             <!--- Links Mobil --->
@@ -480,10 +498,34 @@
                             <li class="cursor-link"><a v-on:click="logout">{{ __('lang.PROFILE_MENU.LOGOUT') }}</a></li>
                         </ul>
                     </div>
+                    <div class="bar__module d-block d-sm-block d-md-none" v-if="session" style="border-bottom: 0;padding: 6px 0 0;">
+                        <ul class="menu-horizontal text-left">
+                            <li v-if="session" >
+                                <!-- mobile-->
+                                <a class="btn btn--sm btn--primary hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="line-height: 24px;margin: 0 auto;">
+                                    <span class="btn__text btn-publish-navbar font-weight-bold">
+                                        {{ __('lang.BUTTON.PUBLISH') }}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <div class="bar__module float-lg-right float-md-right">
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div class="bar__module float-lg-right float-md-right hidden-xs">
                         <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
-                            <li>
+                            <li class="hidden-xs">
                                 <div class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i> Buscar...</span>
 
@@ -493,12 +535,6 @@
                                 </div>
                             </li>
                             <li v-if="session" >
-                                <!-- mobile-->
-                                <a class="btn btn--sm btn--primary hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="margin: 10px auto 20px !important;">
-                                    <span class="btn__text btn-publish-navbar font-weight-bold">
-                                        {{ __('lang.BUTTON.PUBLISH') }}
-                                    </span>
-                                </a>
                                 <!-- desktop-->
                                 <a class="btn btn--sm btn--primary  hidden-xs w-100 ml-0 button-publish-desk" href="/publish">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
@@ -555,7 +591,7 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-md-12 col-lg-8 dropdown__content">
-                                                    <ul class="menu-vertical">
+                                                    <ul class="menu-vertical text-left">
                                                         <li><a v-bind:href="'/@' + session.account.username + '/projects'">{{ __('lang.PROFILE_MENU.PROJECTS') }}</a></li>
                                                         <li class="separate"><a v-bind:href="'/@' + session.account.username + '/notifications'">{{ __('lang.PROFILE_MENU.NOTIFICATIONS') }}</a></li>
                                                         <li class="separate"><a v-bind:href="'/@' + session.account.username + '/wallet'">{{ __('lang.PROFILE_MENU.WALLET') }}</a></li>
