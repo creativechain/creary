@@ -73,7 +73,10 @@ class ScanBlockCommand extends Command
                                 UpdateCommentJob::dispatch($data);
                             case 'comment_download':
                             case 'custom_json':
-                                SendNotificationJob::dispatch($data);
+                                $notInitialDate = Carbon::parse(env('CREA_NOTIFICATION_INITIAL_DATE'));
+                                if ($timestamp->isAfter($notInitialDate)) {
+                                    SendNotificationJob::dispatch($data);
+                                }
                                 break;
                             case 'account_create':
                                 UpdateAccountJob::dispatch($data->new_account_name);
