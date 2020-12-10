@@ -9,6 +9,7 @@ use App\Jobs\UpdateAccountJob;
 use App\Jobs\UpdateCommentJob;
 use App\Notifications\CrearyNotification;
 use App\Utils\CreaOperationsUtils;
+use App\Utils\Obj;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -60,10 +61,9 @@ class ScanBlockCommand extends Command
             foreach ($txs as $tx) {
 
                 $ops = $tx->operations;
-
                 foreach ($ops as $op) {
                     try {
-                        $op_name = get_object_vars($op)[0];
+                        $op_name = $op[0];
                         $data = CreaOperationsUtils::{$op_name}($op);
                         $data->timestamp = $timestamp;
 

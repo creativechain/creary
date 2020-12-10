@@ -27,25 +27,35 @@ class Obj
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
+    /**
+     * @param $obj
+     * @return Obj|array|bool|int|string|null
+     */
     public static function parse($obj) {
-        $newObj = new Obj();
-
         if ($obj) {
-            if (is_object($obj)) {
+            $newObj = new Obj();
+            if (is_string($obj) || is_bool($obj) || is_numeric($obj) ) {
+                return $obj;
+            } else if (is_array($obj) && !self::isAssoc($obj)) {
+                $newArr = [];
+                foreach ($obj as $v) {
+                    $newArr[] = self::parse($v);
+                }
+
+                return $newArr;
+            } else if (is_object($obj)) {
                 $props = get_object_vars($obj);
             } else {
                 $props = $obj;
             }
 
             foreach ($props as $key => $value) {
-                if (is_object($value) || self::isAssoc($value)) {
-                    $newObj->{$key} = self::parse($value);
-                } else {
-                    $newObj->{$key} = $value;
-                }
+                $newObj->{$key} = self::parse($value);
             }
+
+            return $newObj;
         }
 
-        return $newObj;
+        return null;
     }
 }

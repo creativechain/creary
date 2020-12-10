@@ -9,9 +9,8 @@ use Illuminate\Support\Str;
 class CreaOperationsUtils
 {
     public static function parse($op) {
-        $vars = get_object_vars($op);
-        $data = $vars[1];
-        $data->type = $vars[0];
+        $data = $op[1];
+        $data->type = $op[0];
         return $data;
     }
 
