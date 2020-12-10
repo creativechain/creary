@@ -56,6 +56,6 @@ class Obj
             return $newObj;
         }
 
-        return null;
+        return $obj;
     }
 }
