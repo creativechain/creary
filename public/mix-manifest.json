@@ -12,6 +12,7 @@
     "/js/control/navbar.js": "/js/control/navbar.js",
     "/js/control/navbar-filter.js": "/js/control/navbar-filter.js",
     "/js/control/navbar-mobile.js": "/js/control/navbar-mobile.js",
+    "/js/control/navbar-searcher.js": "/js/control/navbar-searcher.js",
     "/js/control/post.js": "/js/control/post.js",
     "/js/control/post-navigation.js": "/js/control/post-navigation.js",
     "/js/control/profile.js": "/js/control/profile.js",

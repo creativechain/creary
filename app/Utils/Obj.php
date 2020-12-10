@@ -22,9 +22,13 @@ class Obj
         $newObj = new Obj();
 
         if ($obj) {
-            $props = get_object_vars($obj);
+            if (is_object($obj)) {
+                $props = get_object_vars($obj);
+            } else {
+                $props = $obj;
+            }
             foreach ($props as $key => $value) {
-                if (is_object($value)) {
+                if (is_object($value) || is_array($value)) {
                     $newObj->{$key} = self::parse($value);
                 } else {
                     $newObj->{$key} = $value;

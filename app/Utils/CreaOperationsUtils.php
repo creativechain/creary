@@ -9,8 +9,9 @@ use Illuminate\Support\Str;
 class CreaOperationsUtils
 {
     public static function parse($op) {
-        $data = $op[1];
-        $data->type = $op[0];
+        $vars = get_object_vars($op);
+        $data = $vars[1];
+        $data->type = $vars[0];
         return $data;
     }
 
@@ -41,14 +42,13 @@ class CreaOperationsUtils
 
     public static function comment($op) {
         $data = self::mention($op);
-
         if ($data->parent_author) {
             //Only return notification data for comments in publications
             $data->to = $data->parent_author;
             return $data;
         }
 
-        return null;
+        return $data;
     }
 
     public static function comment_download($op) {
@@ -86,6 +86,26 @@ class CreaOperationsUtils
                 }
                 break;
         }
+
+        return $data;
+    }
+
+    /**
+     * @param $op
+     * @return mixed
+     */
+    public static function account_create($op) {
+        $data = self::parse($op);
+
+        return $data;
+    }
+
+    /**
+     * @param $op
+     * @return mixed
+     */
+    public static function account_update($op) {
+        $data = self::parse($op);
 
         return $data;
     }

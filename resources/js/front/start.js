@@ -17,6 +17,7 @@ moment.locale($('html').attr('lang'));
 window.apiOptions = {
     nodes: ['https://nodes.creary.net'],
     apiUrl: 'https://api.creary.net',
+    apiCrea: `${location.protocol}//${location.host}/~api`,
     ipfs: 'https://ipfs.creary.net/ipfs/',
     ipfsd: 'https://api.creary.net/ipfs',
     addressPrefix: 'CREA',

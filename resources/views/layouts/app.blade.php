@@ -209,7 +209,7 @@
     </div>
 </div>
 
-<div v-cloak id="navbar-search" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
+<div v-cloak class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
      data-notification-link="search-box">
     <form v-on:submit="performSearch">
         <div class="row justify-content-center row-input">
@@ -483,9 +483,11 @@
 
                     <div class="bar__module float-lg-right float-md-right">
                         <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
-                            <li>
-                                <div class="dropdown dropdown-search">
-                                    <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i> Buscar...</span>
+                            <li v-pre>
+                                <div id="navbar-search" class="dropdown dropdown-search">
+                                    <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i>
+                                        <input v-model="search" v-on:input="performSearch" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                                    </span>
 
                                     <div class="dropdown__container">
                                         @include('modules.vista-resultados-navbar')
@@ -668,6 +670,7 @@
         </div>
     </nav>
 </div>
+<script src="{{ asset('js/control/navbar-searcher.js') }}"></script>
 <script src="{{ asset('js/control/navbar.js') }}"></script>
 
 {{--CONTENT HERE--}}

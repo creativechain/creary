@@ -21,37 +21,7 @@ import Avatar from "../components/Avatar";
 
     let navbarContainer;
 
-    let navbarSearch = new Vue({
-        el: '#navbar-search',
-        data: {
-            lang: lang,
-            search: null,
-            page: 1
-        },
-        methods: {
-            reset: function reset() {
-                this.search = null;
-                this.page = 1;
-            },
-            performSearch: function (_performSearch) {
-                function performSearch(_x) {
-                    return _performSearch.apply(this, arguments);
-                }
 
-                performSearch.toString = function () {
-                    return _performSearch.toString();
-                };
-
-                return performSearch;
-            }(function (event) {
-                cancelEventPropagation(event);
-
-                if (this.search) {
-                    performSearch(this.search, this.page, isInHome());
-                }
-            })
-        }
-    });
 
     let navbarRightMenu = new Vue({
         el: '#navbar-right-menu',

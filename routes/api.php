@@ -34,5 +34,15 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
+Route::group(['prefix' => 'accounts'], function () {
+
+    Route::get('/search', 'Api\AccountsController@search')->name('accounts.search');
+});
+
+Route::group(['prefix' => 'tags'], function () {
+
+    Route::get('/search', 'Api\TagsController@search')->name('tags.search');
+});
+
 /*Route::get('/votes/{creaUser}', 'CrearyController@testVotes')
     ->where('creaUser', '^([\w\.\d-]+)$');*/

@@ -30,10 +30,11 @@ class CrearyClient
     /**
      * @param array $requestBody
      * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function callRequest(array $requestBody) {
         $response = $this->httpClient->post(env('CREA_NODE'), array( 'json' => $requestBody));
-        return Obj::parse(json_decode((string) $response->getBody()));
+        return json_decode((string) $response->getBody(), true);
     }
 
     /**
@@ -52,32 +53,43 @@ class CrearyClient
     }
 
     /**
-     * @return array
-     * @throws \Exception
+     * @param bool $parse
+     * @return Obj|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getGlobalProperties() {
+    public function getGlobalProperties($parse = true) {
         $rpcData = $this->buildRpcData('condenser_api.get_dynamic_global_properties');
 
         $response = $this->callRequest($rpcData);
 
-        return $response->result;
+        if ($parse) {
+            return Obj::parse($response['result']);
+        }
+        return $response['result'];
     }
 
     /**
      * @param string $author
      * @param string $permlink
+     * @param bool $parse
      * @return null
-     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPost(string $author, string $permlink) {
+    public function getPost(string $author, string $permlink, $parse = true) {
         $rpcData = $this->buildRpcData('tags_api.get_discussion', array('author' => $author, 'permlink' => $permlink));
 
         $response = $this->callRequest($rpcData);
 
-        if ($response->result) {
-            $post = $response->result;
-            $post->metadata = Obj::parse(json_decode($post->json_metadata));
-            $post->author = $this->getAccount($post->author);
+        if ($response['result']) {
+            $post = $response['result'];
+            if ($parse) {
+                $post->metadata = Obj::parse(json_decode($post->json_metadata));
+                $post->author = $this->getAccount($post->author);
+            } else {
+                $post['metadata'] = json_decode($post->json_metadata, true);
+                $post['author'] = $this->getAccount($post->author, false);
+            }
+
             return $post;
         }
 
@@ -86,9 +98,11 @@ class CrearyClient
 
     /**
      * @param string $accountName
+     * @param bool $parse
      * @return null
+     * @throws \Exception
      */
-    public function getAccount(string $accountName) {
+    public function getAccount(string $accountName, $parse = true) {
         $rpcData = $this->buildRpcData('condenser_api.get_accounts', array(
             array(
                 $accountName
@@ -96,12 +110,19 @@ class CrearyClient
         ));
 
         $response = $this->callRequest($rpcData);
-        if ($response->result) {
-            $account = $response->result[0];
-            $account = Obj::parse($account);
-            $account->metadata = Obj::parse(json_decode($account->json_metadata));
+        if ($response['result']) {
+            $account = $response['result'][0];
+            if ($parse) {
+                $account = Obj::parse($account);
+                $account->metadata = Obj::parse(json_decode($account->json_metadata));
 
-            $account->metadata->blocked = intval($account->reputation) < 0;
+                $account->metadata->blocked = intval($account->reputation) < 0;
+            } else {
+                $account['metadata'] = json_decode($account['json_metadata'], true);
+
+                $account['metadata']['blocked'] = intval($account['reputation']) < 0;
+            }
+
 
             return $account;
         }
@@ -109,33 +130,54 @@ class CrearyClient
         return null;
     }
 
-    public function getBlock($height) {
+    /**
+     * @param $height
+     * @param bool $parse
+     * @return Obj|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getBlock($height, $parse = true) {
         $rpcData = $this->buildRpcData('condenser_api.get_block', array( $height ));
 
         $response = $this->callRequest($rpcData);
-        return $response->result;
+
+        if ($parse) {
+            return Obj::parse($response['result']);
+        }
+
+        return $response['result'];
     }
 
     /**
      * @param string $accountName
+     * @param bool $parse
      * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getAccountState(string $accountName) {
+    public function getAccountState(string $accountName, $parse = true) {
         $rpcData = $this->buildRpcData('condenser_api.get_state', array( "@$accountName"));
 
         $response = $this->callRequest($rpcData);
-        return $response->result;
+        if ($parse) {
+            return Obj::parse($response['result']);
+        }
+        return $response['result'];
     }
 
     /**
      * @param string $name
+     * @param bool $parse
      * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRewardFund($name = 'post') {
+    public function getRewardFund($name = 'post', $parse = true) {
         $rpcData = $this->buildRpcData('condenser_api.get_reward_fund', array( $name ));
 
         $response = $this->callRequest($rpcData);
-        return $response->result;
+        if ($parse) {
+            return Obj::parse($response['result']);
+        }
+        return $response['result'];
     }
 
 }

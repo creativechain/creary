@@ -40,7 +40,7 @@
                 </div>
             </div>
         </section>-->
-        <script src="{{ asset('js/control/navbar-mobile.js') }}"></script>
+        {{--<script src="{{ asset('js/control/navbar-mobile.js') }}"></script>--}}
 
         <div v-cloak id="home-posts">
             <section v-if="state.discussion_idx[discuss][category].length > 0" class="pt-4">
