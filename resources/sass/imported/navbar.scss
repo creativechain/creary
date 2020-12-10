@@ -185,6 +185,20 @@ span.icons-navbar {
   li {
     margin-right: 2rem !important;
   }
+  .search.icons-navbar {
+    align-items: center;
+    i {
+      margin-right: 0;
+    }
+    input {
+      background: transparent;
+      border: none;
+      color: white;
+    }
+  }
+  .search.icons-navbar:hover {
+    color: #AAAAAA;
+  }
 }
 
 /*! -- Stack Sliders -- */
