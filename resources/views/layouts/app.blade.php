@@ -211,7 +211,7 @@
 
 
 <!-- search mobile -->
-<div v-cloak id="navbar-search" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
+<div v-cloak id="navbar-search-mobile" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
      data-notification-link="search-box">
     <form v-on:submit="performSearch">
         <div class="row justify-content-center row-input">
@@ -495,7 +495,7 @@
                     <div class="bar__module float-lg-right float-md-right hidden-xs">
                         <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
                             <li v-pre class="hidden-xs">
-                                <div class="dropdown dropdown-search">
+                                <div id="navbar-search" class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i>
                                         <input v-model="search" v-on:input="performSearch" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
                                     </span>
