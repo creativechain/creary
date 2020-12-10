@@ -254,12 +254,20 @@
 }
 
 @media (max-width: 767px) {
+  .ul-navbar-invitado {
+    li:last-child {
+      margin-right: 0!important;
+    }
+    .btn:not(:last-child) {
+      margin-bottom: 0!important;
+    }
+  }
   .navbar-rwd ul .list-inline-item:not(:last-child) {
     margin-right: 2rem !important;
   }
   .ul-navbar-invitado {
     .list-inline-item:not(:last-child) {
-      margin-right: 2rem !important;
+      margin-right: 1.2rem !important;
     }
   }
   .post-view {
@@ -770,7 +778,7 @@
     }
   }
   .main-container {
-    top: 50px;
+    top: 48px;
   }
   .post-view .row-comment-options .box-blockchain-certificate .feature-2 .feature__body {
     width: 80%;
@@ -867,7 +875,7 @@
   .li-avatar-navbar {
     .dropdown__container {
       left: -60px !important;
-      top: 37px;
+      top: 41px;
       .container {
         min-width: 165px;
         max-width: 165px;
