@@ -83,11 +83,12 @@ class CrearyClient
         if ($response['result']) {
             $post = $response['result'];
             if ($parse) {
+                $post = Obj::parse($post);
                 $post->metadata = Obj::parse(json_decode($post->json_metadata));
                 $post->author = $this->getAccount($post->author);
             } else {
-                $post['metadata'] = json_decode($post->json_metadata, true);
-                $post['author'] = $this->getAccount($post->author, false);
+                $post['metadata'] = json_decode($post['json_metadata'], true);
+                $post['author'] = $this->getAccount($post['author'], false);
             }
 
             return $post;

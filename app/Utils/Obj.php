@@ -18,6 +18,15 @@ class Obj
         return null;
     }
 
+    public static function isAssoc($arr)
+    {
+        if (!is_array($arr) || array() === $arr) {
+            return false;
+        }
+
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
     public static function parse($obj) {
         $newObj = new Obj();
 
@@ -27,12 +36,12 @@ class Obj
             } else {
                 $props = $obj;
             }
+
             foreach ($props as $key => $value) {
-                if (is_object($value) || is_array($value)) {
+                if (is_object($value) || self::isAssoc($value)) {
                     $newObj->{$key} = self::parse($value);
                 } else {
                     $newObj->{$key} = $value;
-
                 }
             }
         }
