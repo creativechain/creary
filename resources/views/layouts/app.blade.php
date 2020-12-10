@@ -225,10 +225,6 @@
 <!-- fin search mobile -->
 
 
-
-
-
-
 <!--end of notification-->
 <div v-cloak id="navbar-container" class="nav-container background-navbar-dark">
     <div class="visible-xs">
@@ -261,7 +257,7 @@
                                     </a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <div class="li-avatar-navbar-mobile" data-toggle-class="#menu1;hidden-xs">
+                                    <div class="li-avatar-navbar-mobile cursor-link" data-toggle-class="#menu1;hidden-xs">
                                         <div class="user-avatar" >
                                             <avatar v-bind:account="user"></avatar>
                                         </div>
@@ -373,22 +369,7 @@
         </div>
     </div>
 
-
-
-
-
-
-    <div class="hidden-xs">
-
-    </div>
-
-
-    <nav id="menu1" class="bar bar--sm bar-1 bar--absolute pos-fixed bg-dark hidden-xs" data-scroll-class="90vh:pos-fixed">
-
-
-
-
-
+    <nav id="menu1" class="bar bar--sm bar-1 bar--absolute pos-fixed bg-dark hidden-xs" v-bind:class="{ 'hidden-xs': session }" data-scroll-class="90vh:pos-fixed">
         <div class="container">
             <div class="row">
                 <div class="col-2 col-md-2 col-lg-2 hidden-xs">
@@ -500,7 +481,7 @@
                     </div>
                     <div class="bar__module d-block d-sm-block d-md-none" v-if="session" style="border-bottom: 0;padding: 6px 0 0;">
                         <ul class="menu-horizontal text-left">
-                            <li v-if="session" >
+                            <li>
                                 <!-- mobile-->
                                 <a class="btn btn--sm btn--primary hidden-sm hidden-md hidden-lg li-publish-navbar mb-2" href="/publish" style="line-height: 24px;margin: 0 auto;">
                                     <span class="btn__text btn-publish-navbar font-weight-bold">
@@ -510,18 +491,6 @@
                             </li>
                         </ul>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <div class="bar__module float-lg-right float-md-right hidden-xs">
                         <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">

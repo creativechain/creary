@@ -20,6 +20,7 @@ import Avatar from "../components/Avatar";
     Vue.component('avatar', Avatar);
 
     let navbarContainer;
+    let canLoadBootstrapScripts = false;
 
 
 
@@ -73,17 +74,7 @@ import Avatar from "../components/Avatar";
                         hideModal('#modal-login-d');
                     },
                     logout: logout,
-                    login: function (_login) {
-                        function login(_x2) {
-                            return _login.apply(this, arguments);
-                        }
-
-                        login.toString = function () {
-                            return _login.toString();
-                        };
-
-                        return login;
-                    }(function (event) {
+                    login: function (event) {
                         cancelEventPropagation(event);
                         let that = this;
 
@@ -105,7 +96,7 @@ import Avatar from "../components/Avatar";
                                 }
                             });
                         }
-                    }),
+                    },
                     isUserFeed: isUserFeed,
                     checkUsername: checkUsername,
                     goTo: goTo,
@@ -292,6 +283,26 @@ import Avatar from "../components/Avatar";
 
     }
 
+    function enableRightMenu() {
+        if (canLoadBootstrapScripts) {
+            setTimeout(function () {
+                console.log('Activating right menu...');
+                mr.notifications.documentReady($);
+            }, 1e3);
+        }
+
+    }
+
+    function enableProfileMenu() {
+        if (canLoadBootstrapScripts) {
+            setTimeout(function () {
+                console.log('Activating profile menu...');
+                mr.toggleClass.documentReady($);
+            }, 1e3);
+        }
+
+    }
+
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
         navbarContainer.unreadNotifications = unreadNotifications.total;
         navbarContainer.$forceUpdate();
@@ -311,19 +322,21 @@ import Avatar from "../components/Avatar";
             prepareNotifClient(session);
         }
 
-        //Enable toggle button
-/*        setTimeout(function () {
-            console.log('Activating right menu...');
-            mr.toggleClass.documentReady($);
-            mr.toggleClass.documentReady($);
-        }, 1e3);*/
+        enableRightMenu();
+        enableProfileMenu();
     });
 
     creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
         console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready', true);
+
+        enableRightMenu();
     });
+
+    creaEvents.on('crea.dom.ready', function () {
+        canLoadBootstrapScripts = true;
+    })
 
     creaEvents.on('crea.content.filter', function (filter) {
         if (!filter.startsWith('/')) {
