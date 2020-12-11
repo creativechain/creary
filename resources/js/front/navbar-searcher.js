@@ -2,6 +2,7 @@ import {cancelEventPropagation, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 
 const SEARCH_LIMIT = 3;
+const MIN_SEARCH_CHARS = 3;
 
 (function () {
     let navbarSearch;
@@ -32,8 +33,9 @@ const SEARCH_LIMIT = 3;
                     cancelEventPropagation(event);
 
                     let that = this;
-                    if (this.search) {
-                        console.log('Searching')
+
+                    if (this.search && this.search.length >= MIN_SEARCH_CHARS) {
+                        console.log('Searching', this.search)
                         let search = function (endpoint, section) {
                             if (section.http) {
                                 section.http.abort();
@@ -47,7 +49,7 @@ const SEARCH_LIMIT = 3;
 
                             section.http.on('done' + section.http.id, function (response) {
                                 let data = jsonify(response);
-                                console.log(`On reponse ${endpoint}`, data);
+                                console.log(`On response ${endpoint}`, data);
 
                                 section.items = data.data;
                                 section.http = null;

@@ -3,7 +3,7 @@
         <div class="col-md-3 col-lg-2 dropdown__content p-0">
             <ul class="menu-vertical ul-text text-left">
                 <li  v-for="t in tags.items">
-                    <a v-bind:href="'/popular/' + t" class="text-capitalize" target="_blank">
+                    <a v-bind:href="'/popular/' + t.name" class="text-capitalize" target="_blank">
                         @{{ t.name }}
                     </a>
                 </li>
