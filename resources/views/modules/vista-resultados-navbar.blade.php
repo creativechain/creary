@@ -29,7 +29,7 @@
                 </li>
             </ul>
             <div class="see-all-members">
-                <a href="" >See all members</a>
+                <a v-bind:href="'/accounts/search?q=' + search" target="_blank">{{ __('lang.NAVBAR.SEE_ALL_RESULTS') }}</a>
             </div>
 
         </div>

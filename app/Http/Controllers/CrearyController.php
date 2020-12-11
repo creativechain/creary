@@ -220,6 +220,10 @@ class CrearyController extends Controller
         return $this->buildViewResponse($request, 'home');
     }
 
+    public function accountsSearch(Request $request) {
+        return $this->buildViewResponse($request, 'account-search');
+    }
+
     public function welcome(Request $request) {
         return $this->buildViewResponse($request, 'welcome');
     }

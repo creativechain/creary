@@ -660,6 +660,12 @@
             "DESCRIPTION": "Términos y Condiciones de Creativechain FDN para el servicio de Creary.net"
         },
         "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+    },
+    "NAVBAR": {
+        "SEE_ALL_RESULTS": "Mostrar todos los resultados"
+    },
+    "ACCOUNT_SEARCH": {
+        "RESULTS_TITLE": "Resultados de"
     }
 
 }

@@ -38,6 +38,7 @@ class AccountsController extends Controller
             ->where('public_name', 'like', "%$search%")
             ->orderBy('follower_count')
             ->paginate(intval($limit));
+        $accounts->appends($request->except('page'));
 
         return response($accounts);
     }

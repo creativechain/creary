@@ -1,9 +1,10 @@
 {
-    "/js/control/custom.js": "/js/control/custom.js",
+    "/js/control/accounts-list.js": "/js/control/accounts-list.js",
     "/css/custom/btn-loading.css": "/css/custom/btn-loading.css",
     "/css/custom/creativechain.css": "/css/custom/creativechain.css",
     "/css/custom/loading.css": "/css/custom/loading.css",
     "/css/custom/responsive.css": "/css/custom/responsive.css",
+    "/js/control/custom.js": "/js/control/custom.js",
     "/js/control/error-page.js": "/js/control/error-page.js",
     "/js/control/faq.js": "/js/control/faq.js",
     "/js/control/home.js": "/js/control/home.js",
