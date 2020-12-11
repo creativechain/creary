@@ -2,10 +2,10 @@ import {cancelEventPropagation, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Avatar from "../components/Avatar";
 
-const SEARCH_LIMIT = 3;
-const MIN_SEARCH_CHARS = 3;
-
 (function () {
+
+    const SEARCH_LIMIT = 3;
+    const MIN_SEARCH_CHARS = 3;
 
     Vue.component('avatar', Avatar);
 
@@ -92,6 +92,7 @@ const MIN_SEARCH_CHARS = 3;
     }
 
     creaEvents.on('crea.modal.ready', function () {
+        console.log('Setting up searcher!');
        setUp();
     });
 })()

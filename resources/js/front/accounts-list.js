@@ -5,9 +5,9 @@ import HttpClient from "../lib/http";
 import Username from "../components/Username";
 import {updateUserSession} from "../common/common";
 
-const SEARCH_LIMIT = 20;
 
 (function () {
+    const SEARCH_LIMIT = 20;
 
     Vue.component('avatar', Avatar)
     Vue.component('btn-follow', ButtonFollow);
@@ -35,6 +35,8 @@ const SEARCH_LIMIT = 20;
                     }
                 }
             })
+
+            creaEvents.emit('crea.modal.ready');
         } else {
             accountList.search = getParameterByName('q')
             accountList.session = session;
@@ -47,6 +49,16 @@ const SEARCH_LIMIT = 20;
     function preSetup(session, account) {
         setUp(session, account);
         getAllResults();
+
+        setTimeout(function () {
+            console.log('Activating profile menu...');
+            mr.dropdowns.documentReady($);
+        }, 1e3);
+
+        setTimeout(function () {
+            console.log('Activating right menu...');
+            mr.notifications.documentReady($);
+        }, 1e3);
     }
 
     function getAllResults() {
