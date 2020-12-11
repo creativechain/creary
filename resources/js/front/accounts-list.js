@@ -3,6 +3,7 @@ import ButtonFollow from "../components/ButtonFollow";
 import {getParameterByName, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Username from "../components/Username";
+import {updateUserSession} from "../common/common";
 
 const SEARCH_LIMIT = 20;
 
@@ -29,7 +30,9 @@ const SEARCH_LIMIT = 20;
                     http: null
                 },
                 methods: {
-
+                    onFollow: function () {
+                        updateUserSession();
+                    }
                 }
             })
         } else {
@@ -38,9 +41,12 @@ const SEARCH_LIMIT = 20;
             accountList.account = account;
         }
 
-        getAllResults();
-
         console.log('list updated!');
+    }
+
+    function preSetup(session, account) {
+        setUp(session, account);
+        getAllResults();
     }
 
     function getAllResults() {
@@ -81,17 +87,22 @@ const SEARCH_LIMIT = 20;
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
-        setUp(s, a);
+        preSetup(s, a);
     });
 
     creaEvents.on('crea.session.logout', function (s, a) {
-        setUp(false, false);
+        preSetup(false, false);
+    });
+
+    creaEvents.on('crea.session.update', function (session, account) {
+        setUp(session, account);
     });
 
     let onScrollCalling;
     creaEvents.on('crea.scroll.bottom', function () {
         if (!onScrollCalling) {
             onScrollCalling = true;
+            getAllResults();
         }
     })
 })()
