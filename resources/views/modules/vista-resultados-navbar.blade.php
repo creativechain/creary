@@ -17,7 +17,8 @@
                     <a v-bind:href="'/@' + a.name" target="_blank">
                         <div class="row-flex">
                             <div class="user-avatar size-25-avatar">
-                                <div class="img-user-avatar size-25-avatar" v-bind:style="{ backgroundImage: 'url(' + a.metadata.avatar.url + ')' }"></div>
+                                <avatar v-bind:account="a"></avatar>
+<!--                                <div class="img-user-avatar size-25-avatar" v-bind:style="{ backgroundImage: 'url(' + a.metadata.avatar.url + ')' }"></div>-->
                             </div>
                             <div class="media-body text-truncate text-left">
                                 <p class="dropdown-autor-span-name mb-0">@{{ a.public_name || '@' + a.name }}</p>

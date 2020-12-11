@@ -1,10 +1,14 @@
 import {cancelEventPropagation, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
+import Avatar from "../components/Avatar";
 
 const SEARCH_LIMIT = 3;
 const MIN_SEARCH_CHARS = 3;
 
 (function () {
+
+    Vue.component('avatar', Avatar);
+
     let navbarSearch;
 
     function setUp() {
