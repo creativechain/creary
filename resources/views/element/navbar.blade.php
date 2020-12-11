@@ -348,7 +348,7 @@
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/passwords'">{{ __('lang.PROFILE_MENU.CHANGE_PASSWORD') }}</a></li>
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/settings'">{{ __('lang.PROFILE_MENU.SETTINGS') }}</a></li>
                             <li class="dropdown d-block d-sm-block d-md-none" v-if="session">
-                                <span class="dropdown__trigger text-capitalize">More</span>
+                                <span class="dropdown__trigger text-capitalize">{{ __('lang.COMMON.MORE') }}</span>
                                 <div class="dropdown__container">
                                     <div class="container">
                                         <div class="row">
