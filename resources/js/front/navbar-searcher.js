@@ -75,6 +75,16 @@ const MIN_SEARCH_CHARS = 3;
 
                         search('/accounts/search', this.accounts);
                         search('/tags/search', this.tags);
+                    } else {
+                        let cleanSection = function (section) {
+                            section.http = null;
+                            section.items = [];
+                        }
+
+                        cleanSection(this.accounts);
+                        cleanSection(this.tags);
+
+                        this.$forceUpdate();
                     }
                 }
             }
