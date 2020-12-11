@@ -44,7 +44,8 @@ class UpdateAccountJob implements ShouldQueue
             $accountData = $client->getAccount($this->accountName, false);
 
             $account = Accounts::query()
-                ->find($accountData['id']);
+                ->where('id', $accountData['id'])
+                ->first();
 
             if (!$account) {
                 Log::debug('Account ' . $this->accountName . ' not found. Creating registry...');
@@ -56,7 +57,7 @@ class UpdateAccountJob implements ShouldQueue
 
             Log::debug('Account ' . $this->accountName . ' updated!');
         } catch (\Exception $e) {
-            Log::error('Cannot update account ' . $this->accountName, $e->getTrace());
+            Log::error('Cannot update account ' . $this->accountName . ': ' . $e->getMessage(), $e->getTrace());
         }
     }
 }
