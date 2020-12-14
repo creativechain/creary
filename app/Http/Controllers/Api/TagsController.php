@@ -16,6 +16,33 @@ class TagsController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
+    public function index(Request $request) {
+        $validations = array(
+            'limit' => 'sometimes|numeric',
+        );
+
+        $validatedData = Validator::make($request->all(), $validations);
+        if ($validatedData->fails()) {
+            return response([
+                'status' => 'error',
+                'message' => $validatedData->errors(),
+                'error' => 'invalid_parameter'
+            ], 400);
+        }
+
+        $limit = $request->get('limit', 20);
+
+        $tags = Tags::query()
+            ->orderBy('comments_count', 'desc')
+            ->paginate(intval($limit));
+
+        return response($tags);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function search(Request $request) {
         $validations = array(
             'limit' => 'sometimes|numeric',
