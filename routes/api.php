@@ -34,12 +34,12 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
-Route::group(['prefix' => 'accounts'], function () {
+Route::group(['prefix' => 'accounts', 'middleware' => ['cors']], function () {
 
     Route::get('/search', 'Api\AccountsController@search')->name('accounts.search');
 });
 
-Route::group(['prefix' => 'tags'], function () {
+Route::group(['prefix' => 'tags', 'middleware' => ['cors']], function () {
 
     Route::get('/search', 'Api\TagsController@search')->name('tags.search');
 });
