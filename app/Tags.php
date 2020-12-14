@@ -12,6 +12,7 @@ class Tags extends Model
     protected $connection = 'mongodb';
     protected $fillable = ['name'];
     protected $appends = ['comments_count'];
+    protected $hidden = ['comments_ids'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Jenssegers\Mongodb\Relations\BelongsToMany
