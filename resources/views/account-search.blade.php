@@ -5,8 +5,8 @@
     <div class="main-container view-profile">
         <section class="bg--secondary p-top-15">
             <div id="accounts-list" class="container">
-                <div class="row">
-                    <div v-cloak class="col-lg-9 col-xl-9">
+                <div class="row justify-content-center">
+                    <div v-cloak class="col-12 col-lg-9 col-xl-9">
                         <section class="space--sm">
                             <div class="container">
                                 @include('modules.list-accounts')
