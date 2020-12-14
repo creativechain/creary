@@ -25,6 +25,6 @@ class Tags extends Model
      * @return int
      */
     public function getCommentsCountAttribute() {
-        return $this->comments()->count();
+        return count($this->comments_ids);
     }
 }
