@@ -41,7 +41,7 @@ Route::group(['prefix' => 'accounts', 'middleware' => ['cors']], function () {
 
 Route::group(['prefix' => 'tags', 'middleware' => ['cors']], function () {
 
-    Route::get('/', 'Api\TagsController@search')->name('tags.index');
+    Route::get('/', 'Api\TagsController@index')->name('tags.index');
     Route::get('/search', 'Api\TagsController@search')->name('tags.search');
 });
 
