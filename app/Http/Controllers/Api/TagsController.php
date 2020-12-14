@@ -33,7 +33,7 @@ class TagsController extends Controller
         $limit = $request->get('limit', 20);
 
         $tags = Tags::query()
-            ->orderBy('comments_count', 'desc')
+            ->orderByDesc('comments_count')
             ->paginate(intval($limit));
 
         return response($tags);
