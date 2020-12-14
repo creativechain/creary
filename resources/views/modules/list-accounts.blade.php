@@ -1,6 +1,6 @@
 <div class="row">
     <div class="w-100">
-        <h3 class="title-section-profile">{{ __('lang.ACCOUNT_SEARCH.RESULTS_TITLE') }}: '@{{ search }}'</h3>
+        <h1 class="title-section-profile">{{ __('lang.ACCOUNT_SEARCH.RESULTS_TITLE') }}: '@{{ search }}'</h1
     </div>
 
 
