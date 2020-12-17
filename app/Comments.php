@@ -38,9 +38,10 @@ class Comments extends Model
             $this->description = $data->metadata['description'];
             $this->license = $data->metadata['license'];
             $this->adult = $data->metadata['adult'];
-            $rTags = $this->tags();
             $tags = $data->metadata['tags'];
+            $this->save();
             foreach ($tags as $t) {
+                /** @var Tags $mT */
                 $mT = Tags::query()
                     ->firstOrCreate([
                         'name' => $t
@@ -48,10 +49,10 @@ class Comments extends Model
                         'name' => $t
                     ]);
 
-                $rTags->attach($mT->_id);
+                $mT->comments()->attach($this->_id);
+                $mT->setCommentsCount();
+                $mT->save();
             }
-
-            $this->save();
 
         } catch (\Exception $e) {
             Log::error($e->getMessage() . ' Comment: ' . $data->author . '/' . $data->permlink, $e->getTrace());

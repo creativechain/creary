@@ -30,11 +30,11 @@ class TagsController extends Controller
             ], 400);
         }
 
-        $limit = $request->get('limit', 20);
+        $limit = intval($request->get('limit', 20));
 
         $tags = Tags::query()
             ->orderByDesc('comments_count')
-            ->paginate(intval($limit));
+            ->paginate($limit);
 
         return response($tags);
     }
