@@ -80,7 +80,7 @@ import {catchError} from "../common/common";
 
             setTimeout(function () {
                 //mr.sliders.documentReady($);
-                $('.button-º').on('click', function(){
+                $('.button-').on('click', function(){
                     $('.row-filter-select').fadeToggle('show');
                 });
             }, 100)
