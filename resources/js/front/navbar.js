@@ -41,6 +41,7 @@ import {CommentsApi} from "../lib/creary-api";
         if (!navbarContainer) {
             navbarContainer = new Vue({
                 el: '#navbar-container',
+                name: 'navbar-container',
                 data: {
                     lang: lang,
                     session: session,

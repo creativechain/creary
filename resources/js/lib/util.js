@@ -201,8 +201,7 @@ function toUrl(web) {
  * @param {number} index
  * @returns {string}
  */
-function getPathPart(path, index) {
-    index = index !== undefined ? index : 0;
+function getPathPart(path, index = 0) {
     path = path || (currentPage ? currentPage.pathname : null) || window.location.pathname;
     let parts = path.split('/');
     parts.splice(0, 1);

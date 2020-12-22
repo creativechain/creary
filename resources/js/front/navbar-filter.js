@@ -10,7 +10,7 @@ import {catchError} from "../common/common";
     let oldContentLock = mutexify();
     let navbarFilter;
 
-    function setUp(session, account, hasSearch) {
+    function setUp(session, account, isFeed) {
         if (!navbarFilter) {
             navbarFilter = new Vue({
                 el: '#navbar-filter',
@@ -21,7 +21,7 @@ import {catchError} from "../common/common";
                     account: account,
                     availableLicenses: [LICENSE.NON_PERMISSION, LICENSE.CREATIVE_COMMONS, LICENSE.FREE_CONTENT],
                     discussions: [],
-                    category: hasSearch ? 'popular' : 'feed',
+                    category: isFeed ? 'feed' : 'popular',
                     discuss: null,
                     license: null,
                     download: null,
@@ -29,6 +29,7 @@ import {catchError} from "../common/common";
                 },
                 methods: {
                     isUserFeed: isUserFeed,
+                    loadContent: loadContent,
                     getParams: function () {
                         return {
                             search: this.discuss,
@@ -39,33 +40,40 @@ import {catchError} from "../common/common";
                     onSelectCategory: function (event, category) {
                         cancelEventPropagation(event);
 
-                        this.category = category;
-                        this.loadContent();
+                        if (category !== this.category) {
+                            this.category = category;
+                            this.resetContentFilters();
+                        }
                     },
                     onSelectDiscuss: function (event, discuss) {
                         cancelEventPropagation(event);
 
-                        this.discuss = discuss;
-                        this.loadContent();
+                        if (discuss !== this.discuss) {
+                            this.discuss = discuss;
+                            this.resetContentFilters();
+                        }
                     },
                     onSelectLicense: function (event, license) {
                         cancelEventPropagation(event);
-                        this.license = license;
-                        this.loadContent();
+                        if (license !== this.license) {
+                            this.license = license;
+                            this.loadContent();
+                        }
                     },
                     onSelectDownload: function (event, download) {
                         cancelEventPropagation(event);
-                        this.download = download;
-                        this.loadContent();
+
+                        if (download !== this.download) {
+                            this.download = download;
+                            this.loadContent();
+                        }
+
                     },
                     resetContentFilters() {
                         this.license = null;
                         this.downloads = null;
+                        this.oldContent = null;
                         this.loadContent();
-                    },
-                    loadContent() {
-                        console.log('Loading content for', this.category, this.discuss);
-                        creaEvents.emit('crea.content.set', this.category, this.discuss, this.getParams());
                     }
                 }
             });
@@ -84,8 +92,7 @@ import {catchError} from "../common/common";
     }
 
     function preSetup(session, account) {
-        let hasSearch = getParameterByName('search');
-        setUp(session, account, hasSearch);
+        setUp(session, account, isUserFeed());
         fetchUsedTags();
     }
 
@@ -101,6 +108,11 @@ import {catchError} from "../common/common";
                 navbarFilter.$forceUpdate();
             }
         });
+    }
+
+    function loadContent() {
+        console.log('Loading content for', navbarFilter.category, navbarFilter.discuss);
+        creaEvents.emit('crea.content.set', navbarFilter.category, navbarFilter.discuss, navbarFilter.getParams());
     }
 
     function loadSlider() {
@@ -119,14 +131,8 @@ import {catchError} from "../common/common";
         setUp(session, account);
     });
 
-    creaEvents.on('crea.filter.set', function (category, discuss) {
-        console.log('Filter set received!', category, discuss);
-        navbarFilter.category = discuss === 'feed' ? discuss : category;
-        navbarFilter.discuss = discuss === 'feed' ? null : discuss;
-        navbarFilter.$forceUpdate();
-    })
-
     creaEvents.on('crea.content.old', function () {
+        console.log('Received load old content');
         oldContentLock(function (release) {
             let hasPrevQuery = navbarFilter.oldContent && navbarFilter.oldContent.next_page_url;
             let commentsApi = new CommentsApi();
@@ -146,10 +152,11 @@ import {catchError} from "../common/common";
             if (hasPrevQuery) {
                 commentsApi.get(navbarFilter.oldContent.next_page_url, onResult);
             } else {
-                let following = []
                 if (isUserFeed()) {
+                    let following = navbarFilter.account.user.followings;
                     let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
-                    commentsApi.feed(following, navbarFilter.discuss, adult, 20, onResult);
+                    let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
+                    commentsApi.feed(following, discuss, adult, 20, onResult);
                 } else {
                     commentsApi.searchByReward(navbarFilter.discuss, navbarFilter.download, navbarFilter.license, 20, onResult);
                 }
@@ -157,5 +164,15 @@ import {catchError} from "../common/common";
             }
         })
 
-    })
+    });
+
+    creaEvents.on('crea.content.path', function (category, discuss) {
+        navbarFilter.category = category;
+        navbarFilter.discuss = discuss;
+        navbarFilter.$forceUpdate();
+    });
+
+    creaEvents.on('crea.content.load', function () {
+        loadContent();
+    });
 })();
