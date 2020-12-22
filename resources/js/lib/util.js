@@ -51,6 +51,23 @@ function jsonstring(obj) {
     return obj;
 }
 
+/**
+ *
+ * @param obj
+ * @returns {*}
+ */
+function clean(obj) {
+    if (obj) {
+        for (let prop in obj) {
+            if (obj[prop] === null || obj[prop] === undefined) {
+                delete obj[prop];
+            }
+        }
+    }
+
+    return obj;
+}
+
 function validateEmail(email) {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -372,7 +389,7 @@ function makeMentions(comment, state) {
 }
 
 export {
-    cancelEventPropagation, isJSON, jsonify, jsonstring, validateEmail, getParameterByName, toPermalink, createAuth,
+    cancelEventPropagation, isJSON, jsonify, jsonstring, clean, validateEmail, getParameterByName, toPermalink, createAuth,
     copyToClipboard, randomNumber, toLocaleDate, clone, humanFileSize, isUserFeed, toUrl, getPathPart,
     getNavigatorLanguage, cleanArray, isSmallScreen, removeEmojis, NaNOr, isEqual, mixToArray, normalizeTag, linkfy,
     uniqueId, makeMentions

@@ -3,7 +3,7 @@
  */
 
 import * as EventEmitter from 'events';
-import { randomNumber } from './util';
+import {clean, randomNumber} from './util';
 
 class HttpClient extends EventEmitter {
     constructor(url) {
@@ -86,7 +86,7 @@ class HttpClient extends EventEmitter {
      */
     post(params) {
 
-        this.params = params;
+        this.params = clean(params);
         this.method = 'POST';
         this.__exec();
 
@@ -99,7 +99,7 @@ class HttpClient extends EventEmitter {
      * @returns {HttpClient}
      */
     get(params) {
-        this.params = params;
+        this.params = clean(params);
         this.method = 'GET';
         this.__exec();
 

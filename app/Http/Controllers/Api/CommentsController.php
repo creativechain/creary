@@ -15,7 +15,7 @@ class CommentsController extends Controller
     public function feed(Request $request) {
         $validations = array(
             'following' => 'required|array',
-            'following.*' => 'required|string|distinct',
+            'following.*' => 'sometimes|string|distinct',
             'search' => 'sometimes|string',
             'adult' => 'sometimes|boolean',
             'limit' => 'sometimes|numeric',
@@ -30,7 +30,7 @@ class CommentsController extends Controller
             ], 400);
         }
 
-        $limit = $request->get('limit', 20);
+        $limit = intval($request->get('limit', 20));
         $adult = boolval($request->get('adult', 1));
         $search = $request->get('search', false);
         $following = $request->get('following');

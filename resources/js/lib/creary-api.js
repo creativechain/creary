@@ -152,7 +152,7 @@ class TagsApi extends CrearyApi {
      * @param callback
      */
     index(limit = 20, callback) {
-        this.__initializeClient('/index', callback);
+        this.__initializeClient('/', callback);
         this.__get({ limit });
     }
 

@@ -148,7 +148,8 @@ import {catchError} from "../common/common";
             } else {
                 let following = []
                 if (isUserFeed()) {
-                    commentsApi.feed(following, navbarFilter.discuss, navbarFilter.account.usage.metadata.adult_content, 20, onResult);
+                    let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
+                    commentsApi.feed(following, navbarFilter.discuss, adult, 20, onResult);
                 } else {
                     commentsApi.searchByReward(navbarFilter.discuss, navbarFilter.download, navbarFilter.license, 20, onResult);
                 }

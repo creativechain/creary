@@ -14,6 +14,7 @@ import { catchError, performSearch, isInHome, hideModal, goTo, resolveFilter, up
 import Errors from "../lib/error";
 
 import Avatar from "../components/Avatar";
+import {CommentsApi} from "../lib/creary-api";
 
 (function () {
 
@@ -147,72 +148,42 @@ import Avatar from "../components/Avatar";
         crea.api.getState(filter, function (err, urlState) {
             if (!catchError(err)) {
                 if (isUserFeed()) {
-                    let http = new HttpClient(apiOptions.apiUrl + '/creary/feed');
-
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
                         creaEvents.emit('crea.posts', urlFilter, filter, urlState);
                     };
 
-                    http.when('done', function (response) {
-                        let data = jsonify(response).data;
-
-                        if (data.length) {
-                            let count = data.length;
-
-                            let onContentFetched = function onContentFetched() {
-                                count--;
-
-                                if (count <= 0) {
-                                    creaEvents.emit('crea.posts', urlFilter, filter, urlState);
-                                }
-                            };
-
-                            urlState.content = {};
-                            data.forEach(function (d) {
-                                let permlink = d.author + '/' + d.permlink;
-
-                                if (!urlState.content[permlink]) {
-                                    crea.api.getContent(d.author, d.permlink, function (err, result) {
-                                        if (err) {
-                                            console.error('Error getting', permlink, err);
-                                        } else {
-                                            let p = parsePost(result);
-                                            p.reblogged_by = d.reblogged_by;
-                                            urlState.content[permlink] = p;
-                                        }
-
-                                        onContentFetched();
-                                    });
-                                }
-                            });
-                        } else {
-                            noFeedContent();
-                        }
-                    });
-                    http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                        catchError(textStatus);
-                    });
-                    let username = getPathPart().replace('/', '').replace('@', '');
-                    crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
+                    let commentsApi = new CommentsApi();
+                    let adult = navbarContainer.user.metadata.adult_content === 'hide' ? 0 : 1
+                    commentsApi.feed(navbarContainer.user.followings, null, adult, 20, function (err, result) {
                         if (!catchError(err)) {
-                            let followings = [];
-                            result.following.forEach(function (f) {
-                                followings.push(f.following);
-                            });
+                            if (result.to) {
+                                let count = result.to;
 
-                            if (followings.length) {
-                                followings = followings.join(',');
-                                refreshAccessToken(function (accessToken) {
-                                    http.headers = {
-                                        Authorization: 'Bearer ' + accessToken
-                                    };
-                                    http.post({
-                                        following: followings,
-                                        reblogs: true,
-                                        adult: navbarContainer.user.metadata.adult_content
-                                    });
+                                let onContentFetched = function onContentFetched() {
+                                    count--;
+
+                                    if (count <= 0) {
+                                        creaEvents.emit('crea.posts', urlFilter, filter, urlState);
+                                    }
+                                };
+
+                                urlState.content = {};
+                                result.data.forEach(function (d) {
+                                    let permlink = d.author + '/' + d.permlink;
+
+                                    if (!urlState.content[permlink]) {
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
+                                            }
+
+                                            onContentFetched();
+                                        });
+                                    }
                                 });
                             } else {
                                 noFeedContent();

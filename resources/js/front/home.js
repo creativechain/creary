@@ -487,71 +487,42 @@ import {CommentsApi} from "../lib/creary-api";
         crea.api.getState(filter, function (err, urlState) {
             if (!catchError(err)) {
                 if (isUserFeed()) {
-                    let http = new HttpClient(apiOptions.apiCrea + '/comments/feed');
-
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
                         creaEvents.emit('crea.posts', urlFilter, filter, urlState);
                     };
 
-                    http.when('done', function (response) {
-                        let data = jsonify(response);
-
-                        if (data.to) {
-                            let count = data.to;
-
-                            let onContentFetched = function onContentFetched() {
-                                count--;
-
-                                if (count <= 0) {
-                                    creaEvents.emit('crea.posts', urlFilter, filter, urlState);
-                                }
-                            };
-
-                            urlState.content = {};
-                            data.data.forEach(function (d) {
-                                let permlink = d.author + '/' + d.permlink;
-
-                                if (!urlState.content[permlink]) {
-                                    crea.api.getContent(d.author, d.permlink, function (err, result) {
-                                        if (err) {
-                                            console.error('Error getting', permlink, err);
-                                        } else {
-                                            urlState.content[permlink] = parsePost(result, d.reblogged_by);
-                                        }
-
-                                        onContentFetched();
-                                    });
-                                }
-                            });
-                        } else {
-                            noFeedContent();
-                        }
-                    });
-
-                    http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                        catchError(textStatus);
-                    });
-
-                    let username = getPathPart().replace('/', '').replace('@', '');
-                    crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
+                    let commentsApi = new CommentsApi();
+                    commentsApi.feed(homePosts.account.user.followings, params.search, params.adult, 20, function (err, result) {
                         if (!catchError(err)) {
-                            let followings = [];
-                            result.following.forEach(function (f) {
-                                followings.push(f.following);
-                            });
+                            if (result.to) {
+                                let count = result.to;
 
-                            if (followings.length) {
-                                //followings = followings.join(',');
+                                let onContentFetched = function onContentFetched() {
+                                    count--;
 
-                                params.following = followings;
-                                http.headers = {
-                                    Accept: 'application/json'
+                                    if (count <= 0) {
+                                        creaEvents.emit('crea.posts', urlFilter, filter, urlState);
+                                    }
                                 };
 
-                                http.get(params);
+                                urlState.content = {};
+                                result.data.forEach(function (d) {
+                                    let permlink = d.author + '/' + d.permlink;
 
+                                    if (!urlState.content[permlink]) {
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
+                                            }
+
+                                            onContentFetched();
+                                        });
+                                    }
+                                });
                             } else {
                                 noFeedContent();
                             }
@@ -594,7 +565,8 @@ import {CommentsApi} from "../lib/creary-api";
                         if (followings.length) {
                             followings = followings.join(',');
                             let commentsApi = new CommentsApi();
-                            commentsApi.feed(followings, null, account.user.metadata.adult_content, 20, function (err, result) {
+                            let adult = account.user.metadata.adult_content === 'hide' ? 0 : 1
+                            commentsApi.feed(followings, null, adult, 20, function (err, result) {
                                 if (!catchError(err)) {
                                     let data = result.data;
                                     if (data.length) {
