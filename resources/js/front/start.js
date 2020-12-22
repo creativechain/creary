@@ -172,7 +172,7 @@ window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-tes
 window.currentPage = null;
 
 creaEvents.on('crea.content.prepare', function () {
-    console.log('Content prepare on start');
+    //console.log('Content prepare on start');
     Vue.use(VueLazyload);
 
     try {

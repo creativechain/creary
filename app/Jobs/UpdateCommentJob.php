@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Comments;
+use App\Http\Crea\CrearyClient;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,7 +36,7 @@ class UpdateCommentJob implements ShouldQueue
     public function handle()
     {
         //
-        if ($this->data->type === 'comment') {
+        if ($this->data->type === 'comment' && $this->data->parent_author === '') {
             $comment = Comments::query()
                 ->where('permlink', $this->data->permlink)
                 ->where('author', $this->data->author)
@@ -45,7 +46,10 @@ class UpdateCommentJob implements ShouldQueue
                 $comment = new Comments();
             }
 
-            $comment->applyData($this->data)
+            $content = (new CrearyClient())
+                ->getPost($this->data->author, $this->data->permlink);
+
+            $comment->applyData($content)
                 ->save();
         }
     }

@@ -1,4 +1,4 @@
-import {cancelEventPropagation, jsonify} from "../lib/util";
+import {cancelEventPropagation, getParameterByName, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Avatar from "../components/Avatar";
 
@@ -17,7 +17,7 @@ import Avatar from "../components/Avatar";
             name: 'searcher',
             data: {
                 lang: lang,
-                search: null,
+                search: getParameterByName('query'),
                 limit: SEARCH_LIMIT,
                 accounts: {
                     http: null,
@@ -93,6 +93,6 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.modal.ready', function () {
         console.log('Setting up searcher!');
-       setUp();
+        setUp();
     });
 })()

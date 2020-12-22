@@ -6,10 +6,9 @@
             @include('modules.banner')
         </div>
 
-        <section class="cta cta-4 space--xxs border--bottom navbar-filter">
-            <div class="container post-container-home">
+        <section v-pre class="cta cta-4 space--xxs border--bottom navbar-filter">
+            <div v-cloak id="navbar-filter" class="container post-container-home">
                 @include('modules.navbar-filter-home')
-
             </div>
             <script src="{{ asset('js/control/navbar-filter.js') }}"></script>
 
@@ -21,7 +20,7 @@
                     <div class="col-md-12 text-center">
                         <ul class="list-inline navbar-followin-home">
                             <li class="list-inline-item" v-if="session" v-bind:class="{'active': isUserFeed()}">
-                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
+                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FEED') }}</a>
                             </li>
                             <li class="list-inline-item" v-bind:class="{'active': nav === 'popular'}">
                                 <a href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>

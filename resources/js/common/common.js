@@ -803,10 +803,7 @@ function downloadFile(url, filename) {
     document.body.removeChild(element);
 }
 
-function performSearch(search) {
-    let page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-    let inHome = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    let callback = arguments.length > 3 ? arguments[3] : undefined;
+function performSearch(search, page = 1, inHome = false, callback) {
     let path = '/search?query=' + encodeURIComponent(search) + '&page=' + page;
 
     if (inHome) {

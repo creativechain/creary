@@ -120,7 +120,7 @@ import Avatar from "../components/Avatar";
 
         if (!crea.utils.validateAccountName(username)) {
             let accounts = [username];
-            console.log("Checking", accounts);
+            //console.log("Checking", accounts);
             crea.api.lookupAccountNames(accounts, function (err, result) {
                 if (err) {
                     console.error(err);
@@ -286,7 +286,7 @@ import Avatar from "../components/Avatar";
     function enableRightMenu() {
         if (canLoadBootstrapScripts) {
             setTimeout(function () {
-                console.log('Activating right menu...');
+                //console.log('Activating right menu...');
                 mr.notifications.documentReady($);
             }, 1e3);
         }
@@ -296,7 +296,7 @@ import Avatar from "../components/Avatar";
     function enableProfileMenu() {
         if (canLoadBootstrapScripts) {
             setTimeout(function () {
-                console.log('Activating profile menu...');
+                //console.log('Activating profile menu...');
                 mr.toggleClass.documentReady($);
             }, 1e3);
         }
@@ -328,7 +328,7 @@ import Avatar from "../components/Avatar";
 
     creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
-        console.log('Emitting', 'crea.modal.ready', 'event');
+        //console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready', true);
 
         enableRightMenu();

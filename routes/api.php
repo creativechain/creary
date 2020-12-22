@@ -45,5 +45,13 @@ Route::group(['prefix' => 'tags', 'middleware' => ['cors']], function () {
     Route::get('/search', 'Api\TagsController@search')->name('tags.search');
 });
 
+Route::group(['prefix' => 'comments', 'middleware' => ['cors']], function () {
+
+    //Route::get('/', 'Api\TagsController@index')->name('tags.index');
+    Route::get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
+    Route::get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
+    Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show');
+});
+
 /*Route::get('/votes/{creaUser}', 'CrearyController@testVotes')
     ->where('creaUser', '^([\w\.\d-]+)$');*/

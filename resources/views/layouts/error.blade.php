@@ -345,7 +345,7 @@
                     <div class="bar__module">
                         <ul class="menu-horizontal text-left">
                             <li v-if="session" class="d-none d-md-inline-block" v-bind:class="{'active': isUserFeed()}">
-                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
+                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FEED') }}</a>
                             </li>
                             <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'popular'}">
                                 <a  href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>

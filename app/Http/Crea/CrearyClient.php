@@ -71,18 +71,18 @@ class CrearyClient
     /**
      * @param string $author
      * @param string $permlink
-     * @param bool $parse
+     * @param bool $asObject
      * @return null
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPost(string $author, string $permlink, $parse = true) {
+    public function getPost(string $author, string $permlink, $asObject = true) {
         $rpcData = $this->buildRpcData('tags_api.get_discussion', array('author' => $author, 'permlink' => $permlink));
 
         $response = $this->callRequest($rpcData);
 
         if ($response['result']) {
             $post = $response['result'];
-            if ($parse) {
+            if ($asObject) {
                 $post = Obj::parse($post);
                 $post->metadata = Obj::parse(json_decode($post->json_metadata));
                 $post->author = $this->getAccount($post->author);
