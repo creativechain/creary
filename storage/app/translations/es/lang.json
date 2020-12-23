@@ -352,8 +352,11 @@
         "VIDEO_SUPPORT": "(Youtube, Vimeo)",
         "MAIN_CATEGORY": "CATEGORÍA PRINCIPAL",
         "SELECT_A_CATEGORY": "Selecciona una categoría de la lista",
-        "BENEFICIARIES": "BENEFICIARIOS"
-
+        "BENEFICIARIES": "BENEFICIARIOS",
+        "ADD_BENEFICIARY": "Añadir beneficiario",
+        "NO_BENEFICIARY_FILLED": "Por favor, rellena correctamente todos los beneficiarios añadidos",
+        "MAX_BENEFICIARIES_REACHED": "Solo se pueden añadir hasta %s como máximo",
+        "BENEFICIARY_WEIGHT_OVERFLOW": "La suma del porcentaje de todos los beneficiarios no puede exceder de 100."
     },
     "WITNESS": {
         "WITNESSES": "TESTIGOS",

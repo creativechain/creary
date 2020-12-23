@@ -63,11 +63,11 @@
             <div class="col-md-12">
                 <label>{{ __('lang.PUBLISH.MAIN_CATEGORY') }}</label>
                 <div class="input-select">
-                    <select>
-                        <option selected="" value="Default">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
-                        <option value="Small">Small</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Larger">Large</option>
+                    <select v-model="mainCategory">
+                        <option value="">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
+                        <option v-for="c in selectableCategories"value="c.tag">
+                            @{{ c.text }}
+                        </option>
                     </select>
                 </div>
 
@@ -83,31 +83,34 @@
                 <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                        <input type="number" name="input" placeholder="70" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        <input type="number" v-model="mainBeneficiary.weight" name="input" placeholder="0" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
                     </div>
 
                     <div class="input-icon">
                         <i class="material-icons email">alternate_email</i>
-                        <input type="text" v-model="mainBeneficiary.account" name="input" placeholder="Creary" disabled class="disabled"/>
+                        <input type="text" v-model="mainBeneficiary.account" name="input" disabled class="disabled"/>
                     </div>
                 </div>
 
-                <div class="d-flex mb-3">
-                    <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                        <input type="number" v-model="mainBeneficiary.weight" name="input" placeholder="30" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
-                    </div>
+                <template v-for="b in Object.keys(beneficiaries)">
+                    <div v-if="b !== null" class="d-flex mb-3" >
+                        <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
+                            <input type="number" v-model="beneficiaries[b].weight" v-on:input="updateBeneficiariesWeight" name="input" placeholder="0" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        </div>
 
-                    <div class="input-icon">
-                        <i class="material-icons email">alternate_email</i>
-                        <input type="text" name="input" placeholder="csmanolo" />
+                        <div class="input-icon">
+                            <i class="material-icons email">alternate_email</i>
+                            <input type="text" v-model="beneficiaries[b].account" name="input" placeholder="" />
+                        </div>
+                        <div class="input-icon cursor-link">
+                            <a href="" v-on:click="deleteBeneficiary($event, b)" class="close"><i class="material-icons email">close</i></a>
+                        </div>
                     </div>
-                    <div class="input-icon">
-                        <a href="" class="close"><i class="material-icons email">close</i></a>
-                    </div>
-                </div>
+                </template>
 
-                <div class="btn btn--sm">
-                    <span class="btn__text text__dark">Add account</span>
+
+                <div class="btn btn--sm" v-on:click="addBeneficiary">
+                    <span class="btn__text text__dark">{{ __('lang.PUBLISH.ADD_BENEFICIARY') }}</span>
                 </div>
             </div>
 

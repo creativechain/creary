@@ -22,7 +22,7 @@ import CKEditor from "../components/CKEditor";
     let publishContainer;
     let postUploads = {};
 
-    function setUp(editablePost) {
+    function setUp(editablePost, session, account) {
         let downloadFile = {
             price: 0,
             currency: 'CREA'
@@ -41,333 +41,389 @@ import CKEditor from "../components/CKEditor";
             sharedImage = (mSi && mSi.url) ? mSi : sharedImage;
         }
 
-        publishContainer = new Vue({
-            el: '#publish-container',
-            name: 'publish-container',
-            data: {
-                lang: lang,
-                account: account,
-                session: session,
-                LICENSE: LICENSE,
-                CONSTANTS: CONSTANTS,
-                step: 1,
-                editablePost: editablePost,
-                bodyElements: editablePost ? editablePost.body : [],
-                tags: [],
-                uploadedFiles: [],
-                updatingIndex: -1,
-                editor: {
-                    editing: false,
-                    show: false
+        if (!publishContainer) {
+            publishContainer = new Vue({
+                el: '#publish-container',
+                name: 'publish-container',
+                data: {
+                    lang: lang,
+                    account: account,
+                    session: session,
+                    LICENSE: LICENSE,
+                    CONSTANTS: CONSTANTS,
+                    selectableCategories: [],
+                    step: 1,
+                    editablePost: editablePost,
+                    bodyElements: editablePost ? editablePost.body : [],
+                    tags: [],
+                    uploadedFiles: [],
+                    updatingIndex: -1,
+                    editor: {
+                        editing: false,
+                        show: false
+                    },
+                    featuredImage: featuredImage,
+                    sharedImage: sharedImage,
+                    title: editablePost ? editablePost.title : null,
+                    description: editablePost ? editablePost.metadata.description : '',
+                    adult: editablePost ? editablePost.metadata.adult : false,
+                    downloadFile: downloadFile,
+                    publicDomain: license.has(LICENSE.FREE_CONTENT.flag) ? LICENSE.FREE_CONTENT.flag : LICENSE.NO_LICENSE.flag,
+                    share: license.has(LICENSE.SHARE_ALIKE.flag) ? LICENSE.SHARE_ALIKE.flag : license.has(LICENSE.NON_DERIVATES.flag) ? LICENSE.NON_DERIVATES.flag : LICENSE.NO_LICENSE.flag,
+                    commercial: license.has(LICENSE.NON_COMMERCIAL.flag) ? LICENSE.NON_COMMERCIAL.flag : LICENSE.NO_LICENSE.flag,
+                    noLicense: license.has(LICENSE.NON_PERMISSION.flag) ? LICENSE.NON_PERMISSION.flag : LICENSE.NO_LICENSE.flag,
+                    showEditor: false,
+                    mainCategory: "",
+                    mainBeneficiary: {
+                        account: account.user.name,
+                        weight: 100
+                    },
+                    beneficiaries: [],
+                    tagsConfig: {
+                        init: false,
+                        addedEvents: false
+                    },
+                    error: null
                 },
-                featuredImage: featuredImage,
-                sharedImage: sharedImage,
-                title: editablePost ? editablePost.title : null,
-                description: editablePost ? editablePost.metadata.description : '',
-                adult: editablePost ? editablePost.metadata.adult : false,
-                downloadFile: downloadFile,
-                publicDomain: license.has(LICENSE.FREE_CONTENT.flag) ? LICENSE.FREE_CONTENT.flag : LICENSE.NO_LICENSE.flag,
-                share: license.has(LICENSE.SHARE_ALIKE.flag) ? LICENSE.SHARE_ALIKE.flag : license.has(LICENSE.NON_DERIVATES.flag) ? LICENSE.NON_DERIVATES.flag : LICENSE.NO_LICENSE.flag,
-                commercial: license.has(LICENSE.NON_COMMERCIAL.flag) ? LICENSE.NON_COMMERCIAL.flag : LICENSE.NO_LICENSE.flag,
-                noLicense: license.has(LICENSE.NON_PERMISSION.flag) ? LICENSE.NON_PERMISSION.flag : LICENSE.NO_LICENSE.flag,
-                showEditor: false,
-                mainCateogry: null,
-                mainBeneficiary: {
-                    account: account.user.name,
-                    weight: 100
+                mounted: function mounted() {//creaEvents.emit('crea.dom.ready', 'publish');
                 },
-                beneficiaries: [],
-                tagsConfig: {
-                    init: false,
-                    addedEvents: false
-                },
-                error: null
-            },
-            mounted: function mounted() {//creaEvents.emit('crea.dom.ready', 'publish');
-            },
-            updated: function updated() {
-                console.log('updating');
+                updated: function updated() {
+                    console.log('updating');
 
-                if (this.step !== 2) {
-                    this.tagsConfig.init = false;
-                    this.tagsConfig.addedEvents = false;
-                }
-
-                if (this.step === 2) {
-                    let inputTags = $('#publish-tags');
-                    let that = this;
-
-                    if (!this.tagsConfig.init) {
-                        inputTags.tagsinput({
-                            maxTags: CONSTANTS.MAX_TAGS,
-                            maxChars: CONSTANTS.TEXT_MAX_SIZE.TAG,
-                            delimiter: ' '
-                        });
-                        this.tagsConfig.init = true;
+                    if (this.step !== 2) {
+                        this.tagsConfig.init = false;
+                        this.tagsConfig.addedEvents = false;
                     }
 
-                    if (!this.tagsConfig.addedEvents) {
-                        inputTags.on('beforeItemAdd', function (event) {
-                            if (!that.tags.includes(event.item)) {
-                                that.tags.push(event.item);
-                            }
-                        });
-                        inputTags.on('itemRemoved', function (event) {
-                            let i = that.tags.indexOf(event.item);
+                    if (this.step === 2) {
+                        let inputTags = $('#publish-tags');
+                        let that = this;
 
-                            if (i > -1) {
-                                that.tags.splice(i, 1);
-                            }
-                        });
-                        this.tagsConfig.addedEvents = true;
+                        if (!this.tagsConfig.init) {
+                            inputTags.tagsinput({
+                                maxTags: CONSTANTS.MAX_TAGS,
+                                maxChars: CONSTANTS.TEXT_MAX_SIZE.TAG,
+                                delimiter: ' '
+                            });
+                            this.tagsConfig.init = true;
+                        }
 
-                        if (editablePost) {
-                            let tags = editablePost.metadata.tags;
-                            tags.forEach(function (t) {
+                        if (!this.tagsConfig.addedEvents) {
+                            inputTags.on('beforeItemAdd', function (event) {
+                                if (!that.tags.includes(event.item)) {
+                                    that.tags.push(event.item);
+                                }
+                            });
+                            inputTags.on('itemRemoved', function (event) {
+                                let i = that.tags.indexOf(event.item);
+
+                                if (i > -1) {
+                                    that.tags.splice(i, 1);
+                                }
+                            });
+                            this.tagsConfig.addedEvents = true;
+
+                            if (editablePost) {
+                                let tags = editablePost.metadata.tags;
+                                tags.forEach(function (t) {
+                                    inputTags.tagsinput('add', t);
+                                });
+                            }
+                        }
+
+                        if (that.tags.length > 0) {
+                            that.tags.forEach(function (t) {
                                 inputTags.tagsinput('add', t);
                             });
                         }
                     }
-
-                    if (that.tags.length > 0) {
-                        that.tags.forEach(function (t) {
-                            inputTags.tagsinput('add', t);
-                        });
-                    }
-                }
-            },
-            methods: {
-                getLicense: function getLicense() {
-                    let license;
-
-                    if (this.noLicense === LICENSE.NON_PERMISSION.flag) {
-                        license = License.fromFlag(this.noLicense);
-                    } else if (this.publicDomain === LICENSE.FREE_CONTENT.flag) {
-                        license = License.fromFlag(this.publicDomain);
-                    } else {
-                        license = LICENSE.CREATIVE_COMMONS.flag | LICENSE.ATTRIBUTION.flag | this.share | this.commercial;
-                        license = License.fromFlag(license);
-                    }
-
-                    return license;
                 },
-                toStep: function toStep(_toStep) {
-                    if (!this.editor.show && this.step > _toStep) {
-                        this.step = _toStep;
-                    }
-                },
-                nextStep: function nextStep() {
-                    let that = this;
+                methods: {
+                    getLicense: function getLicense() {
+                        let license;
 
-                    if (!this.editor.show) {
-                        //Check errors before continue
-                        switch (this.step) {
-                            case 1:
-                                this.bodyElements = cleanArray(this.bodyElements);
-                                this.error = this.bodyElements.length > 0 ? null : this.lang.PUBLISH.NO_ELEMENTS_ERROR;
-                                break;
-
-                            case 2:
-                                if (!this.featuredImage.hash || !this.title || this.tags.length === 0) {
-                                    this.error = this.lang.PUBLISH.NO_TITLE_TAG_OR_IMAGE;
-                                } else {
-                                    this.error = null;
-                                }
-                                break;
-
-                            case 3:
-                                if ((this.editablePost && this.editablePost.download.size) && !this.downloadFile.size) {
-                                    this.error = String.format(this.lang.PUBLISH.RELOAD_DOWNLOAD_FILE, this.editablePost.download.size.name)
-                                } else {
-                                    this.error = null
-                                }
-                                break;
-
+                        if (this.noLicense === LICENSE.NON_PERMISSION.flag) {
+                            license = License.fromFlag(this.noLicense);
+                        } else if (this.publicDomain === LICENSE.FREE_CONTENT.flag) {
+                            license = License.fromFlag(this.publicDomain);
+                        } else {
+                            license = LICENSE.CREATIVE_COMMONS.flag | LICENSE.ATTRIBUTION.flag | this.share | this.commercial;
+                            license = License.fromFlag(license);
                         }
 
-                        if (!this.error) {
-                            this.step += 1;
+                        return license;
+                    },
+                    toStep: function toStep(_toStep) {
+                        if (!this.editor.show && this.step > _toStep) {
+                            this.step = _toStep;
                         }
-                    }
-                },
-                loadFile: function loadFile(event) {
-                    if (!this.editor.show) {
-                        let elem = this.$refs.publishInputFile;
-                        elem.click();
-                    }
-                },
-                loadFeaturedImage: function loadFeaturedImage(event) {
-                    let elem = this.$refs.publishInputCover;
-                    elem.click();
-                },
-                onInputDownloadFile: function onInputDownloadFile(event) {
-                    let files = event.target.files;
-                    let that = this;
-
-                    if (files.length > 0) {
-                        globalLoading.show = true;
-                        let loadedFile = files[0];
-                        let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY.DOWNLOAD;
-                        uploadToIpfs(loadedFile, maximumSize, function (err, file) {
-                            globalLoading.show = false;
-
-                            if (!catchError(err)) {
-                                file.resource = file.url;
-                                that.downloadFile = Object.assign(that.downloadFile, jsonify(jsonstring(file)));
-                                if (that.editablePost) {
-                                    that.editablePost.downloadUploaded = file.size > 0;
+                    },
+                    hasGoodBeneficiaries: function () {
+                        if (this.beneficiaries.length) {
+                            for (let x = 0; x < this.beneficiaries.length; x++) {
+                                let b = this.beneficiaries[x];
+                                if (b.weight <= 0 || !b.account) {
+                                    return false;
                                 }
                             }
-                        });
-                    }
-                },
-                onLoadFile: function onLoadFile(event) {
-                    let that = this;
-                    let files = event.target.files;
-                    let loadedFile = files[0];
-
-                    console.log('File loading', loadedFile);
-                    if (files.length > 0) {
-                        globalLoading.show = true;
-
-                        let [fileType, fileFormat] = loadedFile.type.toUpperCase().split('/');
-                        let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileType];
-
-                        //Reset maximum size of video files to allow only webm or mo4
-                        if (fileType.includes('VIDEO')) {
-                            maximumSize = 0;
                         }
 
-                        //Set specific file format sizes
-                        if (CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileFormat]) {
-                            maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileFormat];
-                        }
+                        return this.mainBeneficiary.weight >= 0;
+                    },
+                    nextStep: function nextStep() {
+                        let that = this;
 
-                        //Show alert for video formats not allowed
-                        if (fileType.includes('VIDEO') && maximumSize <= 0) {
-                            globalLoading.show = false;
-                            return catchError({ TITLE: lang.PUBLISH.FILE_NOT_ALLOWED, BODY: [lang.PUBLISH.ALLOWED_VIDEO_FORMATS]})
-                        }
+                        if (!this.editor.show) {
+                            //Check errors before continue
+                            switch (this.step) {
+                                case 1:
+                                    this.bodyElements = cleanArray(this.bodyElements);
+                                    this.error = this.bodyElements.length > 0 ? null : this.lang.PUBLISH.NO_ELEMENTS_ERROR;
+                                    break;
 
-                        console.log('file:', loadedFile, 'MaxSize:', maximumSize, 'isGif', loadedFile.type.toLowerCase().includes('image/gif'));
-                        uploadToIpfs(loadedFile, maximumSize, function (err, file) {
-                            globalLoading.show = false;
-
-                            if (err) {
-                                that.error = catchError(err, false);
-                            } else {
-
-                                that.bodyElements.push(file);
-                                postUploads[file.hash] = loadedFile;
-                                that.error = null;
-
-                                if (file.type.indexOf('image/') > -1 && !that.sharedImage.hash) {
-
-                                    uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
-                                        if (!err) {
-                                            that.sharedImage = uploadedPreview;
-                                            console.log('Featured image loaded!');
-                                        } else {
-                                            console.error(err, loadedFile)
-                                        }
-
-                                    })
-
-                                }
-
-                                resizeImage(loadedFile, function (resizedFile) {
-                                    let maximumPreviewSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
-                                    postUploads[file.hash] = {
-                                        original: loadedFile,
-                                        resized: resizedFile
-                                    };
-
-                                    //Set first loaded image as preview
-                                    if (file.type.indexOf('image/') > -1 && !that.featuredImage.hash) {
-                                        uploadToIpfs(resizedFile, maximumPreviewSize, function (err, uploadedPreview) {
-                                            if (!err) {
-                                                that.featuredImage = uploadedPreview;
-                                                console.log('Featured image loaded!');
-                                            } else {
-                                                console.error(err, resizedFile)
-                                            }
-
-                                        })
+                                case 2:
+                                    if (!this.featuredImage.hash || !this.title || (!this.mainCategory && this.tags.length === 0)) {
+                                        this.error = this.lang.PUBLISH.NO_TITLE_TAG_OR_IMAGE;
+                                    } else if (!this.hasGoodBeneficiaries()) {
+                                        this.error = this.lang.PUBLISH.NO_BENEFICIARY_FILLED;
+                                    } else {
+                                        this.error = null;
                                     }
+                                    break;
 
-                                });
+                                case 3:
+                                    if ((this.editablePost && this.editablePost.download.size) && !this.downloadFile.size) {
+                                        this.error = String.format(this.lang.PUBLISH.RELOAD_DOWNLOAD_FILE, this.editablePost.download.size.name)
+                                    } else {
+                                        this.error = null
+                                    }
+                                    break;
 
-                                //Clear input
-                                let elem = that.$refs.publishInputFile;
-                                $(elem).val('');
-                            }
-                        });
-                    }
-                },
-                onLoadFeaturedImage: function onLoadFeaturedImage(event) {
-                    let that = this;
-                    let files = event.target.files;
-
-                    if (files.length > 0) {
-                        globalLoading.show = true;
-                        let loadedFile = files[0];
-
-                        uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
-                            if (!err) {
-                                that.sharedImage = uploadedPreview;
-                                console.log('Featured image loaded!');
-                            } else {
-                                console.error(err, loadedFile)
                             }
 
-                        })
+                            if (!this.error) {
+                                this.step += 1;
+                            }
+                        }
+                    },
+                    loadFile: function loadFile(event) {
+                        if (!this.editor.show) {
+                            let elem = this.$refs.publishInputFile;
+                            elem.click();
+                        }
+                    },
+                    loadFeaturedImage: function loadFeaturedImage(event) {
+                        let elem = this.$refs.publishInputCover;
+                        elem.click();
+                    },
+                    onInputDownloadFile: function onInputDownloadFile(event) {
+                        let files = event.target.files;
+                        let that = this;
 
-                        let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
-                        resizeImage(loadedFile, function (resizedFile) {
-                            uploadToIpfs(resizedFile, maximumSize, function (err, file) {
+                        if (files.length > 0) {
+                            globalLoading.show = true;
+                            let loadedFile = files[0];
+                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY.DOWNLOAD;
+                            uploadToIpfs(loadedFile, maximumSize, function (err, file) {
                                 globalLoading.show = false;
 
                                 if (!catchError(err)) {
-                                    that.featuredImage = file;
-                                    postUploads[file.hash] = loadedFile;
-                                    that.error = null;
+                                    file.resource = file.url;
+                                    that.downloadFile = Object.assign(that.downloadFile, jsonify(jsonstring(file)));
+                                    if (that.editablePost) {
+                                        that.editablePost.downloadUploaded = file.size > 0;
+                                    }
                                 }
                             });
+                        }
+                    },
+                    onLoadFile: function onLoadFile(event) {
+                        let that = this;
+                        let files = event.target.files;
+                        let loadedFile = files[0];
+
+                        console.log('File loading', loadedFile);
+                        if (files.length > 0) {
+                            globalLoading.show = true;
+
+                            let [fileType, fileFormat] = loadedFile.type.toUpperCase().split('/');
+                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileType];
+
+                            //Reset maximum size of video files to allow only webm or mo4
+                            if (fileType.includes('VIDEO')) {
+                                maximumSize = 0;
+                            }
+
+                            //Set specific file format sizes
+                            if (CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileFormat]) {
+                                maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_BODY[fileFormat];
+                            }
+
+                            //Show alert for video formats not allowed
+                            if (fileType.includes('VIDEO') && maximumSize <= 0) {
+                                globalLoading.show = false;
+                                return catchError({ TITLE: lang.PUBLISH.FILE_NOT_ALLOWED, BODY: [lang.PUBLISH.ALLOWED_VIDEO_FORMATS]})
+                            }
+
+                            console.log('file:', loadedFile, 'MaxSize:', maximumSize, 'isGif', loadedFile.type.toLowerCase().includes('image/gif'));
+                            uploadToIpfs(loadedFile, maximumSize, function (err, file) {
+                                globalLoading.show = false;
+
+                                if (err) {
+                                    that.error = catchError(err, false);
+                                } else {
+
+                                    that.bodyElements.push(file);
+                                    postUploads[file.hash] = loadedFile;
+                                    that.error = null;
+
+                                    if (file.type.indexOf('image/') > -1 && !that.sharedImage.hash) {
+
+                                        uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
+                                            if (!err) {
+                                                that.sharedImage = uploadedPreview;
+                                                console.log('Featured image loaded!');
+                                            } else {
+                                                console.error(err, loadedFile)
+                                            }
+
+                                        })
+
+                                    }
+
+                                    resizeImage(loadedFile, function (resizedFile) {
+                                        let maximumPreviewSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
+                                        postUploads[file.hash] = {
+                                            original: loadedFile,
+                                            resized: resizedFile
+                                        };
+
+                                        //Set first loaded image as preview
+                                        if (file.type.indexOf('image/') > -1 && !that.featuredImage.hash) {
+                                            uploadToIpfs(resizedFile, maximumPreviewSize, function (err, uploadedPreview) {
+                                                if (!err) {
+                                                    that.featuredImage = uploadedPreview;
+                                                    console.log('Featured image loaded!');
+                                                } else {
+                                                    console.error(err, resizedFile)
+                                                }
+
+                                            })
+                                        }
+
+                                    });
+
+                                    //Clear input
+                                    let elem = that.$refs.publishInputFile;
+                                    $(elem).val('');
+                                }
+                            });
+                        }
+                    },
+                    onLoadFeaturedImage: function onLoadFeaturedImage(event) {
+                        let that = this;
+                        let files = event.target.files;
+
+                        if (files.length > 0) {
+                            globalLoading.show = true;
+                            let loadedFile = files[0];
+
+                            uploadToIpfs(loadedFile, CONSTANTS.FILE_MAX_SIZE.POST_BODY[loadedFile.type.toUpperCase().split('/')[0]], function (err, uploadedPreview) {
+                                if (!err) {
+                                    that.sharedImage = uploadedPreview;
+                                    console.log('Featured image loaded!');
+                                } else {
+                                    console.error(err, loadedFile)
+                                }
+
+                            })
+
+                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
+                            resizeImage(loadedFile, function (resizedFile) {
+                                uploadToIpfs(resizedFile, maximumSize, function (err, file) {
+                                    globalLoading.show = false;
+
+                                    if (!catchError(err)) {
+                                        that.featuredImage = file;
+                                        postUploads[file.hash] = loadedFile;
+                                        that.error = null;
+                                    }
+                                });
+                            });
+
+                        }
+                    },
+                    toggleEditor: function toggleEditor(event) {
+                        cancelEventPropagation(event);
+
+                        if (!this.editor.show) {
+                            this.editor.show = !this.editor.show;
+                        }
+                    },
+                    editorInput: function editorInput(data) {
+                        this.editor.editing = data.length > 0;
+                    },
+                    editorEmbedVideo: function(url, data) {
+                        let embedElement = {
+                            type: 'embed/' + data.reproductor,
+                            value: url,
+                            player: data.reproductor
+                        };
+
+                        this.bodyElements.push(embedElement);
+                    },
+                    addBeneficiary : function () {
+                        if (!this.beneficiaries.length ) {
+                            this.beneficiaries.push({
+                                account: '',
+                                weight: 0
+                            });
+                        } else if (this.beneficiaries.length < MAX_BENEFICIARIES) {
+                            let lastBeneficiary = this.beneficiaries[this.beneficiaries.length -1];
+                            if (lastBeneficiary.account && lastBeneficiary.weight > 0) {
+                                this.beneficiaries.push({
+                                    account: '',
+                                    weight: 0
+                                });
+                            } else {
+                                this.error = this.lang.PUBLISH.NO_BENEFICIARY_FILLED;
+                            }
+                        } else {
+                            this.error = String.format(this.lang.PUBLISH.MAX_BENEFICIARIES_REACHED, MAX_BENEFICIARIES);
+                        }
+                    },
+                    updateBeneficiariesWeight: function () {
+                        let totalSumBeneficiaries = 0;
+                        this.beneficiaries.forEach( b => {
+                            totalSumBeneficiaries += parseFloat(b.weight);
+                            //console.log('tsb', totalSumBeneficiaries, b.account, b.weight);
                         });
-
-                    }
-                },
-                toggleEditor: function toggleEditor(event) {
-                    cancelEventPropagation(event);
-
-                    if (!this.editor.show) {
-                        this.editor.show = !this.editor.show;
-                    }
-                },
-                editorInput: function editorInput(data) {
-                    this.editor.editing = data.length > 0;
-                },
-                editorEmbedVideo: function(url, data) {
-                    let embedElement = {
-                        type: 'embed/' + data.reproductor,
-                        value: url,
-                        player: data.reproductor
-                    };
-
-                    this.bodyElements.push(embedElement);
-                },
-                updateText: updateText,
-                removeTitleEmojis: removeTitleEmojis,
-                removeDescriptionEmojis: removeDescriptionEmojis,
-                editText: editText,
-                removeElement: removeElement,
-                addVideo: addVideo,
-                makePublication: makePublication,
-                humanFileSize: humanFileSize,
-                stringFormat: String.format
-            }
-        });
-
+                        this.mainBeneficiary.weight = 100 - totalSumBeneficiaries;
+                        if (totalSumBeneficiaries > 100) {
+                            this.error = this.lang.PUBLISH.BENEFICIARY_WEIGHT_OVERFLOW;
+                        }
+                    },
+                    deleteBeneficiary: function (event, b) {
+                        cancelEventPropagation(event);
+                        this.beneficiaries.splice(b, 1);
+                        this.updateBeneficiariesWeight();
+                    },
+                    updateText: updateText,
+                    removeTitleEmojis: removeTitleEmojis,
+                    removeDescriptionEmojis: removeDescriptionEmojis,
+                    editText: editText,
+                    removeElement: removeElement,
+                    addVideo: addVideo,
+                    makePublication: makePublication,
+                    humanFileSize: humanFileSize,
+                    stringFormat: String.format
+                }
+            });
+        } else {
+            publishContainer.session = session;
+            publishContainer.account = account;
+            publishContainer.$forceUpdate();
+        }
     }
 
     function removeTitleEmojis(event) {
@@ -538,6 +594,11 @@ import CKEditor from "../components/CKEditor";
             let tags = publishContainer.tags;
 
             let nTags = [];
+            //Add MainCategory
+            if (publishContainer.mainCategory) {
+                nTags.push(normalizeTag(publishContainer.mainCategory));
+            }
+
             for (let x = 0; x < tags.length; x++) {
                 let t = normalizeTag(tags[x]);
                 if (!nTags.includes(t)) {
@@ -583,14 +644,24 @@ import CKEditor from "../components/CKEditor";
                 let operations = [];
                 operations.push(crea.broadcast.commentBuilder('', toPermalink(metadata.tags[0]), username, permlink, title, body, jsonstring(download), jsonstring(metadata)));
                 //Build beneficiaries
-                let extensions = [];
-                if (publishContainer.beneficiaries.length) {
-                    extensions.push(
-                        [0, {beneficiaries: publishContainer.beneficiaries}]
-                    )
-                }
 
                 if (!isEditing) {
+                    //Update beneficiaries
+                    let extensions = [];
+                    let beneficiaries = [];
+                    publishContainer.beneficiaries.forEach(b => {
+                        beneficiaries.push({
+                            account: b.account,
+                            weight: b.weight * 100
+                        })
+                    });
+
+                    if (beneficiaries.length) {
+                        extensions.push(
+                            [0, { beneficiaries }]
+                        )
+                    }
+
                     let rewards = account.user.metadata.post_rewards;
                     switch (rewards) {
                         case '0':
@@ -641,7 +712,10 @@ import CKEditor from "../components/CKEditor";
         });
     }
 
-    creaEvents.on('crea.content.loaded', function () {
+    creaEvents.on('crea.session.login', function (s, a) {
+        session = s;
+        account = a;
+
         let edit = getParameterByName('edit');
 
         if (edit) {
@@ -658,25 +732,16 @@ import CKEditor from "../components/CKEditor";
                         post.download.price = parseFloat(price.toPlainString());
                         post.download.currency = price.asset.symbol;
                         post.downloadUploaded = false;
-                        setUp(post);
+                        setUp(post, session, account);
                     }
                 });
-            } else {//TODO: SHOW EDIT ERROR
+            } else {
+                //TODO: SHOW EDIT ERROR
             }
         } else {
-            setUp();
-        }
-    });
-
-    creaEvents.on('crea.session.login', function (s, a) {
-        session = s;
-
-        if (publishContainer) {
-            publishContainer.session = s;
-            publishContainer.$forceUpdate();
+            setUp(null, session, account);
         }
 
-        account = a;
         creaEvents.emit('crea.dom.ready');
     });
 
