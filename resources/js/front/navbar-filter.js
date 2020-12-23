@@ -190,7 +190,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                             commentsApi.get(navbarFilter.oldApiCall.next_page_url, onFeedComments);
                         }
                     } else {
-                        commentsApi.feed(navbarFilter.account.user.followings, params.search, params.adult, 20, onFeedComments);
+                        commentsApi.feed(navbarFilter.account.user.followings, params.search, params.adult, params.download, params.license, 20, onFeedComments);
                     }
 
                 } else {
@@ -241,7 +241,9 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     let following = navbarFilter.account.user.followings;
                     let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
                     let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
-                    commentsApi.feed(following, discuss, adult, 20, onResult);
+                    let download = navbarFilter.download;
+                    let license = navbarFilter.license;
+                    commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
                 } else {
                     commentsApi.searchByReward(navbarFilter.discuss, navbarFilter.download, navbarFilter.license, 20, onResult);
                 }

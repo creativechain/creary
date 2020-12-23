@@ -35,7 +35,7 @@ class CommentsController extends Controller
         $limit = intval($request->get('limit', 20));
         $adult = boolval($request->get('adult', 1));
         $download = $request->get('download', false);
-        $license = $request->get('license', false);
+        $license = intval($request->get('license', 0));
         $search = $request->get('search', false);
         $following = $request->get('following');
 
