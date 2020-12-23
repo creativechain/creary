@@ -11,6 +11,7 @@ import { catchError, CONSTANTS, uploadToIpfs, resizeImage, parsePost, showPost, 
 
 //Import components
 import CKEditor from "../components/CKEditor";
+import {SELECTABLE_CATEGORIES} from "../lib/categories";
 
 (function () {
 
@@ -51,7 +52,7 @@ import CKEditor from "../components/CKEditor";
                     session: session,
                     LICENSE: LICENSE,
                     CONSTANTS: CONSTANTS,
-                    selectableCategories: [],
+                    selectableCategories: SELECTABLE_CATEGORIES,
                     step: 1,
                     editablePost: editablePost,
                     bodyElements: editablePost ? editablePost.body : [],

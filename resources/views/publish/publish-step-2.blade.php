@@ -65,7 +65,7 @@
                 <div class="input-select">
                     <select v-model="mainCategory">
                         <option value="">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
-                        <option v-for="c in selectableCategories"value="c.tag">
+                        <option v-for="c in selectableCategories" v-bind:value="c.tag">
                             @{{ c.text }}
                         </option>
                     </select>
