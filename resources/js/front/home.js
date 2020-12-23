@@ -318,7 +318,7 @@ import {CommentsApi} from "../lib/creary-api";
 
     }
 
-    creaEvents.on('crea.posts', function (urlFilter, filter, state) {
+    creaEvents.on('crea.posts', function (urlFilter, filter, state, hasContent, needCleanContent) {
         let authors = [];
 
         for (let c in state.content) {
@@ -342,6 +342,11 @@ import {CommentsApi} from "../lib/creary-api";
 
                     if (homePosts) {
 
+                        if (needCleanContent) {
+                            homePosts.state.discussion_idx['feed'][getPathPart()] = [];
+                            homePosts.state.content = {};
+                        }
+
                         //Accounts
                         for (let a in accounts) {
                             homePosts.state.accounts[a] = accounts[a];
@@ -358,20 +363,34 @@ import {CommentsApi} from "../lib/creary-api";
                         state = homePosts.state;
                     } else {
                         state.accounts = accounts;
-
                     }
 
+                    if (!hasContent) {
+                        if (homePosts) {
+                            homePosts.state.discussion_idx['feed'][getPathPart()] = [];
+                        }
+                        state.content = {};
+                    }
+                    //Result is for applied filters and no has accounts
                     showPosts(urlFilter, filter, state);
                 }
             });
         } else {
-            if (homePosts && homePosts.urlFilter === urlFilter) {
-                for (let a in state.accounts) {
-                    homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
+            if (homePosts) {
+                state = homePosts.state;
+
+                if (needCleanContent) {
+                    state.discussion_idx[homePosts.discuss][homePosts.category] = [];
+                    state.content = {};
                 }
 
-                state = homePosts.state;
+                if (homePosts.urlFilter === urlFilter) {
+                    for (let a in state.accounts) {
+                        homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
+                    }
+                }
             }
+
 
             let ck = Object.keys(state.content);
             let reblogsFetched = 0;

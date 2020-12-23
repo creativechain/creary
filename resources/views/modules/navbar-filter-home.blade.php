@@ -74,7 +74,7 @@
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">{{ __('lang.FILTER.LICENSES') }}</span>
         <div class="dropdown">
-            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> @{{ license === null ? lang.FILTER.ALL : license.name }} </span>
+            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> @{{ license ? license.name : lang.FILTER.ALL }} </span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">

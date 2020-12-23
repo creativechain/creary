@@ -24,7 +24,8 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     discuss: null,
                     license: null,
                     download: null,
-                    oldApiCall: null
+                    oldApiCall: null,
+                    needResetContent: false
                 },
                 methods: {
                     isUserFeed: isUserFeed,
@@ -35,6 +36,9 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                             download: this.download,
                             license: this.license
                         }
+                    },
+                    hasContent: function () {
+                        return this.oldApiCall && this.oldApiCall.total > 0;
                     },
                     onSelectCategory: function (event, category) {
                         cancelEventPropagation(event);
@@ -53,10 +57,12 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                         }
                     },
                     onSelectLicense: function (event, license) {
+                        console.log('selecting license', license, this.license);
                         cancelEventPropagation(event);
                         if (license !== this.license) {
                             this.license = license;
                             this.oldApiCall = null;
+                            this.needResetContent = true;
                             this.loadContent();
                         }
                     },
@@ -66,6 +72,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                         if (download !== this.download) {
                             this.download = download;
                             this.oldApiCall = null;
+                            this.needResetContent = true;
                             this.loadContent();
                         }
 
@@ -74,6 +81,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                         this.license = null;
                         this.downloads = null;
                         this.oldApiCall = null;
+                        this.needResetContent = true;
                         this.loadContent();
                     }
                 }
@@ -143,7 +151,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
-                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState, false, navbarFilter.needResetContent);
                     };
 
                     let onFeedComments = function (err, result) {
@@ -158,7 +166,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                                     //console.log('Content fetched. Remaining', count);
                                     if (count <= 0) {
                                         //creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
-                                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState, navbarFilter.hasContent(), navbarFilter.needResetContent);
                                     }
                                 };
 
@@ -183,18 +191,26 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                             }
                         }
                     }
+
                     let commentsApi = new CommentsApi();
                     if (navbarFilter.oldApiCall) {
                         console.log('Calling feed next page', navbarFilter.oldApiCall.next_page_url)
                         if (navbarFilter.oldApiCall.next_page_url) {
+                            navbarFilter.needResetContent = false;
                             commentsApi.get(navbarFilter.oldApiCall.next_page_url, onFeedComments);
                         }
                     } else {
-                        commentsApi.feed(navbarFilter.account.user.followings, params.search, params.adult, params.download, params.license, 20, onFeedComments);
+                        let followings = navbarFilter.account.user.followings;
+                        let adult = params.adult;
+                        let search = params.search;
+                        let download = params.download;
+                        let license = params.license ?  params.license.flag : null;
+
+                        commentsApi.feed(followings, search, adult, download, license, 20, onFeedComments);
                     }
 
                 } else {
-                    creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                    creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState, true, false);
                 }
             }
         });
@@ -235,22 +251,22 @@ import {catchError, parsePost, updateUrl} from "../common/common";
             };
 
             if (hasPrevQuery) {
+                navbarFilter.needResetContent = false;
                 commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
             } else {
+                let following = navbarFilter.account.user.followings;
+                let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
+                let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
+                let download = navbarFilter.download;
+                let license = navbarFilter.license ? navbarFilter.license.flag : null;
+
                 if (isUserFeed()) {
-                    let following = navbarFilter.account.user.followings;
-                    let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
-                    let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
-                    let download = navbarFilter.download;
-                    let license = navbarFilter.license;
                     commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
                 } else {
-                    commentsApi.searchByReward(navbarFilter.discuss, navbarFilter.download, navbarFilter.license, 20, onResult);
+                    commentsApi.searchByReward(discuss, download, license, 20, onResult);
                 }
-
             }
         })
-
     });
 
     creaEvents.on('crea.content.path', function (category, discuss) {
