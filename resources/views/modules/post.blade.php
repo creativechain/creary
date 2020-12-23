@@ -117,7 +117,7 @@
                                 </div>
                                 <div v-else-if="el.type.indexOf('video/') > -1" class="upload-img">
                                     <p>
-                                        <video controls >
+                                        <video controls loop>
                                             <source v-bind:src="'https://ipfs.creary.net/ipfs/' + el.hash" v-bind:type="el.type">
                                         </video>
                                     </p>
@@ -445,9 +445,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
                 <div class="col-md-5">
                     <div v-if="state.post.download.resource && !state.author.buzz.blocked" class="boxed boxed--border box-comment  mt--2 mt-3">
