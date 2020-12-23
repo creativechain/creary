@@ -113,7 +113,7 @@ function showProfile(username) {
 
 function updateUrl(url, title, data, isModal = false) {
     title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE ;
-    console.log('Title:', title);
+    //console.log('Title:', title);
     $('title').html(title);
 
     let currentLocation = window.location.pathname;

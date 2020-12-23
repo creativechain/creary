@@ -1,13 +1,12 @@
-import {cancelEventPropagation, getParameterByName, isUserFeed, jsonify} from "../lib/util";
-import HttpClient from "../lib/http";
+import {cancelEventPropagation, getPathPart, isUserFeed} from "../lib/util";
 import {LICENSE} from "../lib/license";
 import * as mutexify from 'mutexify';
 import {CommentsApi, TagsApi} from "../lib/creary-api";
-import {catchError} from "../common/common";
+import {catchError, parsePost, updateUrl} from "../common/common";
 
 
 (function () {
-    let oldContentLock = mutexify();
+    let oldApiCallLock = mutexify();
     let navbarFilter;
 
     function setUp(session, account, isFeed) {
@@ -25,14 +24,14 @@ import {catchError} from "../common/common";
                     discuss: null,
                     license: null,
                     download: null,
-                    oldContent: null
+                    oldApiCall: null
                 },
                 methods: {
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
                     getParams: function () {
                         return {
-                            search: this.discuss,
+                            search: this.isUserFeed() ? null : this.discuss,
                             download: this.download,
                             license: this.license
                         }
@@ -57,6 +56,7 @@ import {catchError} from "../common/common";
                         cancelEventPropagation(event);
                         if (license !== this.license) {
                             this.license = license;
+                            this.oldApiCall = null;
                             this.loadContent();
                         }
                     },
@@ -65,6 +65,7 @@ import {catchError} from "../common/common";
 
                         if (download !== this.download) {
                             this.download = download;
+                            this.oldApiCall = null;
                             this.loadContent();
                         }
 
@@ -72,7 +73,7 @@ import {catchError} from "../common/common";
                     resetContentFilters() {
                         this.license = null;
                         this.downloads = null;
-                        this.oldContent = null;
+                        this.oldApiCall = null;
                         this.loadContent();
                     }
                 }
@@ -111,8 +112,92 @@ import {catchError} from "../common/common";
     }
 
     function loadContent() {
+        navbarFilter.$forceUpdate();
+
         console.log('Loading content for', navbarFilter.category, navbarFilter.discuss);
-        creaEvents.emit('crea.content.set', navbarFilter.category, navbarFilter.discuss, navbarFilter.getParams());
+
+        let category = navbarFilter.category;
+        let discuss = navbarFilter.discuss;
+        let params = navbarFilter.getParams();
+
+        if (category === 'feed') {
+            let user = getPathPart();
+            retrieveContent(`/${user}/feed`, params);
+        } else if (discuss) {
+            retrieveContent(`/${category}/${discuss}`, params);
+        } else {
+            retrieveContent(`/${category}`, params);
+        }
+    }
+
+    function retrieveContent(urlFilter, params) {
+        /*if (isInHome()) {
+            cancelEventPropagation(event);
+        }*/
+
+        updateUrl(urlFilter);
+
+        crea.api.getState(urlFilter, function (err, urlState) {
+            if (!catchError(err)) {
+                if (isUserFeed()) {
+                    let noFeedContent = function noFeedContent() {
+                        //User not follows anything, load empty content
+                        urlState.content = {};
+                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                    };
+
+                    let onFeedComments = function (err, result) {
+                        navbarFilter.oldApiCall = result;
+
+                        if (!catchError(err)) {
+                            if (result.data.length) {
+                                let count = result.data.length;
+
+                                let onContentFetched = function onContentFetched() {
+                                    count--;
+                                    //console.log('Content fetched. Remaining', count);
+                                    if (count <= 0) {
+                                        //creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                                    }
+                                };
+
+                                urlState.content = {};
+                                result.data.forEach(function (d) {
+                                    let permlink = d.author + '/' + d.permlink;
+
+                                    if (!urlState.content[permlink]) {
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
+                                            }
+
+                                            onContentFetched();
+                                        });
+                                    }
+                                });
+                            } else {
+                                noFeedContent();
+                            }
+                        }
+                    }
+                    let commentsApi = new CommentsApi();
+                    if (navbarFilter.oldApiCall) {
+                        console.log('Calling feed next page', navbarFilter.oldApiCall.next_page_url)
+                        if (navbarFilter.oldApiCall.next_page_url) {
+                            commentsApi.get(navbarFilter.oldApiCall.next_page_url, onFeedComments);
+                        }
+                    } else {
+                        commentsApi.feed(navbarFilter.account.user.followings, params.search, params.adult, 20, onFeedComments);
+                    }
+
+                } else {
+                    creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
+                }
+            }
+        });
     }
 
     function loadSlider() {
@@ -133,13 +218,13 @@ import {catchError} from "../common/common";
 
     creaEvents.on('crea.content.old', function () {
         console.log('Received load old content');
-        oldContentLock(function (release) {
-            let hasPrevQuery = navbarFilter.oldContent && navbarFilter.oldContent.next_page_url;
+        oldApiCallLock(function (release) {
+            let hasPrevQuery = navbarFilter.oldApiCall && navbarFilter.oldApiCall.next_page_url;
             let commentsApi = new CommentsApi();
 
             let onResult = function (err, result) {
                 if (!catchError(err)) {
-                    navbarFilter.oldContent = result;
+                    navbarFilter.oldApiCall = result;
                     release();
 
                     creaEvents.emit('crea.content.add', result.data);
@@ -150,7 +235,7 @@ import {catchError} from "../common/common";
             };
 
             if (hasPrevQuery) {
-                commentsApi.get(navbarFilter.oldContent.next_page_url, onResult);
+                commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
             } else {
                 if (isUserFeed()) {
                     let following = navbarFilter.account.user.followings;

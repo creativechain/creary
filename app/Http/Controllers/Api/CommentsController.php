@@ -18,6 +18,8 @@ class CommentsController extends Controller
             'following.*' => 'sometimes|string|distinct',
             'search' => 'sometimes|string',
             'adult' => 'sometimes|boolean',
+            'download' => 'sometimes|string',
+            'license' => 'sometimes|numeric',
             'limit' => 'sometimes|numeric',
         );
 
@@ -32,6 +34,8 @@ class CommentsController extends Controller
 
         $limit = intval($request->get('limit', 20));
         $adult = boolval($request->get('adult', 1));
+        $download = $request->get('download', false);
+        $license = $request->get('license', false);
         $search = $request->get('search', false);
         $following = $request->get('following');
 
@@ -40,6 +44,14 @@ class CommentsController extends Controller
         //Only avoid return adult content if field $adult = false (Not show adult content)
         if (!$adult) {
             $query->where('adult', false);
+        }
+
+        if ($download) {
+            $query->where('download', $download);
+        }
+
+        if ($license) {
+            $query->where('license', $license);
         }
 
         if ($search) {

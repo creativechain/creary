@@ -74,19 +74,19 @@
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">{{ __('lang.FILTER.LICENSES') }}</span>
         <div class="dropdown">
-            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> {{ __('lang.FILTER.ALL') }} </span>
+            <span class="dropdown__trigger filter"><i class="stack-down-open"></i> @{{ license === null ? lang.FILTER.ALL : license.name }} </span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 dropdown__content p-0">
                             <ul class="ul-select">
                                 <li>
-                                    <a href="">
+                                    <a href="" v-on:click="onSelectLicense($event, null)">
                                         {{ __('lang.FILTER.ALL') }}
                                     </a>
                                 </li>
                                 <li v-for="l in availableLicenses">
-                                    <a href="">
+                                    <a href="" v-on:click="onSelectLicense($event, l)">
                                         <img v-bind:src="l.getIcon()">
                                         @{{ l.name }}
                                     </a>
@@ -107,15 +107,15 @@
     <div class="col-12 col-md-6 mt-3 mt-md-0">
         <span class="font-weight-bold">{{ __('lang.FILTER.DOWNLOADS') }}</span>
         <div class="dropdown">
-            <span class="dropdown__trigger filter">{{ __('lang.FILTER.ALL') }} <i class="stack-down-open"></i></span>
+            <span class="dropdown__trigger filter">@{{ download ? download : lang.FILTER.ALL }} <i class="stack-down-open"></i></span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 dropdown__content  p-0">
                             <ul class="ul-select">
-                                <li><a href="">{{ __('lang.FILTER.ALL') }}</a></li>
-                                <li><a href="">{{ __('lang.FILTER.FREE_DOWNLOADS') }}</a></li>
-                                <li><a href="">{{ __('lang.FILTER.PAYMENT_DOWNLOADS') }}</a></li>
+                                <li><a href="" v-on:click="onSelectDownload($event, null)">{{ __('lang.FILTER.ALL') }}</a></li>
+                                <li><a href="" v-on:click="onSelectDownload($event, 'free')">{{ __('lang.FILTER.FREE_DOWNLOADS') }}</a></li>
+                                <li><a href="" v-on:click="onSelectDownload($event, 'paid')">{{ __('lang.FILTER.PAYMENT_DOWNLOADS') }}</a></li>
                             </ul>
                         </div>
                     </div><!--end row-->

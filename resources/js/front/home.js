@@ -331,7 +331,7 @@ import {CommentsApi} from "../lib/creary-api";
             state.content[c] = parsePost(state.content[c]);
         }
 
-        if (isUserFeed(getPathPart())) {
+        if (isUserFeed()) {
             //Retrieve another accounts
             getAccounts(authors, function (err, result) {
                 if (!catchError(err)) {
@@ -341,53 +341,29 @@ import {CommentsApi} from "../lib/creary-api";
                     });
 
                     if (homePosts) {
-                        //On Session update
+
                         //Accounts
                         for (let a in accounts) {
                             homePosts.state.accounts[a] = accounts[a];
-                        } //Posts
+                        }
 
-
+                        //Posts
                         for (let _c in state.content) {
-                            homePosts.state.content[_c] = parsePost(state.content[_c]);
+                            homePosts.state.content[_c] = state.content[_c];
+                            if (!homePosts.state.discussion_idx['feed'][getPathPart()].includes(_c)) {
+                                homePosts.state.discussion_idx['feed'][getPathPart()].push(_c);
+                            }
                         }
 
                         state = homePosts.state;
                     } else {
                         state.accounts = accounts;
+
                     }
 
                     showPosts(urlFilter, filter, state);
                 }
             });
-        } else if (homePosts && homePosts.urlFilter === urlFilter && urlFilter === '/search') {
-            let query = getParameterByName('query');
-
-            if (query === homePosts.search && query !== null) {
-                //Accounts
-                for (let a in state.accounts) {
-                    homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
-                } //Posts
-
-
-                for (let _c2 in state.content) {
-                    homePosts.state.content[_c2] = parsePost(state.content[_c2]);
-                } //Order
-
-
-                let newPosts = state.discussion_idx[""].search;
-
-                for (let x = 0; x < newPosts.length; x++) {
-                    if (!homePosts.state.discussion_idx[''].search.includes(newPosts[x])) {
-                        homePosts.state.discussion_idx[''].search.push(newPosts[x]);
-                    }
-                }
-
-                homePosts.state.discussion_idx[''].search = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[''].search);
-
-            } else {
-                showPosts(urlFilter, filter, state);
-            }
         } else {
             if (homePosts && homePosts.urlFilter === urlFilter) {
                 for (let a in state.accounts) {
@@ -411,35 +387,24 @@ import {CommentsApi} from "../lib/creary-api";
                 state.content[k] = parsePost(d, reblogs);
             };
 
-            refreshAccessToken(function (accessToken) {
+            for (let x = 0; x < ck.length; x++) {
+                let d = state.content[ck[x]];
 
-                for (let x = 0; x < ck.length; x++) {
-                    let d = state.content[ck[x]];
-
-                    (function (x, ck, d) {
-                        let http = new HttpClient(apiOptions.apiUrl + String.format('/creary/%s/%s', d.author, d.permlink));
-
-                        http.when('done', function (response) {
-                            let data = jsonify(response).data;
-                            onReblogs(ck[x], d, data.reblogged_by);
-                            onAllReblogs();
-                        });
-
-                        http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                            console.error(textStatus, errorThrown);
+                (function (x, ck, d) {
+                    let commentsApi = new CommentsApi();
+                    commentsApi.comment(d.author, d.permlink, function (err, data) {
+                        if (err) {
+                            console.log('Fail getting comment data', d.author, d.permlink);
                             onReblogs(ck[x], d);
                             onAllReblogs();
-                        });
+                        } else {
+                            onReblogs(ck[x], d, data.reblogged_by);
+                            onAllReblogs();
+                        }
+                    });
+                })(x, ck, d)
 
-                        http.headers = {
-                            Authorization: 'Bearer ' + accessToken
-                        };
-
-                        http.get({});
-                    })(x, ck, d)
-
-                }
-            });
+            }
         }
     });
 
@@ -478,64 +443,6 @@ import {CommentsApi} from "../lib/creary-api";
                 creaEvents.emit('crea.content.load');
             }
         }
-    }
-
-    function retrieveContent(urlFilter, params) {
-        /*if (isInHome()) {
-            cancelEventPropagation(event);
-        }*/
-
-        updateUrl(urlFilter);
-
-        crea.api.getState(urlFilter, function (err, urlState) {
-            if (!catchError(err)) {
-                if (isUserFeed()) {
-                    let noFeedContent = function noFeedContent() {
-                        //User not follows anything, load empty content
-                        urlState.content = {};
-                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
-                    };
-
-                    let commentsApi = new CommentsApi();
-                    commentsApi.feed(account.user.followings, params.search, params.adult, 20, function (err, result) {
-                        if (!catchError(err)) {
-                            if (result.to) {
-                                let count = result.to;
-
-                                let onContentFetched = function onContentFetched() {
-                                    count--;
-                                    console.log('Content fetched. Remaining', count);
-                                    if (count <= 0) {
-                                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
-                                    }
-                                };
-
-                                urlState.content = {};
-                                result.data.forEach(function (d) {
-                                    let permlink = d.author + '/' + d.permlink;
-
-                                    if (!urlState.content[permlink]) {
-                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
-                                            if (err) {
-                                                console.error('Error getting', permlink, err);
-                                            } else {
-                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
-                                            }
-
-                                            onContentFetched();
-                                        });
-                                    }
-                                });
-                            } else {
-                                noFeedContent();
-                            }
-                        }
-                    });
-                } else {
-                    creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
-                }
-            }
-        });
     }
 
     function addApiContent(apiContents, callback) {
@@ -630,43 +537,18 @@ import {CommentsApi} from "../lib/creary-api";
         addApiContent(apiContents);
     });
 
-    let scrollLock = mutexify();
+    let onScrollCalling = false;
     let feedResult;
     creaEvents.on('crea.scroll.bottom', function () {
-        scrollLock(function (release) {
+
+        if (!onScrollCalling) {
+            onScrollCalling = true;
+
             if (isUserFeed()) {
-                let commentsApi = new CommentsApi();
-                let adult = account.user.metadata.adult_content === 'hide' ? 0 : 1;
-                let followings = account.user.followings;
-                let onFeedContent = function (err, result) {
-                    if (!catchError(err)) {
-                        feedResult = result;
-                        let data = result.data;
-                        if (data.length) {
-                            addApiContent(data, function () {
-                                release();
-                            });
-                        } else {
-                            release();
-                            --lastPage;
-                        }
-                    }
-
-                    //release();
-                }
-
-                if (feedResult) {
-                    if (feedResult.next_page_url) {
-                        commentsApi.get(feedResult.next_page_url, onFeedContent)
-                    } else {
-                        release();
-                    }
-
-                } else {
-                    commentsApi.feed(followings, null, adult, 20, onFeedContent);
-                }
-
-
+                creaEvents.emit('crea.content.load');
+                setTimeout(function () {
+                    onScrollCalling = false;
+                }, 1e3);
 
             } else {
                 feedResult = null;
@@ -789,7 +671,7 @@ import {CommentsApi} from "../lib/creary-api";
                     });
                 }
             }
-        });
+        }
     });
 
     creaEvents.on('crea.search.content', function (data) {
@@ -849,17 +731,6 @@ import {CommentsApi} from "../lib/creary-api";
             });
         }
     });
-
-    creaEvents.on('crea.content.set', function (category, discuss, params) {
-        if (category === 'feed') {
-            let user = getPathPart();
-            retrieveContent(`/${user}/feed`, params);
-        } else if (discuss) {
-            retrieveContent(`/${category}/${discuss}`, params);
-        } else {
-            retrieveContent(`/${category}`, params);
-        }
-    })
 
     creaEvents.on('crea.dom.ready', function () {
         $("#view-changer").click(function () {

@@ -163,10 +163,10 @@ function humanFileSize(size) {
 
 /**
  *
- * @param {string} username
+ * @param {string|null} username
  * @returns {boolean}
  */
-function isUserFeed(username) {
+function isUserFeed(username = null) {
     let path = currentPage ? currentPage.pathname : window.location.pathname;
     let regexp = '(\/@[a-zA-Z0-9]+\/feed)';
 
@@ -197,11 +197,11 @@ function toUrl(web) {
 
 /**
  *
- * @param {string} path
+ * @param {string|null} path
  * @param {number} index
  * @returns {string}
  */
-function getPathPart(path, index = 0) {
+function getPathPart(path= null, index = 0) {
     path = path || (currentPage ? currentPage.pathname : null) || window.location.pathname;
     let parts = path.split('/');
     parts.splice(0, 1);
