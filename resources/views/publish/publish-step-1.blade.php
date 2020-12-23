@@ -86,8 +86,8 @@
                                 </div>
 
                                 <div class="col-4 text-center">
-                                    <div class="button-add-video" ></div>
-                                    <p class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <div class="button-add-video" v-on:click="addVideo"></div>
+                                    <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
                                     <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
                                 </div>
 
@@ -103,8 +103,8 @@
                                     <p class="disabled">{{ __('lang.PUBLISH.FILE_TYPE_INFO') }}</p>
                                 </div>
                                 <div class="col-4 text-center">
-                                    <div class="button-add-video img-disabled-video"></div>
-                                    <p class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <div class="button-add-video" v-bind:class="{ 'img-disabled-text': editor.show }"></div>
+                                    <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
                                     <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
                                 </div>
                                 <div class="col-4 text-center">
