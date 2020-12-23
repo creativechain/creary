@@ -37,7 +37,7 @@ class Comments extends Model
         $this->permlink = $data->permlink;
         $this->author = $data->author->name;
         $this->title = $data->title;
-        $this->reblogged_by = [];
+        $this->reblogged_by = $data->reblogged_by;
 
         $aR = $data->total_payout_value;
         $aR = (intval($aR->amount) / pow(10, $aR->precision));

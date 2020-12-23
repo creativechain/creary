@@ -82,13 +82,16 @@ class CrearyClient
 
         if ($response['result']) {
             $post = $response['result'];
+            $reblogs = $this->getReblogs($author, $permlink);
             if ($asObject) {
                 $post = Obj::parse($post);
                 $post->metadata = Obj::parse(json_decode($post->json_metadata));
                 $post->author = $this->getAccount($post->author);
+                $post->reblogged_by = $reblogs;
             } else {
                 $post['metadata'] = json_decode($post['json_metadata'], true);
                 $post['author'] = $this->getAccount($post['author'], false);
+                $post['reblogged_by'] = $reblogs;
             }
 
             return $post;
@@ -181,4 +184,21 @@ class CrearyClient
         return $response['result'];
     }
 
+    /**
+     * @param string $author
+     * @param string $permlink
+     * @param bool $parse
+     * @return Obj|array|bool|int|mixed|string|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getReblogs(string $author, string $permlink, $parse = true) {
+        $rpcData = $this->buildRpcData('condenser_api.get_reblogged_by', array($author, $permlink));
+
+        $response = $this->callRequest($rpcData);
+        if ($parse) {
+            return Obj::parse($response['result']);
+        }
+
+        return $response['result'];
+    }
 }
