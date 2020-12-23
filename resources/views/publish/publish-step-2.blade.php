@@ -83,18 +83,18 @@
                 <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                        <input type="text" name="input" placeholder="70" disabled="" class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        <input type="number" name="input" placeholder="70" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
                     </div>
 
                     <div class="input-icon">
                         <i class="material-icons email">alternate_email</i>
-                        <input type="text" name="input" placeholder="Creary" class="disabled"/>
+                        <input type="text" v-model="mainBeneficiary.account" name="input" placeholder="Creary" disabled class="disabled"/>
                     </div>
                 </div>
 
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                        <input type="number" name="input" placeholder="30" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        <input type="number" v-model="mainBeneficiary.weight" name="input" placeholder="30" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
                     </div>
 
                     <div class="input-icon">

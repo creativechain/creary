@@ -46,6 +46,7 @@ import CKEditor from "../components/CKEditor";
             name: 'publish-container',
             data: {
                 lang: lang,
+                account: account,
                 session: session,
                 LICENSE: LICENSE,
                 CONSTANTS: CONSTANTS,
@@ -70,6 +71,11 @@ import CKEditor from "../components/CKEditor";
                 commercial: license.has(LICENSE.NON_COMMERCIAL.flag) ? LICENSE.NON_COMMERCIAL.flag : LICENSE.NO_LICENSE.flag,
                 noLicense: license.has(LICENSE.NON_PERMISSION.flag) ? LICENSE.NON_PERMISSION.flag : LICENSE.NO_LICENSE.flag,
                 showEditor: false,
+                mainCateogry: null,
+                mainBeneficiary: {
+                    account: account.user.name,
+                    weight: 100
+                },
                 beneficiaries: [],
                 tagsConfig: {
                     init: false,
@@ -361,6 +367,7 @@ import CKEditor from "../components/CKEditor";
                 stringFormat: String.format
             }
         });
+
     }
 
     function removeTitleEmojis(event) {
