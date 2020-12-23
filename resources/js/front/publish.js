@@ -355,6 +355,7 @@ import CKEditor from "../components/CKEditor";
                 removeDescriptionEmojis: removeDescriptionEmojis,
                 editText: editText,
                 removeElement: removeElement,
+                addVideo: addVideo,
                 makePublication: makePublication,
                 humanFileSize: humanFileSize,
                 stringFormat: String.format
@@ -452,6 +453,71 @@ import CKEditor from "../components/CKEditor";
             publishContainer.$forceUpdate();
 
         }
+    }
+
+    function addVideo() {
+        let url = prompt('Youtube, Vimeo, Dailymotion URL');
+        let id            = '';
+        let reproductor   = '';
+        let url_comprobar = '';
+
+        if(url.indexOf('youtu.be') >= 0){
+            reproductor = 'youtube';
+            id          = url.substring(url.lastIndexOf("/")+1, url.length);
+        } else if (url.indexOf("youtube") >= 0){
+            reproductor = 'youtube'
+            if(url.indexOf("</iframe>") >= 0){
+                let fin = url.substring(url.indexOf("embed/")+6, url.length)
+                id      = fin.substring(fin.indexOf('"'), 0);
+            }else{
+                if(url.indexOf("&") >= 0)
+                    id = url.substring(url.indexOf("?v=")+3, url.indexOf("&"));
+                else
+                    id = url.substring(url.indexOf("?v=")+3, url.length);
+            }
+            url_comprobar = "https://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=json";
+            //"https://gdata.youtube.com/feeds/api/videos/" + id + "?v=2&alt=json"
+        } else if (url.indexOf("vimeo") >= 0){
+            reproductor = 'vimeo'
+            if(url.indexOf("</iframe>") >= 0){
+                var fin = url.substring(url.lastIndexOf('vimeo.com/"')+6, url.indexOf('>'))
+                id      = fin.substring(fin.lastIndexOf('/')+1, fin.indexOf('"',fin.lastIndexOf('/')+1))
+            }else{
+                id = url.substring(url.lastIndexOf("/")+1, url.length)
+            }
+            url_comprobar = 'http://vimeo.com/api/v2/video/' + id + '.json';
+            //'http://vimeo.com/api/v2/video/' + video_id + '.json';
+        } else if (url.indexOf('dai.ly') >= 0){
+            reproductor = 'dailymotion';
+            id          = url.substring(url.lastIndexOf("/")+1, url.length);
+        } else if (url.indexOf("dailymotion") >= 0){
+            reproductor = 'dailymotion';
+            if(url.indexOf("</iframe>") >= 0){
+                let fin = url.substring(url.indexOf('dailymotion.com/')+16, url.indexOf('></iframe>'))
+                id      = fin.substring(fin.lastIndexOf('/')+1, fin.lastIndexOf('"'))
+            }else{
+                if(url.indexOf('_') >= 0)
+                    id = url.substring(url.lastIndexOf('/')+1, url.indexOf('_'))
+                else
+                    id = url.substring(url.lastIndexOf('/')+1, url.length);
+            }
+            url_comprobar = 'https://api.dailymotion.com/video/' + id;
+            // https://api.dailymotion.com/video/x26ezrb
+        }
+
+        switch (reproductor) {
+            case "youtube":
+                url = "https://www.youtube.com/embed/"+id+"?autohide=1&controls=1&showinfo=0";
+                break;
+            case "vimeo":
+                url = "https://player.vimeo.com/video/"+id+"?portrait=0";
+                break;
+            case "dailymotion":
+                url = "https://www.dailymotion.com/embed/video/"+id;
+                break;
+        }
+
+        publishContainer.editorEmbedVideo(url, { reproductor, id_video: id });
     }
 
     function makePublication(event) {
