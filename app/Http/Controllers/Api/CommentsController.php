@@ -55,7 +55,8 @@ class CommentsController extends Controller
 
         $comments = $query
             ->orderByDesc('created_at')
-            ->paginate($limit);
+            ->paginate($limit)
+            ->appends($request->except('page'));
 
         return response($comments);
 
@@ -103,7 +104,8 @@ class CommentsController extends Controller
             })
             ->orWhere('description', 'like', "%$search%")
             ->orderByDesc('reward')
-            ->paginate($limit);
+            ->paginate($limit)
+            ->appends($request->except('page'));
 
         return response($comments);
     }

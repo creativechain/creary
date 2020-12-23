@@ -1,7 +1,7 @@
 <div class="row align-items-end align-items-center">
     <div class="col-6 col-md-2 order-0 order-md-0">
         <div class="dropdown dropdown-popular">
-            <span class="dropdown__trigger">@{{ lang.FILTER[category.toUpperCase()] }} <i class="stack-down-open"></i></span>
+            <span class="dropdown__trigger">@{{ discuss === 'feed' ? lang.FILTER.FEED : lang.FILTER[category.toUpperCase()] }} <i class="stack-down-open"></i></span>
             <div class="dropdown__container">
                 <div class="container">
                     <div class="row">

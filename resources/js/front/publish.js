@@ -14,6 +14,7 @@ import CKEditor from "../components/CKEditor";
 
 (function () {
 
+    const MAX_BENEFICIARIES = 10;
     //Load components
     Vue.component('ckeditor', CKEditor);
 
@@ -42,6 +43,7 @@ import CKEditor from "../components/CKEditor";
 
         publishContainer = new Vue({
             el: '#publish-container',
+            name: 'publish-container',
             data: {
                 lang: lang,
                 session: session,
@@ -68,6 +70,7 @@ import CKEditor from "../components/CKEditor";
                 commercial: license.has(LICENSE.NON_COMMERCIAL.flag) ? LICENSE.NON_COMMERCIAL.flag : LICENSE.NO_LICENSE.flag,
                 noLicense: license.has(LICENSE.NON_PERMISSION.flag) ? LICENSE.NON_PERMISSION.flag : LICENSE.NO_LICENSE.flag,
                 showEditor: false,
+                beneficiaries: [],
                 tagsConfig: {
                     init: false,
                     addedEvents: false
@@ -506,18 +509,25 @@ import CKEditor from "../components/CKEditor";
 
                 let operations = [];
                 operations.push(crea.broadcast.commentBuilder('', toPermalink(metadata.tags[0]), username, permlink, title, body, jsonstring(download), jsonstring(metadata)));
+                //Build beneficiaries
+                let extensions = [];
+                if (publishContainer.beneficiaries.length) {
+                    extensions.push(
+                        [0, {beneficiaries: publishContainer.beneficiaries}]
+                    )
+                }
 
                 if (!isEditing) {
                     let rewards = account.user.metadata.post_rewards;
                     switch (rewards) {
                         case '0':
-                            operations.push(crea.broadcast.commentOptionsBuilder(username, permlink, '0.000 CBD', 10000, true, true, []));
+                            operations.push(crea.broadcast.commentOptionsBuilder(username, permlink, '0.000 CBD', 10000, true, true, extensions));
                             break;
                         case '50':
                             break;
                         case '100':
                         default:
-                            operations.push(crea.broadcast.commentOptionsBuilder(username, permlink, '1000000.000 CBD', 0, true, true, []));
+                            operations.push(crea.broadcast.commentOptionsBuilder(username, permlink, '1000000.000 CBD', 0, true, true, extensions));
                             break;
                     }
                 }

@@ -497,14 +497,14 @@ import {CommentsApi} from "../lib/creary-api";
                     };
 
                     let commentsApi = new CommentsApi();
-                    commentsApi.feed(homePosts.account.user.followings, params.search, params.adult, 20, function (err, result) {
+                    commentsApi.feed(account.user.followings, params.search, params.adult, 20, function (err, result) {
                         if (!catchError(err)) {
                             if (result.to) {
                                 let count = result.to;
 
                                 let onContentFetched = function onContentFetched() {
                                     count--;
-
+                                    console.log('Content fetched. Remaining', count);
                                     if (count <= 0) {
                                         creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
                                     }
@@ -547,6 +547,7 @@ import {CommentsApi} from "../lib/creary-api";
         let onContentFetched = function onContentFetched() {
             count--;
 
+            console.log('Fetched. Remain', count);
             if (count <= 0) {
                 getAccounts(accounts, function (err, newAccounts) {
                     if (!catchError(err)) {
@@ -588,6 +589,7 @@ import {CommentsApi} from "../lib/creary-api";
             let permlink = d.author + '/' + d.permlink;
 
             if (!homePosts.state.content[permlink]) {
+
                 crea.api.getContent(d.author, d.permlink, function (err, result) {
                     if (err) {
                         console.error('Error getting', permlink, err);
@@ -599,12 +601,13 @@ import {CommentsApi} from "../lib/creary-api";
                         if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
                             accounts.push(d.author);
                         }
-                    }
 
-                    onContentFetched();
+                        onContentFetched();
+                    }
                 });
             } else {
                 homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
+                onContentFetched();
             }
         });
     }
@@ -628,15 +631,16 @@ import {CommentsApi} from "../lib/creary-api";
     });
 
     let scrollLock = mutexify();
+    let feedResult;
     creaEvents.on('crea.scroll.bottom', function () {
         scrollLock(function (release) {
             if (isUserFeed()) {
-
                 let commentsApi = new CommentsApi();
                 let adult = account.user.metadata.adult_content === 'hide' ? 0 : 1;
                 let followings = account.user.followings;
-                commentsApi.feed(followings, null, adult, 20, function (err, result) {
+                let onFeedContent = function (err, result) {
                     if (!catchError(err)) {
+                        feedResult = result;
                         let data = result.data;
                         if (data.length) {
                             addApiContent(data, function () {
@@ -648,10 +652,24 @@ import {CommentsApi} from "../lib/creary-api";
                         }
                     }
 
-                    release();
-                });
+                    //release();
+                }
+
+                if (feedResult) {
+                    if (feedResult.next_page_url) {
+                        commentsApi.get(feedResult.next_page_url, onFeedContent)
+                    } else {
+                        release();
+                    }
+
+                } else {
+                    commentsApi.feed(followings, null, adult, 20, onFeedContent);
+                }
+
+
 
             } else {
+                feedResult = null;
                 let apiCall;
                 let category = homePosts.category;
                 let discuss = homePosts.discuss ? homePosts.discuss : '';
@@ -834,7 +852,8 @@ import {CommentsApi} from "../lib/creary-api";
 
     creaEvents.on('crea.content.set', function (category, discuss, params) {
         if (category === 'feed') {
-            retrieveContent(`/${category}/${discuss}`, params);
+            let user = getPathPart();
+            retrieveContent(`/${user}/feed`, params);
         } else if (discuss) {
             retrieveContent(`/${category}/${discuss}`, params);
         } else {
