@@ -317,6 +317,23 @@ function parsePost(post, reblogged_by ) {
         post.body = isJSON(post.body) ? jsonify(post.body) : post.body;
         post.body = cleanArray(post.body);
 
+        //Beneficiaries
+        let contributors = [];
+        let bAuthor = {
+            account: post.author,
+            weight: 100
+        };
+
+        post.beneficiaries.forEach(b => {
+            let c = clone(b);
+            c.weight /= 100;
+            bAuthor.weight -= c.weight;
+            contributors.push(c);
+        });
+
+        contributors.unshift(bAuthor);
+        post.contributors = contributors;
+
         //Has adult content
         post.adult_content = post.metadata.adult || (post.metadata.tags &&
             (post.metadata.tags.includes('nsfw') ||

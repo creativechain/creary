@@ -516,10 +516,9 @@
                         <div class="row row-publish-description">
                             <div class="col-md-12">
                                 <p class="title mb-1">{{ __('lang.PUBLICATION.BENEFICIARIES') }}</p>
-                                <span v-for="b in state.post.beneficiaries"class="description">
-                                    @{{ b.account }} (@{{ b.weight / 100 }}%)
+                                <span v-for="(b, index) in state.post.contributors" class="description">
+                                    @{{ b.account }} (@{{ b.weight }}%)@{{ index+1 < state.post.contributors.length ? ',':'' }}
                                 </span>
-<!--                                <span class="description">creary (70%), protus (20%), creativechain (10%)</span>-->
                             </div>
                         </div>
                     </div>

@@ -703,7 +703,9 @@ import {CommentsApi} from "../lib/creary-api";
                                     })(topDiscussions.length-1, d)
                                 }
                             } else {
-                                creaEvents.emit('crea.content.old');
+                                if (discuss) {
+                                    creaEvents.emit('crea.content.old');
+                                }
                             }
 
                         }
