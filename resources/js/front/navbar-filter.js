@@ -44,8 +44,14 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                         cancelEventPropagation(event);
 
                         if (category !== this.category) {
-                            this.category = category;
-                            this.discuss = null;
+                            if (category === 'feed') {
+                                this.category = '@' + this.account.user.name;
+                                this.discuss = 'feed';
+                            } else {
+                                this.category = category;
+                                this.discuss = null;
+                            }
+
                             this.resetContentFilters();
                         }
                     },
@@ -240,7 +246,8 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     } else {
                         let followings = navbarFilter.account.user.followings;
                         let adult = params.adult;
-                        let search = params.search;
+                        //If is user feed, no search ocnfigured
+                        let search = params.search === 'feed' ? null : params.search;
                         let download = params.download;
                         let license = params.license ?  params.license.flag : null;
 

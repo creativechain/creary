@@ -341,8 +341,7 @@ import {CommentsApi} from "../lib/creary-api";
                     if (homePosts) {
 
                         if (needCleanContent) {
-                            homePosts.state.discussion_idx['feed'][getPathPart()] = [];
-                            homePosts.state.content = {};
+                            cleanHomeContent(urlFilter)
                         }
 
                         //Accounts
