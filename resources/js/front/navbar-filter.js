@@ -45,6 +45,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
 
                         if (category !== this.category) {
                             this.category = category;
+                            this.discuss = null;
                             this.resetContentFilters();
                         }
                     },
@@ -138,6 +139,43 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         }
     }
 
+    function loadOldContent(cleanContent = false) {
+        console.log('Received load old content');
+        oldApiCallLock(function (release) {
+            let hasPrevQuery = navbarFilter.oldApiCall && navbarFilter.oldApiCall.next_page_url;
+            let commentsApi = new CommentsApi();
+
+            let onResult = function (err, result) {
+                if (!catchError(err)) {
+                    navbarFilter.oldApiCall = result;
+                    release();
+
+                    creaEvents.emit('crea.content.add', result.data, cleanContent);
+                } else {
+                    release();
+                }
+
+            };
+
+            if (hasPrevQuery) {
+                navbarFilter.needResetContent = false;
+                commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
+            } else {
+                let adult = navbarFilter.account && navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
+                let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
+                let download = navbarFilter.download;
+                let license = navbarFilter.license ? navbarFilter.license.flag : null;
+
+                if (isUserFeed()) {
+                    let following = navbarFilter.account.user.followings;
+                    commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
+                } else {
+                    commentsApi.searchByReward(discuss, download, license, 20, onResult);
+                }
+            }
+        });
+    }
+
     function retrieveContent(urlFilter, params) {
         /*if (isInHome()) {
             cancelEventPropagation(event);
@@ -210,7 +248,17 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     }
 
                 } else {
-                    creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState, true, false);
+                    //Check if state has content. If not has content, search in creary api
+                    let category = getPathPart(urlFilter);
+                    let discuss = getPathPart(urlFilter, 1);
+
+                    let hasContent = urlState.discussion_idx[discuss][category].length > 0;
+                    if (hasContent) {
+                        creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState, true, navbarFilter.needResetContent);
+                    } else {
+                        //Load old content from creary api
+                        loadOldContent(true);
+                    }
                 }
             }
         });
@@ -233,46 +281,19 @@ import {catchError, parsePost, updateUrl} from "../common/common";
     });
 
     creaEvents.on('crea.content.old', function () {
-        console.log('Received load old content');
-        oldApiCallLock(function (release) {
-            let hasPrevQuery = navbarFilter.oldApiCall && navbarFilter.oldApiCall.next_page_url;
-            let commentsApi = new CommentsApi();
-
-            let onResult = function (err, result) {
-                if (!catchError(err)) {
-                    navbarFilter.oldApiCall = result;
-                    release();
-
-                    creaEvents.emit('crea.content.add', result.data);
-                } else {
-                    release();
-                }
-
-            };
-
-            if (hasPrevQuery) {
-                navbarFilter.needResetContent = false;
-                commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
-            } else {
-                let following = navbarFilter.account.user.followings;
-                let adult = navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1
-                let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
-                let download = navbarFilter.download;
-                let license = navbarFilter.license ? navbarFilter.license.flag : null;
-
-                if (isUserFeed()) {
-                    commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
-                } else {
-                    commentsApi.searchByReward(discuss, download, license, 20, onResult);
-                }
-            }
-        })
+        loadOldContent();
     });
 
     creaEvents.on('crea.content.path', function (category, discuss) {
         navbarFilter.category = category;
         navbarFilter.discuss = discuss;
         navbarFilter.$forceUpdate();
+    });
+
+    creaEvents.on('crea.content.tag', function (tag) {
+        navbarFilter.category = 'popular';
+        navbarFilter.discuss = tag;
+        navbarFilter.resetContentFilters();
     });
 
     creaEvents.on('crea.content.load', function () {

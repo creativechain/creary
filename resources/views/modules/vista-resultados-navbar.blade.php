@@ -3,7 +3,7 @@
         <div class="col-md-3 col-lg-2 dropdown__content p-0">
             <ul class="menu-vertical ul-text text-left">
                 <li  v-for="t in tags.items">
-                    <a v-bind:href="'/popular/' + t.name" class="text-capitalize" target="_blank">
+                    <a v-bind:href="'/popular/' + t.name" class="text-capitalize" v-on:click="onSelectTag($event, t)">
                         @{{ t.name }}
                     </a>
                 </li>
@@ -14,7 +14,7 @@
         <div class="col-md-3 col-lg-2 dropdown__content p-0">
             <ul class="menu-vertical ul-name-img mb-0">
                 <li v-for="a in accounts.items">
-                    <a v-bind:href="'/@' + a.name" target="_blank">
+                    <a v-bind:href="'/@' + a.name" >
                         <div class="row-flex">
                             <div class="user-avatar size-25-avatar">
                                 <avatar v-bind:account="a"></avatar>

@@ -33,6 +33,11 @@ import Avatar from "../components/Avatar";
                     this.search = null;
                     this.limit = SEARCH_LIMIT;
                 },
+                onSelectTag: function (event, tag) {
+                    cancelEventPropagation(event);
+                    this.search = tag.name;
+                    creaEvents.emit('crea.content.tag', tag.name);
+                },
                 performSearch: function (event) {
                     cancelEventPropagation(event);
 

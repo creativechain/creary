@@ -4,7 +4,6 @@
 import R from '../lib/resources';
 import {Asset} from '../lib/amount';
 import {License} from '../lib/license';
-import HttpClient from '../lib/http';
 import {
     cancelEventPropagation,
     getParameterByName,
@@ -20,10 +19,7 @@ import {
     getDiscussion,
     parseAccount,
     parsePost,
-    performSearch,
-    refreshAccessToken,
     removeBlockedContents,
-    resolveFilter,
     showModal,
     showProfile,
     updateUrl,
@@ -36,7 +32,6 @@ import Recommend from "../components/Recommend";
 import NewLike from "../components/NewLike";
 import LinkName from "../components/LinkName";
 import ButtonFollow from "../components/ButtonFollow";
-import * as mutexify from "mutexify";
 import {CommentsApi} from "../lib/creary-api";
 
 (function () {
@@ -85,8 +80,8 @@ import {CommentsApi} from "../lib/creary-api";
             filter = filter.substring(1);
         }
 
-        let category = resolveFilter('/' + getPathPart()).replace('/', '');
-        let discuss = getPathPart(null, 1) || '';
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1) || '';
 
         if (isUserFeed(getPathPart()) && !state.discussion_idx[discuss]) {
             cKeys = newKeys;
@@ -320,6 +315,9 @@ import {CommentsApi} from "../lib/creary-api";
 
     creaEvents.on('crea.posts', function (urlFilter, filter, state, hasContent, needCleanContent) {
         let authors = [];
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1) || '';
+        console.log('crea.posts', urlFilter, filter, hasContent, needCleanContent, category, discuss);
 
         for (let c in state.content) {
             let author = state.content[c].author;
@@ -377,11 +375,12 @@ import {CommentsApi} from "../lib/creary-api";
             });
         } else {
             if (homePosts) {
-                state = homePosts.state;
 
                 if (needCleanContent) {
-                    state.discussion_idx[homePosts.discuss][homePosts.category] = [];
-                    state.content = {};
+                    cleanHomeContent(urlFilter);
+
+                    homePosts.state.category = category;
+                    homePosts.state.discuss = discuss;
                 }
 
                 if (homePosts.urlFilter === urlFilter) {
@@ -391,12 +390,13 @@ import {CommentsApi} from "../lib/creary-api";
                 }
             }
 
-
+            console.log('State', state);
             let ck = Object.keys(state.content);
             let reblogsFetched = 0;
             let onAllReblogs = function () {
                 reblogsFetched++;
 
+                console.log('onAllReblogs', reblogsFetched, ck.length);
                 if (reblogsFetched >= ck.length) {
                     showPosts(urlFilter, filter, state);
                 }
@@ -427,8 +427,9 @@ import {CommentsApi} from "../lib/creary-api";
         }
     });
 
-    function beforeInit(urlFilter) {
+    function beforeInit(urlFilter = null) {
         let path = currentPage ? currentPage.pathname : window.location.pathname;
+        console.log('beforeInit', path, urlFilter, getPathPart(), getPathPart(null, 1));
 
         if (path === '/') {
             if (session) {
@@ -458,17 +459,37 @@ import {CommentsApi} from "../lib/creary-api";
                     showProfile(getPathPart());
                 }
             } else {
-                creaEvents.emit('crea.content.path', getPathPart(), getPathPart(1));
+                creaEvents.emit('crea.content.path', getPathPart(), getPathPart(null, 1));
                 creaEvents.emit('crea.content.load');
             }
         }
     }
 
-    function addApiContent(apiContents, callback) {
+    function cleanHomeContent(urlFilter = null) {
+        console.log('cleaning home content', urlFilter);
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1);
+        if (homePosts) {
+
+            if (!homePosts.state.discussion_idx[discuss]) {
+                homePosts.state.discussion_idx[discuss] = {};
+            }
+
+            homePosts.state.discussion_idx[discuss][category] = [];
+            homePosts.state.discussion_idx[homePosts.discuss][homePosts.category] = [];
+            homePosts.state.content = {};
+        }
+    }
+
+    function addApiContent(apiContents, cleanContent, callback) {
         console.log('Adding content', apiContents.length, apiContents);
         let discussions = [];
         let accounts = [];
         let count = apiContents.length;
+
+        if (cleanContent) {
+            cleanHomeContent();
+        }
 
         let onContentFetched = function onContentFetched() {
             count--;
@@ -552,8 +573,8 @@ import {CommentsApi} from "../lib/creary-api";
         beforeInit();
     });
 
-    creaEvents.on('crea.content.add', function (apiContents) {
-        addApiContent(apiContents);
+    creaEvents.on('crea.content.add', function (apiContents, cleanContent) {
+        addApiContent(apiContents, cleanContent);
     });
 
     let onScrollCalling = false;
