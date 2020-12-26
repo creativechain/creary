@@ -5,10 +5,7 @@ namespace App\Console\Commands;
 use App\Comments;
 use App\Http\Crea\CrearyClient;
 use App\Jobs\UpdateCommentJob;
-use App\Utils\Obj;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use mysql_xdevapi\Exception;
 
 class UpdateCommentsCommand extends Command
 {
@@ -17,7 +14,7 @@ class UpdateCommentsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'crea:comments';
+    protected $signature = 'crea:comments {--p|page=}';
 
     /**
      * The console command description.
@@ -43,27 +40,45 @@ class UpdateCommentsCommand extends Command
      */
     public function handle()
     {
-        $comments = Comments::query()
-            ->get();
-
-        $this->output->writeln("Updating " . $comments->count() . ' comments!');
-
-        foreach ($comments as $c) {
-            /** @var Comments $c */
-
-            $this->output->writeln("Updating comment: " . $c->author  . "/" . $c->permlink);
-
-            $cc = new CrearyClient();
-            $content = $cc->getPost($c->author, $c->permlink);
-            if ($content->parent_author === '') {
-                $c->applyData($content);
-            } else {
-                $c->delete();
-                $this->output->error("Deleted this comment");
-            }
-
-
+        $page = $this->hasOption('page');
+        if ($page) {
+            $page = intval($this->option('page'));
         }
+
+
+        if (!$page) {
+            $page = 1;
+        }
+
+        $limit = 100;
+        $offset = ($page * $limit) - $limit;
+
+        do {
+            $this->output->success("Comments page: $page");
+            $comments = Comments::query()
+                ->orderBy('created_at')
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+
+            $this->output->writeln("Updating " . $comments->count() . ' comments!');
+
+            foreach ($comments as $c) {
+                /** @var Comments $c */
+
+                $this->output->writeln("Updating comment: " . $c->author  . "/" . $c->permlink);
+
+                $cc = new CrearyClient();
+                $content = $cc->getPost($c->author, $c->permlink);
+                if ($content->parent_author === '') {
+                    $c->applyData($content);
+                } else {
+                    $c->delete();
+                    $this->output->error("Deleted this comment");
+                }
+            }
+        } while (!$comments->isEmpty());
+
         return 0;
     }
 }
