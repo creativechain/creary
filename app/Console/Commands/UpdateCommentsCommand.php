@@ -77,6 +77,7 @@ class UpdateCommentsCommand extends Command
                     $this->output->error("Deleted this comment");
                 }
             }
+            $page++;
         } while (!$comments->isEmpty());
 
         return 0;
