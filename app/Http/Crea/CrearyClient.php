@@ -119,6 +119,9 @@ class CrearyClient
             if ($parse) {
                 $account = Obj::parse($account);
                 $account->metadata = Obj::parse(json_decode($account->json_metadata));
+                if (!$account->metadata) {
+                    $account->metadata = new Obj();
+                }
 
                 $account->metadata->blocked = intval($account->reputation) < 0;
             } else {

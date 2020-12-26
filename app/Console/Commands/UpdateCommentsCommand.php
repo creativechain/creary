@@ -58,8 +58,8 @@ class UpdateCommentsCommand extends Command
             if ($content->parent_author === '') {
                 $c->applyData($content);
             } else {
-                //$c->delete();
-                $this->output->error("Deletewd this comment");
+                $c->delete();
+                $this->output->error("Deleted this comment");
             }
 
 
