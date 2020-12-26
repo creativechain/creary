@@ -406,7 +406,7 @@ import {CommentsApi} from "../lib/creary-api";
 
             let onReblogs = function (d) {
                 let pl = `${d.author}/${d.permlink}`;
-                state.content[pl] = parsePost(d, reblogs);
+                state.content[pl] = parsePost(state.content[pl], d.reblogged_by);
             };
 
             let commentsApi = new CommentsApi();
