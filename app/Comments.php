@@ -86,7 +86,7 @@ class Comments extends Model
             }
 
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' Comment: ' . $data->author . '/' . $data->permlink, $e->getTrace());
+            Log::error($e->getMessage() . ' Comment: ' . $data->author->name . '/' . $data->permlink, $e->getTrace());
         }
 
         return $this;

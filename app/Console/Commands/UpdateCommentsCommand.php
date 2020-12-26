@@ -55,7 +55,13 @@ class UpdateCommentsCommand extends Command
 
             $cc = new CrearyClient();
             $content = $cc->getPost($c->author, $c->permlink);
-            $c->applyData($content);
+            if ($content->parent_author === '') {
+                $c->applyData($content);
+            } else {
+                $c->delete();
+                $this->output->error("Deletewd this comment");
+            }
+
 
         }
         return 0;
