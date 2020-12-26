@@ -51,9 +51,11 @@ class UpdateCommentsCommand extends Command
         }
 
         $limit = 100;
-        $offset = ($page * $limit) - $limit;
+
 
         do {
+            $offset = ($page * $limit) - $limit;
+
             $this->output->success("Comments page: $page");
             $comments = Comments::query()
                 ->orderBy('created_at')
