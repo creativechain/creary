@@ -404,28 +404,20 @@ import {CommentsApi} from "../lib/creary-api";
                 }
             };
 
-            let onReblogs = function (k, d, reblogs) {
-                state.content[k] = parsePost(d, reblogs);
+            let onReblogs = function (d) {
+                let pl = `${d.author}/${d.permlink}`;
+                state.content[pl] = parsePost(d, reblogs);
             };
 
-            for (let x = 0; x < ck.length; x++) {
-                let d = state.content[ck[x]];
-
-                (function (x, ck, d) {
-                    let commentsApi = new CommentsApi();
-                    commentsApi.comment(d.author, d.permlink, function (err, data) {
-                        if (err) {
-                            console.log('Fail getting comment data', d.author, d.permlink);
-                            onReblogs(ck[x], d);
-                            onAllReblogs();
-                        } else {
-                            onReblogs(ck[x], d, data.reblogged_by);
-                            onAllReblogs();
-                        }
-                    });
-                })(x, ck, d)
-
-            }
+            let commentsApi = new CommentsApi();
+            commentsApi.multipleComments(ck, function (err, result) {
+                if (!catchError(err)) {
+                    result.forEach(d => {
+                        onReblogs(d);
+                        onAllReblogs();
+                    })
+                }
+            });
         }
     });
 
@@ -674,8 +666,12 @@ import {CommentsApi} from "../lib/creary-api";
                             };
 
                             if (discussions.length) {
+                                let discussionLinks = [];
+                                let discussionsObj = {}
+
                                 for (let x = 0; x < discussions.length; x++) {
                                     let d = discussions[x];
+                                    d.index = x;
                                     //For /now discussions, check post active date
                                     if (category === 'now') {
                                         let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
@@ -690,29 +686,31 @@ import {CommentsApi} from "../lib/creary-api";
                                         topDiscussions.push(d);
                                     }
 
-                                    (function (x, d) {
-
-                                        let onReblogs = function (reblogs) {
-
-                                            topDiscussions[x] = parsePost(d, reblogs);
-
-                                            if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                                                accounts.push(d.author);
-                                            }
-                                        };
-
-                                        let commentApi = new CommentsApi();
-                                        commentApi.comment(d.author, d.permlink, function (err, result) {
-                                            if (err) {
-                                                onReblogs();
-                                                onAllReblogs();
-                                            } else {
-                                                onReblogs(result.reblogged_by);
-                                                onAllReblogs();
-                                            }
-                                        });
-                                    })(topDiscussions.length-1, d)
+                                    let pl = `${d.author}/${d.permlink}`;
+                                    discussionLinks.push(pl);
+                                    discussionsObj[pl] = d;
                                 }
+
+                                let onReblogs = function (dr) {
+                                    let pl = `${dr.author}/${dr.permlink}`;
+                                    let d = discussionsObj[pl];
+                                    topDiscussions[d.index] = parsePost(d, dr.reblogged_by);
+
+                                    if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
+                                        accounts.push(d.author);
+                                    }
+                                };
+
+                                let commentsApi = new CommentsApi();
+                                commentsApi.multipleComments(discussionLinks, function (err, result) {
+                                    if (!catchError(err)) {
+                                        result.forEach(dr => {
+                                            onReblogs(dr);
+                                            onAllReblogs();
+                                        });
+                                    }
+                                })
+
                             } else {
                                 if (discuss) {
                                     creaEvents.emit('crea.content.old');

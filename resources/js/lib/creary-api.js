@@ -141,6 +141,11 @@ class CommentsApi extends CrearyApi {
         this.__initializeClient(`/${author}/${permlink}`, callback);
         this.__get()
     }
+
+    multipleComments(permlinks, callback) {
+        this.__initializeClient('/multiple', callback);
+        this.__get({ comments: permlinks });
+    }
 }
 
 class TagsApi extends CrearyApi {

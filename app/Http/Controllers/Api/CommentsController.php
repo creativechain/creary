@@ -140,4 +140,53 @@ class CommentsController extends Controller
 
         return response($comment);
     }
+
+    /**
+     * @param Request $request
+     * @param $user
+     * @param $permlink
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function showMultiple(Request $request) {
+        $validations = array(
+            'comments' => 'required|array'
+        );
+
+        $validatedData = Validator::make($request->all(), $validations);
+        if ($validatedData->fails()) {
+            return response([
+                'status' => 'error',
+                'message' => $validatedData->errors(),
+                'error' => 'invalid_parameter'
+            ], 400);
+        }
+
+        $comments = $request->get('comments');
+
+        $commentsQuery = Comments::query();
+
+        $first = true;
+        foreach ($comments as $cl) {
+            $author = explode('/', $cl)[0];
+            $permlink = explode('/', $cl)[1];
+            if ($first) {
+                $commentsQuery->where(function ($q) use ($author, $permlink) {
+                    return $q->where('author', $author)
+                        ->where('permlink', $permlink);
+                });
+                $first = false;
+            } else {
+                $commentsQuery->orWhere(function ($q) use ($author, $permlink) {
+                    return $q->where('author', $author)
+                        ->where('permlink', $permlink);
+                });
+            }
+
+        }
+
+        $commentsData = $commentsQuery->get();
+
+
+        return response($commentsData);
+    }
 }

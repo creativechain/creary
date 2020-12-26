@@ -50,6 +50,7 @@ Route::group(['prefix' => 'comments', 'middleware' => ['cors']], function () {
     //Route::get('/', 'Api\TagsController@index')->name('tags.index');
     Route::get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
     Route::get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
+    Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
     Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show');
 });
 
