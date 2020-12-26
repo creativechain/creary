@@ -114,6 +114,7 @@ import {CommentsApi} from "../lib/creary-api";
                     discuss: discuss,
                     urlFilter: urlFilter,
                     state: state,
+                    cleaningContent: false,
                     search: getParameterByName('query'),
                     simpleView: false,
                     lang: lang
@@ -304,6 +305,7 @@ import {CommentsApi} from "../lib/creary-api";
             homePosts.discuss = discuss;
             homePosts.state = state;
             homePosts.urlFilter = urlFilter;
+            homePosts.cleaningContent = false;
             homePosts.search = getParameterByName('query');
         }
 
@@ -368,6 +370,7 @@ import {CommentsApi} from "../lib/creary-api";
                         }
                         state.content = {};
                     }
+
                     //Result is for applied filters and no has accounts
                     showPosts(urlFilter, filter, state);
                 }
@@ -470,13 +473,21 @@ import {CommentsApi} from "../lib/creary-api";
         let discuss = getPathPart(urlFilter, 1);
         if (homePosts) {
 
+            homePosts.cleaningContent = true;
+
             if (!homePosts.state.discussion_idx[discuss]) {
                 homePosts.state.discussion_idx[discuss] = {};
             }
 
+            let lastDiscuss = homePosts.discuss;
+            let lastCategory = homePosts.category;
+
             homePosts.state.discussion_idx[discuss][category] = [];
-            homePosts.state.discussion_idx[homePosts.discuss][homePosts.category] = [];
+            homePosts.discuss = discuss;
+            homePosts.category = category;
+            homePosts.state.discussion_idx[lastDiscuss][lastCategory] = [];
             homePosts.state.content = {};
+            homePosts.$forceUpdate();
         }
     }
 
@@ -520,6 +531,7 @@ import {CommentsApi} from "../lib/creary-api";
 
                         homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
                         homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
+                        homePosts.cleaningContent = false;
                         homePosts.$forceUpdate();
                         creaEvents.emit('navigation.state.update', homePosts.state);
                     }
