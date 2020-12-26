@@ -198,10 +198,17 @@ class CrearyClient
         $rpcData = $this->buildRpcData('condenser_api.get_reblogged_by', array($author, $permlink));
 
         $response = $this->callRequest($rpcData);
-        if ($parse) {
-            return Obj::parse($response['result']);
+        $result = $response['result'];
+
+        $index = array_search($author, $result);
+        if($index !== FALSE){
+             array_splice($result, $index, 1);
         }
 
-        return $response['result'];
+        if ($parse) {
+            return Obj::parse($result);
+        }
+
+        return $result;
     }
 }
