@@ -196,13 +196,13 @@ class License {
 
 let LICENSE = {
     NO_LICENSE: new LicensePermission(0x00, 'WithoutLicense', 'WL', {}),
-    CREATIVE_COMMONS: new LicensePermission(0x01, 'CreativeCommons', 'CC', R.IMG.LICENSE.CREATIVE_COMMONS, false),
+    CREATIVE_COMMONS: new LicensePermission(0x01, 'Creative Commons', 'CC', R.IMG.LICENSE.CREATIVE_COMMONS, false),
     ATTRIBUTION: new LicensePermission(0x02, 'Attribution', 'BY', R.IMG.LICENSE.ATTRIBUTION),
     SHARE_ALIKE: new LicensePermission(0x04, 'ShareAlike', 'SA', R.IMG.LICENSE.SHARE_ALIKE),
     NON_COMMERCIAL: new LicensePermission(0x08, 'NonCommercial', 'NC', R.IMG.LICENSE.NON_COMMERCIAL),
     NON_DERIVATES: new LicensePermission(0x10, 'NonDerivates', 'ND', R.IMG.LICENSE.NON_DERIVATES),
     NON_PERMISSION: new LicensePermission(0x20, lang.LICENSE.NON_PERMISSION, lang.LICENSE.NON_PERMISSION, R.IMG.LICENSE.COPYRIGHT),
-    FREE_CONTENT: new LicensePermission(0x80, 'FreeContent', 'CC0', R.IMG.LICENSE.FREE_CONTENT),
+    FREE_CONTENT: new LicensePermission(0x80, 'Free Content', 'CC0', R.IMG.LICENSE.FREE_CONTENT),
 };
 
 let LICENSE_LINKS = {
