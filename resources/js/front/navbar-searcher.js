@@ -1,6 +1,7 @@
 import {cancelEventPropagation, getParameterByName, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Avatar from "../components/Avatar";
+import {isInHome} from "../common/common";
 
 (function () {
 
@@ -29,14 +30,17 @@ import Avatar from "../components/Avatar";
                 },
             },
             methods: {
+                isInHome: isInHome,
                 reset: function reset() {
                     this.search = null;
                     this.limit = SEARCH_LIMIT;
                 },
                 onSelectTag: function (event, tag) {
-                    cancelEventPropagation(event);
-                    this.search = tag.name;
-                    creaEvents.emit('crea.content.tag', tag.name);
+                    if (this.isInHome()) {
+                        cancelEventPropagation(event);
+                        this.search = tag.name;
+                        creaEvents.emit('crea.content.tag', tag.name);
+                    }
                 },
                 performSearch: function (event) {
                     cancelEventPropagation(event);
