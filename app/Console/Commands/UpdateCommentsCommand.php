@@ -46,7 +46,7 @@ class UpdateCommentsCommand extends Command
         $comments = Comments::query()
             ->get();
 
-        $this->output->writeln("Updating" . $comments->count() . ' comments!');
+        $this->output->writeln("Updating " . $comments->count() . ' comments!');
 
         foreach ($comments as $c) {
             /** @var Comments $c */
