@@ -20,6 +20,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     account: account,
                     availableLicenses: [LICENSE.NON_PERMISSION, LICENSE.CREATIVE_COMMONS, LICENSE.FREE_CONTENT],
                     discussions: [],
+                    discussReady: false,
                     category: isFeed ? 'feed' : 'popular',
                     discuss: null,
                     license: null,
@@ -93,13 +94,6 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     }
                 }
             });
-
-            setTimeout(function () {
-                //mr.sliders.documentReady($);
-                $('.button-filter').on('click', function(){
-                    $('.row-filter-select').fadeToggle('show');
-                });
-            }, 100)
         } else {
             navbarFilter.session = session;
             navbarFilter.account = account;
@@ -117,12 +111,13 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         tagsApi.index(20, function (err, result) {
             if (!catchError(err)) {
                 navbarFilter.discussions = result.data;
-                navbarFilter.$forceUpdate();
-                setTimeout(loadSlider, 100);
+
             } else {
                 navbarFilter.discussions = [];
-                navbarFilter.$forceUpdate();
+
             }
+
+            loadSlider();
         });
     }
 
@@ -160,7 +155,6 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                 } else {
                     release();
                 }
-
             };
 
             if (hasPrevQuery) {
@@ -272,7 +266,11 @@ import {catchError, parsePost, updateUrl} from "../common/common";
     }
 
     function loadSlider() {
-        mr.sliders.documentReady($);
+        setTimeout(function () {
+            console.log('loading slider');
+            mr.sliders.documentReady($);
+            navbarFilter.discussReady = true;
+        }, 1e3);
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
@@ -306,4 +304,10 @@ import {catchError, parsePost, updateUrl} from "../common/common";
     creaEvents.on('crea.content.load', function () {
         loadContent();
     });
+
+    creaEvents.on('crea.dom.ready', function () {
+        $('.button-filter').on('click', function(){
+            $('.row-filter-select').fadeToggle('show');
+        });
+    })
 })();

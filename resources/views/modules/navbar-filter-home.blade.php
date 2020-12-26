@@ -33,9 +33,9 @@
     <div class="col-12 col-md-8 order-2 order-md-1 select-slider">
         <div class="container">
             <div class="row">
-                <div class="col">
+                <div class="col" >
                     <div class="slider slider--inline-arrows slider--arrows-hover text-center" data-arrows="true" data-autoplay="false">
-                        <ul v-cloak class="slides">
+                        <ul class="slides">
                             <li></li>
                             <li v-bind:class="{ active: !discuss }">
                                 <a v-bind:href="'/' + category" >{{ __('lang.FILTER.ALL') }}</a>

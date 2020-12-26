@@ -398,7 +398,7 @@ import {CommentsApi} from "../lib/creary-api";
             let onAllReblogs = function () {
                 reblogsFetched++;
 
-                console.log('onAllReblogs', reblogsFetched, ck.length);
+                //console.log('onAllReblogs', reblogsFetched, ck.length);
                 if (reblogsFetched >= ck.length) {
                     showPosts(urlFilter, filter, state);
                 }
