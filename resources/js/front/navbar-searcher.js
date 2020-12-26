@@ -5,7 +5,7 @@ import Avatar from "../components/Avatar";
 (function () {
 
     const SEARCH_LIMIT = 3;
-    const MIN_SEARCH_CHARS = 3;
+    const MIN_SEARCH_CHARS = 2;
 
     Vue.component('avatar', Avatar);
 

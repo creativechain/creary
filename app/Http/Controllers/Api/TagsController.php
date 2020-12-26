@@ -46,7 +46,7 @@ class TagsController extends Controller
     public function search(Request $request) {
         $validations = array(
             'limit' => 'sometimes|numeric',
-            'search' => 'required|string|min:3'
+            'search' => 'required|string'
         );
 
         $validatedData = Validator::make($request->all(), $validations);
