@@ -668,10 +668,9 @@ import {CommentsApi} from "../lib/creary-api";
                                             creaEvents.emit('navigation.state.update', homePosts.state);
                                         }
 
-                                        release();
+                                        onScrollCalling = false;
                                     });
                                 }
-
                             };
 
                             if (discussions.length) {
@@ -718,6 +717,8 @@ import {CommentsApi} from "../lib/creary-api";
                                 if (discuss) {
                                     creaEvents.emit('crea.content.old');
                                 }
+
+                                onScrollCalling = false;
                             }
 
                         }
