@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Comments;
 use App\Http\Controllers\Controller;
+use App\Http\Crea\CrearyClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -185,6 +186,27 @@ class CommentsController extends Controller
         }
 
         $commentsData = $commentsQuery->get();
+
+        //Check if any comment not exists;
+        foreach ($commentsData as $c) {
+            /** @var Comments $c */
+            $permlink = $c->author . '/' . $c->permlink;
+            $index = array_search($permlink, $comments);
+            if ($index !== false) {
+                array_splice($comments, $index, 1);
+            }
+        }
+
+        foreach ($comments as $cl) {
+            $author = explode('/', $cl)[0];
+            $permlink = explode('/', $cl)[1];
+            $cc = new CrearyClient();
+            $content = $cc->getPost($author, $permlink);
+            $c = new Comments();
+            $c->applyData($content);
+
+            $commentsData->add($c);
+        }
 
 
         return response($commentsData);

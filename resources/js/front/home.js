@@ -633,36 +633,31 @@ import {CommentsApi} from "../lib/creary-api";
                             let topDiscussions = [];
                             let accounts = [];
 
-                            let reblogsFetched = 0;
                             let onAllReblogs = function () {
-                                reblogsFetched++;
-                                if (reblogsFetched >= topDiscussions.length) {
-                                    //Get new accounts
-                                    getAccounts(accounts, function (err, newAccounts) {
-                                        if (!catchError(err)) {
-                                            //Update accounts
-                                            newAccounts.forEach(function (a) {
-                                                homePosts.state.accounts[a.name] = a;
-                                            }); //Update Posts
+                                getAccounts(accounts, function (err, newAccounts) {
+                                    if (!catchError(err)) {
+                                        //Update accounts
+                                        newAccounts.forEach(function (a) {
+                                            homePosts.state.accounts[a.name] = a;
+                                        }); //Update Posts
 
-                                            let discuss = homePosts.discuss;
-                                            topDiscussions.forEach(function (d) {
-                                                let permlink = d.author + '/' + d.permlink;
-                                                homePosts.state.content[permlink] = d;
+                                        let discuss = homePosts.discuss;
+                                        topDiscussions.forEach(function (d) {
+                                            let permlink = d.author + '/' + d.permlink;
+                                            homePosts.state.content[permlink] = d;
 
-                                                homePosts.state.discussion_idx[discuss][category].push(permlink);
-                                            });
+                                            homePosts.state.discussion_idx[discuss][category].push(permlink);
+                                        });
 
-                                            homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
-                                            homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                                            lastPage = topDiscussions[topDiscussions.length - 1];
-                                            homePosts.$forceUpdate();
-                                            creaEvents.emit('navigation.state.update', homePosts.state);
-                                        }
+                                        homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
+                                        homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
+                                        lastPage = topDiscussions[topDiscussions.length - 1];
+                                        homePosts.$forceUpdate();
+                                        creaEvents.emit('navigation.state.update', homePosts.state);
+                                    }
 
-                                        onScrollCalling = false;
-                                    });
-                                }
+                                    onScrollCalling = false;
+                                });
                             };
 
                             if (discussions.length) {
@@ -672,6 +667,12 @@ import {CommentsApi} from "../lib/creary-api";
                                 for (let x = 0; x < discussions.length; x++) {
                                     let d = discussions[x];
                                     d.index = x;
+
+                                    //Add account
+                                    if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
+                                        accounts.push(d.author);
+                                    }
+
                                     //For /now discussions, check post active date
                                     if (category === 'now') {
                                         let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
@@ -695,10 +696,6 @@ import {CommentsApi} from "../lib/creary-api";
                                     let pl = `${dr.author}/${dr.permlink}`;
                                     let d = discussionsObj[pl];
                                     topDiscussions[d.index] = parsePost(d, dr.reblogged_by);
-
-                                    if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                                        accounts.push(d.author);
-                                    }
                                 };
 
                                 let commentsApi = new CommentsApi();
@@ -706,8 +703,9 @@ import {CommentsApi} from "../lib/creary-api";
                                     if (!catchError(err)) {
                                         result.forEach(dr => {
                                             onReblogs(dr);
-                                            onAllReblogs();
                                         });
+
+                                        onAllReblogs();
                                     }
                                 })
 
