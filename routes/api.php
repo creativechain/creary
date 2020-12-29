@@ -34,18 +34,18 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
-Route::group(['prefix' => 'accounts', 'middleware' => ['cors']], function () {
+Route::group(['prefix' => 'accounts', 'middleware' => ['cors', 'throttle:search']], function () {
 
     Route::get('/search', 'Api\AccountsController@search')->name('accounts.search');
 });
 
-Route::group(['prefix' => 'tags', 'middleware' => ['cors']], function () {
+Route::group(['prefix' => 'tags', 'middleware' => ['cors', 'throttle:search']], function () {
 
     Route::get('/', 'Api\TagsController@index')->name('tags.index');
     Route::get('/search', 'Api\TagsController@search')->name('tags.search');
 });
 
-Route::group(['prefix' => 'comments', 'middleware' => ['cors']], function () {
+Route::group(['prefix' => 'comments', 'middleware' => ['cors', 'throttle:search']], function () {
 
     //Route::get('/', 'Api\TagsController@index')->name('tags.index');
     Route::get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
