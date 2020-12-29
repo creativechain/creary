@@ -34,25 +34,29 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
-Route::group(['prefix' => 'accounts', 'middleware' => ['cors']], function () {
+Route::group(['middleware' => ['cors']], function () {
 
-    Route::middleware(['throttle:search'])->get('/search', 'Api\AccountsController@search')->name('accounts.search');
+    Route::group(['prefix' => 'accounts'], function () {
+
+        Route::middleware(['throttle:search'])->get('/search', 'Api\AccountsController@search')->name('accounts.search');
+    });
+
+    Route::group(['prefix' => 'tags'], function () {
+
+        Route::get('/', 'Api\TagsController@index')->name('tags.index');
+        Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
+    });
+
+    Route::group(['prefix' => 'comments'], function () {
+
+        //Route::get('/', 'Api\TagsController@index')->name('tags.index');
+        Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
+        Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
+        Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
+        Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show');
+    });
 });
 
-Route::group(['prefix' => 'tags', 'middleware' => ['cors']], function () {
-
-    Route::get('/', 'Api\TagsController@index')->name('tags.index');
-    Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
-});
-
-Route::group(['prefix' => 'comments', 'middleware' => ['cors']], function () {
-
-    //Route::get('/', 'Api\TagsController@index')->name('tags.index');
-    Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
-    Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
-    Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
-    Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show');
-});
 
 /*Route::get('/votes/{creaUser}', 'CrearyController@testVotes')
     ->where('creaUser', '^([\w\.\d-]+)$');*/
