@@ -2,6 +2,7 @@ import {cancelEventPropagation, getParameterByName, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Avatar from "../components/Avatar";
 import {isInHome} from "../common/common";
+import {AccountsApi, TagsApi} from "../lib/creary-api";
 
 (function () {
 
@@ -48,42 +49,42 @@ import {isInHome} from "../common/common";
                     let that = this;
 
                     if (this.search && this.search.length >= MIN_SEARCH_CHARS) {
-                        console.log('Searching', this.search)
-                        let search = function (endpoint, section) {
-                            if (section.http) {
-                                section.http.abort();
-                                console.log(that.search, `aborted ${endpoint}`);
-                            }
+                        console.log('Searching', this.search);
 
-                            section.http = new HttpClient(apiOptions.apiCrea + endpoint);
-                            section.http.setHeaders({
-                                accept: 'application/json'
-                            })
-
-                            section.http.on('done' + section.http.id, function (response) {
-                                let data = jsonify(response);
-                                console.log(`On response ${endpoint}`, data);
-
-                                section.items = data.data;
-                                section.http = null;
-                                that.$forceUpdate();
-                            })
-
-                            section.http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                                //console.error(jqXHR, textStatus, errorThrown);
-                                section.items = [];
-                                section.http = null;
-                                that.$forceUpdate();
-                            });
-
-                            section.http.get({
-                                search: that.search,
-                                limit: that.limit
-                            });
+                        //Accounts search
+                        if (this.accounts.http) {
+                            this.accounts.http.abort();
+                        } else {
+                            this.accounts.http = new AccountsApi();
                         }
 
-                        search('/accounts/search', this.accounts);
-                        search('/tags/search', this.tags);
+                        this.accounts.http.search(this.search, this.limit, (err, result) => {
+                            if (err) {
+                                this.accounts.items = [];
+                            } else {
+                                this.accounts.items = result.data;
+                            }
+
+                            this.$forceUpdate();
+                        });
+
+                        //Tags search
+                        if (this.tags.http) {
+                            this.tags.http.abort();
+                        } else {
+                            this.tags.http = new TagsApi();
+                        }
+
+                        this.tags.http.search(this.search, this.limit, (err, result) => {
+                            if (err) {
+                                this.tags.items = [];
+                            } else {
+                                this.tags.items = result.data;
+                            }
+
+                            this.$forceUpdate();
+                        });
+
                     } else {
                         let cleanSection = function (section) {
                             section.http = null;

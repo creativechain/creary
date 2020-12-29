@@ -75,6 +75,12 @@ class CrearyApi extends EventEmitter {
         this._http.post(params);
     }
 
+    abort() {
+        if (this._http) {
+            this._http.abort();
+        }
+    }
+
     /**
      *
      * @param url
@@ -175,6 +181,22 @@ class TagsApi extends CrearyApi {
     }
 }
 
+class AccountsApi extends CrearyApi {
+    constructor(options = OPTIONS) {
+        super('accounts');
+    }
+
+    /**
+     *
+     * @param search
+     * @param limit
+     * @param callback
+     */
+    search(search, limit = 20, callback) {
+        this.__initializeClient('/search', callback);
+        this.__get({ search, limit });
+    }
+}
 export {
-    CrearyApi, CommentsApi, TagsApi
+    CrearyApi, CommentsApi, TagsApi, AccountsApi
 }
