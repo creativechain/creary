@@ -99,7 +99,7 @@ class CommentsController extends Controller
         $search = strtolower($request->get('search'));
         $download = $request->get('download');
         $license = $request->get('license', false);
-        $limit = $request->get('limit', 20);
+        $limit = intval($request->get('limit', 20));
 
         $query = Comments::query();
         if ($download) {
