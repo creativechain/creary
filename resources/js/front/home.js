@@ -459,10 +459,33 @@ import {CommentsApi} from "../lib/creary-api";
         }
     }
 
+    function initEmptyHome(urlFilter = null, callback) {
+        urlFilter =  urlFilter || window.location.pathname;
+
+        console.log('Initiating homePosts with', urlFilter);
+        crea.api.getState(urlFilter, function (err, urlState) {
+            if (!catchError(err)) {
+                let category = getPathPart();
+                let discuss = getPathPart(null, 1) || '';
+                urlState.content = {};
+                urlState.accounts = {};
+                urlState.discussion_idx = {};
+                urlState.discussion_idx[discuss] = {};
+                urlState.discussion_idx[discuss][category] = [];
+
+                showPosts(urlFilter, urlFilter, urlState);
+                if (callback) {
+                    callback();
+                }
+            }
+        });
+    }
+
     function cleanHomeContent(urlFilter = null) {
         console.log('cleaning home content', urlFilter);
         let category = getPathPart(urlFilter);
         let discuss = getPathPart(urlFilter, 1);
+
         if (homePosts) {
 
             homePosts.cleaningContent = true;
@@ -483,83 +506,86 @@ import {CommentsApi} from "../lib/creary-api";
         }
     }
 
-    function addApiContent(apiContents, cleanContent, callback) {
+    function addApiContent(apiContents, accountNames, discussion_idx, cleanContent, callback) {
         console.log('Adding content', apiContents.length, apiContents);
         let discussions = [];
-        let accounts = [];
         let count = apiContents.length;
+
+        let onHomeInit = function () {
+
+            let onContentFetched = function onContentFetched() {
+                count--;
+
+                console.log('Fetched. Remain', count);
+                if (count <= 0) {
+                    getAccounts(accountNames, function (err, newAccounts) {
+                        if (!catchError(err)) {
+                            //Update accounts
+                            newAccounts.forEach(function (a) {
+                                homePosts.state.accounts[a.name] = parseAccount(a);
+                            });
+
+                            //Sort
+                            /*discussions.sort(function (k1, k2) {
+                                let d1 = toLocaleDate(k1.created);
+                                let d2 = toLocaleDate(k2.created);
+                                return d2.valueOf() - d1.valueOf();
+                            });*/
+                            let discuss = homePosts.discuss;
+                            let category = homePosts.category;
+
+                            //Update Posts
+                            discussions.forEach(function (d) {
+                                let permlink = d.author + '/' + d.permlink;
+                                homePosts.state.content[permlink] = d;
+                                homePosts.state.discussion_idx[discuss][category].push(permlink);
+                            });
+
+                            homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
+                            homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
+                            homePosts.cleaningContent = false;
+                            homePosts.$forceUpdate();
+                            creaEvents.emit('navigation.state.update', homePosts.state);
+                        }
+
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                }
+            };
+
+            apiContents.forEach(function (d) {
+                let permlink = d.author + '/' + d.permlink;
+
+                if (!homePosts.state.content[permlink]) {
+
+                    crea.api.getContent(d.author, d.permlink, function (err, result) {
+                        if (err) {
+                            console.error('Error getting', permlink, err);
+                        } else {
+                            let p = parsePost(result);
+                            p.reblogged_by = d.reblogged_by;
+                            discussions.push(p);
+
+                            onContentFetched();
+                        }
+                    });
+                } else {
+                    homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
+                    onContentFetched();
+                }
+            });
+        }
+        if (!homePosts) {
+            initEmptyHome(null, onHomeInit);
+        } else {
+            onHomeInit();
+        }
 
         if (cleanContent) {
             cleanHomeContent();
         }
-
-        let onContentFetched = function onContentFetched() {
-            count--;
-
-            console.log('Fetched. Remain', count);
-            if (count <= 0) {
-                getAccounts(accounts, function (err, newAccounts) {
-                    if (!catchError(err)) {
-                        //Update accounts
-                        newAccounts.forEach(function (a) {
-                            homePosts.state.accounts[a.name] = parseAccount(a);
-                        });
-
-                        //Sort
-                        /*discussions.sort(function (k1, k2) {
-                            let d1 = toLocaleDate(k1.created);
-                            let d2 = toLocaleDate(k2.created);
-                            return d2.valueOf() - d1.valueOf();
-                        });*/
-                        let discuss = homePosts.discuss;
-                        let category = homePosts.category;
-
-                        //Update Posts
-                        discussions.forEach(function (d) {
-                            let permlink = d.author + '/' + d.permlink;
-                            homePosts.state.content[permlink] = d;
-                            homePosts.state.discussion_idx[discuss][category].push(permlink);
-                        });
-
-                        homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
-                        homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                        homePosts.cleaningContent = false;
-                        homePosts.$forceUpdate();
-                        creaEvents.emit('navigation.state.update', homePosts.state);
-                    }
-
-                    if (callback) {
-                        callback();
-                    }
-                });
-            }
-        };
-
-        apiContents.forEach(function (d) {
-            let permlink = d.author + '/' + d.permlink;
-
-            if (!homePosts.state.content[permlink]) {
-
-                crea.api.getContent(d.author, d.permlink, function (err, result) {
-                    if (err) {
-                        console.error('Error getting', permlink, err);
-                    } else {
-                        let p = parsePost(result);
-                        p.reblogged_by = d.reblogged_by;
-                        discussions.push(p);
-
-                        if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                            accounts.push(d.author);
-                        }
-
-                        onContentFetched();
-                    }
-                });
-            } else {
-                homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
-                onContentFetched();
-            }
-        });
     }
 
     creaEvents.on('crea.session.update', function (s, a) {
@@ -576,8 +602,8 @@ import {CommentsApi} from "../lib/creary-api";
         beforeInit();
     });
 
-    creaEvents.on('crea.content.add', function (apiContents, cleanContent) {
-        addApiContent(apiContents, cleanContent);
+    creaEvents.on('crea.content.add', function (apiContents, accountNames, discussion_idx, cleanContent) {
+        addApiContent(apiContents, accountNames, discussion_idx, cleanContent);
     });
 
     let onScrollCalling = false;
@@ -599,126 +625,137 @@ import {CommentsApi} from "../lib/creary-api";
                 let category = homePosts.category;
                 let discuss = homePosts.discuss ? homePosts.discuss : '';
 
-                switch (category) {
-                    case 'now':
-                        apiCall = crea.api.getDiscussionsByNow;
-                        break;
+                if (lastPage) {
+                    switch (category) {
+                        case 'now':
+                            apiCall = crea.api.getDiscussionsByNow;
+                            break;
 
-                    case 'skyrockets':
-                        apiCall = crea.api.getDiscussionsBySkyrockets;
-                        break;
+                        case 'skyrockets':
+                            apiCall = crea.api.getDiscussionsBySkyrockets;
+                            break;
 
-                    case 'promoted':
-                        apiCall = crea.api.getDiscussionsByPromoted;
-                        break;
+                        case 'promoted':
+                            apiCall = crea.api.getDiscussionsByPromoted;
+                            break;
 
-                    case 'popular':
-                        apiCall = crea.api.getDiscussionsByPopular;
-                        break;
-                    default:
-                        apiCall = crea.api['getDiscussionsBy' + category.capitalize()];
-                        break;
-                }
+                        case 'popular':
+                            apiCall = crea.api.getDiscussionsByPopular;
+                            break;
+                        default:
+                            apiCall = crea.api['getDiscussionsBy' + category.capitalize()];
+                            break;
+                    }
 
-                if (apiCall) {
-                    apiCall(lastPage.author, lastPage.permlink, discuss, 21, function (err, result) {
-                        if (err) {
-                            console.error(err);
-                        } else {
-                            //Get new accounts
-                            let discussions = result.discussions;
+                    if (apiCall) {
+                        apiCall(lastPage.author, lastPage.permlink, discuss, 21, function (err, result) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                //Get new accounts
+                                let discussions = result.discussions;
 
-                            //Remove first duplicate post
-                            discussions.shift();
-                            let topDiscussions = [];
-                            let accounts = [];
+                                //Remove first duplicate post
+                                discussions.shift();
+                                let topDiscussions = [];
+                                let accounts = [];
 
-                            let onAllReblogs = function () {
-                                getAccounts(accounts, function (err, newAccounts) {
-                                    if (!catchError(err)) {
-                                        //Update accounts
-                                        newAccounts.forEach(function (a) {
-                                            homePosts.state.accounts[a.name] = a;
-                                        }); //Update Posts
+                                let onAllReblogs = function () {
+                                    getAccounts(accounts, function (err, newAccounts) {
+                                        if (!catchError(err)) {
+                                            //Update accounts
+                                            newAccounts.forEach(function (a) {
+                                                homePosts.state.accounts[a.name] = a;
+                                            }); //Update Posts
 
-                                        let discuss = homePosts.discuss;
-                                        topDiscussions.forEach(function (d) {
-                                            let permlink = d.author + '/' + d.permlink;
-                                            homePosts.state.content[permlink] = d;
+                                            let discuss = homePosts.discuss;
+                                            topDiscussions.forEach(function (d) {
+                                                let permlink = d.author + '/' + d.permlink;
+                                                homePosts.state.content[permlink] = d;
 
-                                            homePosts.state.discussion_idx[discuss][category].push(permlink);
-                                        });
+                                                homePosts.state.discussion_idx[discuss][category].push(permlink);
+                                            });
 
-                                        homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
-                                        homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                                        lastPage = topDiscussions[topDiscussions.length - 1];
-                                        homePosts.$forceUpdate();
-                                        creaEvents.emit('navigation.state.update', homePosts.state);
+                                            homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
+                                            homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
+                                            lastPage = topDiscussions[topDiscussions.length - 1];
+                                            homePosts.$forceUpdate();
+                                            creaEvents.emit('navigation.state.update', homePosts.state);
+                                        }
+
+                                        onScrollCalling = false;
+                                    });
+                                };
+
+                                if (discussions.length) {
+                                    let discussionLinks = [];
+                                    let discussionsObj = {}
+
+                                    for (let x = 0; x < discussions.length; x++) {
+                                        let d = discussions[x];
+                                        d.index = x;
+
+                                        //Add account
+                                        if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
+                                            accounts.push(d.author);
+                                        }
+
+                                        //For /now discussions, check post active date
+                                        if (category === 'now') {
+                                            let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
+                                            let postPayoutDate = moment(d.last_payout, 'YYYY-MM-DDTHH:mm:ss');
+                                            if (postCreatedDate.isAfter(postPayoutDate)) {
+                                                //Post is active
+                                                topDiscussions.push(d);
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            topDiscussions.push(d);
+                                        }
+
+                                        let pl = `${d.author}/${d.permlink}`;
+                                        discussionLinks.push(pl);
+                                        discussionsObj[pl] = d;
+                                    }
+
+                                    let onReblogs = function (dr) {
+                                        let pl = `${dr.author}/${dr.permlink}`;
+                                        let d = discussionsObj[pl];
+                                        topDiscussions[d.index] = parsePost(d, dr.reblogged_by);
+                                    };
+
+                                    let commentsApi = new CommentsApi();
+                                    commentsApi.multipleComments(discussionLinks, function (err, result) {
+                                        if (!catchError(err)) {
+                                            result.forEach(dr => {
+                                                onReblogs(dr);
+                                            });
+
+                                            onAllReblogs();
+                                        }
+                                    })
+
+                                } else {
+                                    if (discuss) {
+                                        creaEvents.emit('crea.content.old');
                                     }
 
                                     onScrollCalling = false;
-                                });
-                            };
-
-                            if (discussions.length) {
-                                let discussionLinks = [];
-                                let discussionsObj = {}
-
-                                for (let x = 0; x < discussions.length; x++) {
-                                    let d = discussions[x];
-                                    d.index = x;
-
-                                    //Add account
-                                    if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                                        accounts.push(d.author);
-                                    }
-
-                                    //For /now discussions, check post active date
-                                    if (category === 'now') {
-                                        let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
-                                        let postPayoutDate = moment(d.last_payout, 'YYYY-MM-DDTHH:mm:ss');
-                                        if (postCreatedDate.isAfter(postPayoutDate)) {
-                                            //Post is active
-                                            topDiscussions.push(d);
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        topDiscussions.push(d);
-                                    }
-
-                                    let pl = `${d.author}/${d.permlink}`;
-                                    discussionLinks.push(pl);
-                                    discussionsObj[pl] = d;
                                 }
 
-                                let onReblogs = function (dr) {
-                                    let pl = `${dr.author}/${dr.permlink}`;
-                                    let d = discussionsObj[pl];
-                                    topDiscussions[d.index] = parsePost(d, dr.reblogged_by);
-                                };
-
-                                let commentsApi = new CommentsApi();
-                                commentsApi.multipleComments(discussionLinks, function (err, result) {
-                                    if (!catchError(err)) {
-                                        result.forEach(dr => {
-                                            onReblogs(dr);
-                                        });
-
-                                        onAllReblogs();
-                                    }
-                                })
-
-                            } else {
-                                if (discuss) {
-                                    creaEvents.emit('crea.content.old');
-                                }
-
-                                onScrollCalling = false;
                             }
+                        });
+                    }
+                } else {
+                    if (discuss) {
+                        creaEvents.emit('crea.content.old');
+                    }
 
-                        }
-                    });
+                    setTimeout(() => {
+                        onScrollCalling = false;
+                    }, 300)
+
                 }
             }
         }

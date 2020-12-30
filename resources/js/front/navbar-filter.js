@@ -164,12 +164,22 @@ import {catchError, parsePost, updateUrl} from "../common/common";
             let onResult = function (err, result) {
                 if (!catchError(err)) {
                     navbarFilter.oldApiCall = result;
-                    release();
 
-                    creaEvents.emit('crea.content.add', result.data, cleanContent);
-                } else {
-                    release();
+                    let accountNames = [];
+                    let discussion_idx = [];
+
+                    result.data.forEach(c => {
+                        if (!accountNames.includes(c.author)) {
+                            accountNames.push(c.author);
+                        }
+
+                        discussion_idx.push(`${c.author}/${c.permlink}`);
+                    })
+
+                    creaEvents.emit('crea.content.add', result.data, accountNames, discussion_idx, cleanContent);
                 }
+
+                release();
             };
 
             if (hasPrevQuery) {

@@ -1,4 +1,4 @@
-import {cancelEventPropagation, getParameterByName, jsonify} from "../lib/util";
+import {cancelEventPropagation, getParameterByName, getPathPart, isUserFeed, jsonify} from "../lib/util";
 import HttpClient from "../lib/http";
 import Avatar from "../components/Avatar";
 import {isInHome} from "../common/common";
@@ -14,12 +14,16 @@ import {AccountsApi, TagsApi} from "../lib/creary-api";
     let navbarSearch;
 
     function setUp() {
+        let search;
+        if (!isUserFeed()) {
+            search = getPathPart(null, 1);
+        }
         navbarSearch = new Vue({
             el: '#navbar-search',
             name: 'searcher',
             data: {
                 lang: lang,
-                search: getParameterByName('query'),
+                search: search,
                 limit: SEARCH_LIMIT,
                 accounts: {
                     http: null,
