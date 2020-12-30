@@ -20,6 +20,7 @@ const CATEGORIES = [
     'Costume Design',
     'Creative direction',
     'Cryptoart',
+    'Cyberpunk',
     'Design of products',
     'Designs of objects or accessories',
     'Designs with paper',
