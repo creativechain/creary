@@ -3,8 +3,10 @@ import HttpClient from '../lib/http';
 import Session from "../lib/session";
 import * as CREARY from "../common/ls";
 import { Asset } from '../lib/amount';
-import { clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
-    getNavigatorLanguage, uniqueId, cancelEventPropagation } from "../lib/util";
+import {
+    clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
+    getNavigatorLanguage, uniqueId, cancelEventPropagation, getPathPart
+} from "../lib/util";
 import Errors from "../lib/error";
 import { DEFAULT_ROLES } from "../lib/account";
 
@@ -180,7 +182,8 @@ function isInHome() {
         return true;
     }
 
-    return filters.includes(window.location.pathname);
+    let pathPart = '/' + getPathPart();
+    return filters.includes(pathPart);
 }
 
 function showModal(id) {
