@@ -73,7 +73,16 @@
 <div class="row mt-3 row-filter-select" style="display: none;">
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">{{ __('lang.FILTER.LICENSES') }}</span>
-        <div class="dropdown">
+        <div class="input-select select-filter">
+            <select v-model="license" v-on:change="onSelectLicense">
+                <option v-bind:value="null">{{ __('lang.FILTER.ALL') }}</option>
+                <option v-for="l in availableLicenses" v-bind:value="l.flag">
+                    @{{ l.name }}
+                </option>
+            </select>
+        </div>
+
+<!--        <div class="dropdown">
             <span class="dropdown__trigger filter"><i class="stack-down-open"></i> @{{ license ? license.name : lang.FILTER.ALL }} </span>
             <div class="dropdown__container">
                 <div class="container">
@@ -91,22 +100,29 @@
                                         @{{ l.name }}
                                     </a>
                                 </li>
-<!--                                <li>
+&lt;!&ndash;                                <li>
                                     <a href=""><img src="/img/icons/license/copyright.png" alt="">CopyRight</a>
                                 </li>
                                 <li><a href=""><img src="/img/icons/license/creativecommons.png" alt="">Creative Commons</a></li>
-                                <li><a href=""><img src="/img/icons/license/freecontent.png" alt="">Free Content</a></li>-->
+                                <li><a href=""><img src="/img/icons/license/freecontent.png" alt="">Free Content</a></li>&ndash;&gt;
                             </ul>
                         </div>
-                    </div><!--end row-->
-                </div><!--end container-->
-            </div><!--end dropdown container-->
-        </div>
+                    </div>&lt;!&ndash;end row&ndash;&gt;
+                </div>&lt;!&ndash;end container&ndash;&gt;
+            </div>&lt;!&ndash;end dropdown container&ndash;&gt;
+        </div>-->
     </div>
 
     <div class="col-12 col-md-6 mt-3 mt-md-0">
         <span class="font-weight-bold">{{ __('lang.FILTER.DOWNLOADS') }}</span>
-        <div class="dropdown">
+        <div class="input-select select-filter">
+            <select v-model="download" v-on:change="onSelectDownload">
+                <option v-bind:value="null" >{{ __('lang.FILTER.ALL') }}</option>
+                <option value="free" >{{ __('lang.FILTER.FREE_DOWNLOADS') }}</option>
+                <option value="paid" >{{ __('lang.FILTER.PAYMENT_DOWNLOADS') }}</option>
+            </select>
+        </div>
+<!--        <div class="dropdown">
             <span class="dropdown__trigger filter">@{{ download ? download : lang.FILTER.ALL }} <i class="stack-down-open"></i></span>
             <div class="dropdown__container">
                 <div class="container">
@@ -118,9 +134,9 @@
                                 <li><a href="" v-on:click="onSelectDownload($event, 'paid')">{{ __('lang.FILTER.PAYMENT_DOWNLOADS') }}</a></li>
                             </ul>
                         </div>
-                    </div><!--end row-->
-                </div><!--end container-->
-            </div><!--end dropdown container-->
-        </div>
+                    </div>&lt;!&ndash;end row&ndash;&gt;
+                </div>&lt;!&ndash;end container&ndash;&gt;
+            </div>&lt;!&ndash;end dropdown container&ndash;&gt;
+        </div>-->
     </div>
 </div>

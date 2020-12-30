@@ -79,25 +79,22 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                             this.resetContentFilters();
                         }
                     },
-                    onSelectLicense: function (event, license) {
-                        console.log('selecting license', license, this.license);
-                        cancelEventPropagation(event);
-                        if (license !== this.license) {
-                            this.license = license;
-                            this.oldApiCall = null;
-                            this.needResetContent = true;
-                            this.loadContent();
-                        }
-                    },
-                    onSelectDownload: function (event, download) {
-                        cancelEventPropagation(event);
+                    onSelectLicense: function (event) {
+                        //cancelEventPropagation(event);
+                        //console.log('selecting license', event);
 
-                        if (download !== this.download) {
-                            this.download = download;
-                            this.oldApiCall = null;
-                            this.needResetContent = true;
-                            this.loadContent();
-                        }
+                        //this.license = license;
+                        this.oldApiCall = null;
+                        this.needResetContent = true;
+                        this.loadContent();
+                    },
+                    onSelectDownload: function (event) {
+                        //cancelEventPropagation(event);
+                        //console.log('Download selected', event);
+
+                        this.oldApiCall = null;
+                        this.needResetContent = true;
+                        this.loadContent();
 
                     },
                     resetContentFilters() {
