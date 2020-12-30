@@ -31,7 +31,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                 methods: {
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
-                    loadButtonFilterToggle: loadButtonFilterToggle,
+                    closeCategoryDropdown: closeCategoryDropdown,
                     linkForTag: function (tag) {
                         let link = '';
                         if (!['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
@@ -67,6 +67,8 @@ import {catchError, parsePost, updateUrl} from "../common/common";
 
                             this.resetContentFilters();
                         }
+
+                        this.closeCategoryDropdown();
                     },
                     onSelectDiscuss: function (event, discuss) {
                         cancelEventPropagation(event);
@@ -302,6 +304,14 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         $('.button-filter').on('click', function(){
             $('.row-filter-select').fadeToggle('show');
         });
+    }
+
+    function closeCategoryDropdown() {
+        setTimeout( () => {
+            $('#category-select').removeClass('dropdown--active');
+            console.log('Closing dropdown');
+        }, 100);
+
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
