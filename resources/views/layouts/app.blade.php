@@ -214,7 +214,7 @@
 <!-- search mobile -->
 <div v-cloak id="navbar-search-mobile" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
      data-notification-link="search-box">
-    <form v-on:submit="performSearch">
+    <form v-on:submit="performSearch" autocomplete="off">
         <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
                 <input v-model="search" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
