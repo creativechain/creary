@@ -56,7 +56,7 @@
         </div>
 
     </div>
-    <div class="col-6 col-md-2 text-right order-1 order-md-2">
+    <div v-if="isUserFeed()" class="col-6 col-md-2 text-right order-1 order-md-2">
         <a href="#" class="btn btn--sm button-filter" value="show/hide">
             <svg xmlns="http://www.w3.org/2000/svg" width="13.458" height="8.145" viewBox="0 0 13.458 8.145" class="mr-2">
                 <g id="Grupo_9843" data-name="Grupo 9843" transform="translate(-327.801 -77.38)">
@@ -70,7 +70,7 @@
     </div>
 </div>
 
-<div class="row mt-3 row-filter-select" style="display: none;">
+<div v-if="isUserFeed()" class="row mt-3 row-filter-select" style="display: none;">
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">{{ __('lang.FILTER.LICENSES') }}</span>
         <div class="input-select select-filter">

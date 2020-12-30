@@ -31,6 +31,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                 methods: {
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
+                    loadButtonFilterToggle: loadButtonFilterToggle,
                     linkForTag: function (tag) {
                         let link = '';
                         if (!['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
@@ -208,6 +209,8 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         crea.api.getState(urlFilter, function (err, urlState) {
             if (!catchError(err)) {
                 if (isUserFeed()) {
+                    loadButtonFilterToggle();
+
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
@@ -295,6 +298,12 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         }, 1e3);
     }
 
+    function loadButtonFilterToggle() {
+        $('.button-filter').on('click', function(){
+            $('.row-filter-select').fadeToggle('show');
+        });
+    }
+
     creaEvents.on('crea.session.login', function (s, a) {
         preSetup(s, a);
     });
@@ -328,8 +337,6 @@ import {catchError, parsePost, updateUrl} from "../common/common";
     });
 
     creaEvents.on('crea.dom.ready', function () {
-        $('.button-filter').on('click', function(){
-            $('.row-filter-select').fadeToggle('show');
-        });
+        loadButtonFilterToggle();
     })
 })();
