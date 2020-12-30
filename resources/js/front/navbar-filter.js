@@ -99,7 +99,7 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                     },
                     resetContentFilters() {
                         this.license = null;
-                        this.downloads = null;
+                        this.download = null;
                         this.oldApiCall = null;
                         this.needResetContent = true;
                         this.loadContent();
