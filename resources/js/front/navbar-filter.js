@@ -31,6 +31,17 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                 methods: {
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
+                    linkForTag: function (tag) {
+                        let link = '';
+                        if (!['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
+                            link += '/popular';
+                        } else {
+                            link += '/' + this.category;
+                        }
+
+                        link += '/' + tag.name;
+                        return link;
+                    },
                     getParams: function () {
                         return {
                             search: this.isUserFeed() ? null : this.discuss,
@@ -60,6 +71,10 @@ import {catchError, parsePost, updateUrl} from "../common/common";
                         cancelEventPropagation(event);
 
                         if (discuss !== this.discuss) {
+                            if (this.isUserFeed()) {
+                                this.category = 'popular';
+                            }
+
                             this.discuss = discuss;
                             this.resetContentFilters();
                         }

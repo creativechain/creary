@@ -43,7 +43,7 @@
                             <li v-for="t in discussions">
                                 <a class="text-capitalize"
                                    v-bind:class="{ active: discuss === t.name }"
-                                   v-bind:href="'/' + category + '/' + t.name"
+                                   v-bind:href="linkForTag(t)"
                                    v-on:click="onSelectDiscuss($event, t.name)">
                                     @{{ t.name }}
                                 </a>
