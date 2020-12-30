@@ -83,24 +83,33 @@
                 <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                        <input type="number" v-model="mainBeneficiary.weight" name="input" placeholder="0" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        <input type="number" v-model="mainBeneficiary.weight" name="account" placeholder="0" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
                     </div>
 
                     <div class="input-icon">
                         <i class="material-icons email">alternate_email</i>
-                        <input type="text" v-model="mainBeneficiary.account" name="input" disabled class="disabled"/>
+                        <input type="text" v-model="mainBeneficiary.account" name="weight" disabled class="disabled"/>
                     </div>
                 </div>
 
                 <template v-for="b in Object.keys(beneficiaries)">
                     <div v-if="b !== null" class="d-flex mb-3" >
                         <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
-                            <input type="number" v-model="beneficiaries[b].weight" v-on:input="updateBeneficiariesWeight" name="input" placeholder="0" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                            <input type="number"
+                                   autocomplete="off"
+                                   v-model="beneficiaries[b].weight"
+                                   v-on:input="updateBeneficiariesWeight"
+                                   v-bind:name="'weight' + b"
+                                   placeholder="0" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
                         </div>
 
                         <div class="input-icon">
                             <i class="material-icons email">alternate_email</i>
-                            <input type="text" v-model="beneficiaries[b].account" name="input" placeholder="" />
+                            <input type="text"
+                                   autocomplete="off"
+                                   v-model="beneficiaries[b].account"
+                                   v-bind:name="'account' + b"
+                                   placeholder="" />
                         </div>
                         <div class="input-icon cursor-link">
                             <a href="" v-on:click="deleteBeneficiary($event, b)" class="close"><i class="material-icons email">close</i></a>
