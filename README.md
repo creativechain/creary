@@ -19,7 +19,7 @@ npm install
 
 ## Daily workflow
 
--   Create/copy the `.env` file in your root and include the secrets
+-   Create/copy the `.env` file in the root folder and include the secrets
 -   Start the development server, running the following command `php artisan serve`, by default is used the port 8000
 -   For compile styles and views, run `npm run dev`. For a more easy workflow during development also you can run `npm run watch` for check instantly the changes.
 
