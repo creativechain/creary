@@ -1,8 +1,12 @@
 ## SOME REQUIREMENTs
 
 ### Passport (Oauth)
+### SOME REQUIREMENTs
 
-- Installation:
+#### Passport (Oauth)
+
+-   Installation:
+
 ```bash
 composer require laravel/passport
 php artisan migrate
@@ -10,25 +14,30 @@ php artisan passport:install
 php artisan passport:keys
 ```
 
-- Issuing Client Credentials
-    - Normal:
-    ```
-    php artisan passport:client
-    ```
-    
-    - Grant Type Password
-    ```
-    php artisan passport:client --password
-    ```
-    
-    - Personal
-    ```
-    php artisan passport:client --personal
-    ```
-    
-### Search Engine with Scout
+-   Issuing Client Credentials
 
-- Installation
+    -   Normal:
+
+                ```
+                php artisan passport:client
+                ```
+
+    -   Grant Type Password
+
+                ```bash
+                php artisan passport:client --password
+                ```
+
+    -   Personal
+
+                ```bash
+                php artisan passport:client --personal
+                ```
+
+#### Search Engine with Scout
+
+-   Installation
+
 ```bash
 composer require laravel/scout
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
@@ -36,7 +45,8 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 
 ```
 
-- Add Searcheable to your models
+-   Add Searcheable to your models
+
 ```php
 <?php
 
@@ -58,7 +68,7 @@ class Post extends Model
     {
         return 'posts_index';
     }
-    
+
     /**
      * Get the indexable data array for the model.
      *
@@ -72,7 +82,6 @@ class Post extends Model
 
         return $array;
     }
-    
 
     /**
      * Get the value used to index the model.
@@ -82,6 +91,6 @@ class Post extends Model
     public function getScoutKey()
     {
         return $this->email;
-    }    
+    }
 }
 ```
