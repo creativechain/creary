@@ -757,8 +757,14 @@ import { CommentsApi } from "../lib/creary-api";
         if (!onScrollCalling) {
             onScrollCalling = true;
 
+            let category = getPathPart();
             if (isUserFeed()) {
                 creaEvents.emit("crea.content.load");
+                setTimeout(function () {
+                    onScrollCalling = false;
+                }, 1e3);
+            } else if (category === "search") {
+                creaEvents.emit("crea.content.old");
                 setTimeout(function () {
                     onScrollCalling = false;
                 }, 1e3);
