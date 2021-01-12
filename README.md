@@ -1,8 +1,34 @@
-## SOME REQUIREMENTs
+# Creary
 
-### Passport (Oauth)
+## First steps
 
-- Installation:
+Recommended versions:
+
+-   PHP: 7.3 or superior
+-   Composer: 2.0.8
+-   Node: 12
+
+The project uses PHP extensions for MySQL and MongoDB, before installing the dependencies check first if you have activated the extensions on the `php.ini` file.
+
+For install all the dependencies run the following scripts:
+
+```bash
+composer install
+npm install
+```
+
+## Daily workflow
+
+-   Create/copy the `.env` file in the root folder and include the secrets
+-   Start the development server, running the following command `php artisan serve`, by default is used the port 8000
+-   For compile styles and views, run `npm run dev`. For a more easy workflow during development also you can run `npm run watch` for check instantly the changes.
+
+### SOME REQUIREMENTs
+
+#### Passport (Oauth)
+
+-   Installation:
+
 ```bash
 composer require laravel/passport
 php artisan migrate
@@ -10,25 +36,30 @@ php artisan passport:install
 php artisan passport:keys
 ```
 
-- Issuing Client Credentials
-    - Normal:
-    ```
-    php artisan passport:client
-    ```
-    
-    - Grant Type Password
-    ```
-    php artisan passport:client --password
-    ```
-    
-    - Personal
-    ```
-    php artisan passport:client --personal
-    ```
-    
-### Search Engine with Scout
+-   Issuing Client Credentials
 
-- Installation
+    -   Normal:
+
+                ```
+                php artisan passport:client
+                ```
+
+    -   Grant Type Password
+
+                ```bash
+                php artisan passport:client --password
+                ```
+
+    -   Personal
+
+                ```bash
+                php artisan passport:client --personal
+                ```
+
+#### Search Engine with Scout
+
+-   Installation
+
 ```bash
 composer require laravel/scout
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
@@ -36,7 +67,8 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 
 ```
 
-- Add Searcheable to your models
+-   Add Searcheable to your models
+
 ```php
 <?php
 
@@ -58,7 +90,7 @@ class Post extends Model
     {
         return 'posts_index';
     }
-    
+
     /**
      * Get the indexable data array for the model.
      *
@@ -72,7 +104,6 @@ class Post extends Model
 
         return $array;
     }
-    
 
     /**
      * Get the value used to index the model.
@@ -82,6 +113,6 @@ class Post extends Model
     public function getScoutKey()
     {
         return $this->email;
-    }    
+    }
 }
 ```
