@@ -76,11 +76,11 @@
     <script>
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
         window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/es/lang.json') !!};
+        window.search_api = "{{ env('CREA_SEARCH_API_URL') }}"
     </script>
 
     {{--PRELOAD SCRIPTS - SEO IMPROVEMENTS--}}
     <link rel="preload" href="{{ asset('js/control/start.js') }}" as="script">
-    <link rel="preload" href="{{ asset('js/ui/tagsinput.js') }}" as="script">
 
     {{--FOOTER PRELOADS--}}
     <link rel="preload" href="{{ asset('js/ui/flickity.js') }}" as="script">
@@ -98,7 +98,6 @@
     {{--END PRELOADS--}}
 
     <script src="{{ asset('js/control/start.js') }}"></script>
-    <script src="{{ asset('js/ui/tagsinput.js') }}"></script>
 </head>
 
 <body id="body" class=" " >
