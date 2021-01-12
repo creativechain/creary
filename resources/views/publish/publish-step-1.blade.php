@@ -121,7 +121,7 @@
             <div class="mt-4">
                 <div class="col-md-12">
                     <p class="disabled mb-0">
-                        @{{ String.format(lang.PUBLISH.IMAGE_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.IMAGE)) }},
+                        @{{ String.format(lang.PUBLISH.IMAGE_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.IMAGE), humanFileSize(10 * 1024 * 1024)) }},
                         @{{ String.format(lang.PUBLISH.AUDIO_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.AUDIO)) }},
                         @{{ String.format(lang.PUBLISH.VIDEO_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.VIDEO)) }}
                     </p>
