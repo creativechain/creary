@@ -34,24 +34,35 @@
         <div class="container">
             <div class="row">
                 <div class="col" >
-                    <div class="slider slider--inline-arrows slider--arrows-hover text-center" data-arrows="true" data-autoplay="false">
-                        <ul class="slides">
-                            <li></li>
-                            <li v-bind:class="{ active: !discuss }">
+                    <div class="filter-category">
+                        <div class="actions action-prev -hide">
+                            <a href="#">
+                                <svg class="action-icon" viewBox="0 0 100 100">
+                                    <path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="actions action-next -hide">
+                            <a href="#">
+                                <svg class="action-icon" viewBox="0 0 100 100">
+                                    <path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" transform="translate(100, 100) rotate(180) "></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <ul class="filter-list">
+                            <li v-bind:class="{ active: !discuss }" class="category">
                                 <a v-bind:href="'/' + category" >{{ __('lang.FILTER.ALL') }}</a>
                             </li>
-                            <li v-for="t in discussions">
-                                <a class="text-capitalize"
-                                   v-bind:class="{ active: discuss === t.name }"
-                                   v-bind:href="linkForTag(t)"
-                                   v-on:click="onSelectDiscuss($event, t.name)">
+                            <li v-for="t in discussions" class="category" v-bind:class="{ active: discuss === t.name }">
+                                <a  class="text-capitalize"
+                                    v-bind:href="linkForTag(t)"
+                                    v-on:click="onSelectDiscuss($event, t.name)">
                                     @{{ t.name }}
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <!--end of col-->
             </div>
         </div>
 

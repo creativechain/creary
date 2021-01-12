@@ -3,7 +3,7 @@ import {LICENSE} from "../lib/license";
 import * as mutexify from 'mutexify';
 import {CommentsApi, TagsApi} from "../lib/creary-api";
 import {catchError, parsePost, updateUrl} from "../common/common";
-
+import {categorySlider} from './category-slider';
 
 (function () {
     let oldApiCallLock = mutexify();
@@ -132,7 +132,8 @@ import {catchError, parsePost, updateUrl} from "../common/common";
 
             }
 
-            loadSlider();
+            
+            loadCategorySlider();
         });
     }
 
@@ -292,11 +293,13 @@ import {catchError, parsePost, updateUrl} from "../common/common";
         });
     }
 
-    function loadSlider() {
+    function loadCategorySlider() {
         setTimeout(function () {
-            console.log('loading slider');
+            console.log('Loading category slider');
             mr.sliders.documentReady($);
             navbarFilter.discussReady = true;
+            
+            categorySlider().init();
         }, 1e3);
     }
 
