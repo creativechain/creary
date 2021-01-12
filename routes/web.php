@@ -32,7 +32,7 @@ Route::get('/{category}', 'CrearyController@home')
     ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$');
 
 Route::get('/{category}/{tag}', 'CrearyController@home')
-    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$')
+    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active|search)$')
     ->where('tag', '^([\w\d\-\/]+)$');
 
 Route::get('/{user}', 'CrearyController@profile')
