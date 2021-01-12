@@ -17,6 +17,7 @@ moment.locale($('html').attr('lang'));
 window.apiOptions = {
     nodes: ['https://nodes.creary.net'],
     apiUrl: 'https://api.creary.net',
+    apiCrea: (window.search_api.length > 0 ? window.search_api : `${location.protocol}//${location.host}`) + '/~api',
     ipfs: 'https://ipfs.creary.net/ipfs/',
     ipfsd: 'https://api.creary.net/ipfs',
     addressPrefix: 'CREA',
@@ -171,7 +172,7 @@ window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-tes
 window.currentPage = null;
 
 creaEvents.on('crea.content.prepare', function () {
-    console.log('Content prepare on start');
+    //console.log('Content prepare on start');
     Vue.use(VueLazyload);
 
     try {

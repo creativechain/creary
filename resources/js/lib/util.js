@@ -51,6 +51,23 @@ function jsonstring(obj) {
     return obj;
 }
 
+/**
+ *
+ * @param obj
+ * @returns {*}
+ */
+function clean(obj) {
+    if (obj) {
+        for (let prop in obj) {
+            if (obj[prop] === null || obj[prop] === undefined) {
+                delete obj[prop];
+            }
+        }
+    }
+
+    return obj;
+}
+
 function validateEmail(email) {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -146,10 +163,10 @@ function humanFileSize(size) {
 
 /**
  *
- * @param {string} username
+ * @param {string|null} username
  * @returns {boolean}
  */
-function isUserFeed(username) {
+function isUserFeed(username = null) {
     let path = currentPage ? currentPage.pathname : window.location.pathname;
     let regexp = '(\/@[a-zA-Z0-9]+\/feed)';
 
@@ -180,12 +197,11 @@ function toUrl(web) {
 
 /**
  *
- * @param {string} path
+ * @param {string|null} path
  * @param {number} index
  * @returns {string}
  */
-function getPathPart(path, index) {
-    index = index !== undefined ? index : 0;
+function getPathPart(path= null, index = 0) {
     path = path || (currentPage ? currentPage.pathname : null) || window.location.pathname;
     let parts = path.split('/');
     parts.splice(0, 1);
@@ -372,7 +388,7 @@ function makeMentions(comment, state) {
 }
 
 export {
-    cancelEventPropagation, isJSON, jsonify, jsonstring, validateEmail, getParameterByName, toPermalink, createAuth,
+    cancelEventPropagation, isJSON, jsonify, jsonstring, clean, validateEmail, getParameterByName, toPermalink, createAuth,
     copyToClipboard, randomNumber, toLocaleDate, clone, humanFileSize, isUserFeed, toUrl, getPathPart,
     getNavigatorLanguage, cleanArray, isSmallScreen, removeEmojis, NaNOr, isEqual, mixToArray, normalizeTag, linkfy,
     uniqueId, makeMentions

@@ -10,12 +10,12 @@ import HttpClient from "../lib/http";
 (function () {
 
     window.addEventListener('load', function (ev) {
-        console.log("Resources loaded");
+        //console.log("Resources loaded");
         window.creaEvents.emit('crea.content.loaded');
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("DOM loaded");
+        //console.log("DOM loaded");
         window.creaEvents.emit('crea.content.prepare');
 
         let session = Session.getAlive();
@@ -36,7 +36,7 @@ import HttpClient from "../lib/http";
                         --count;
 
                         if (count === 0) {
-                            console.log('Emitting session')
+                            //console.log('Emitting session')
                             creaEvents.emit('crea.session.login', session, account);
                         }
                     };
@@ -70,7 +70,7 @@ import HttpClient from "../lib/http";
     });
 
     function updateCookies(session, account) {
-        console.log('Cookie session', session, account);
+        //console.log('Cookie session', session, account);
         if (session) {
             CreaCookies.set('creary.username', session.account.username, { expires: 365 });
         } else {
@@ -97,7 +97,7 @@ import HttpClient from "../lib/http";
             let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
                 unreadNotifications =  JSON.parse(data);
-                console.log('Notifications', unreadNotifications);
+                //console.log('Notifications', unreadNotifications);
 
                 //creaEvents.emit('crea.notifications.all', notifications);
                 creaEvents.emit('crea.notifications.unread', unreadNotifications);
@@ -121,7 +121,7 @@ import HttpClient from "../lib/http";
             let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
                 allNotifications =  JSON.parse(data);
-                console.log('Notifications', allNotifications);
+                //console.log('Notifications', allNotifications);
 
                 creaEvents.emit('crea.notifications.all', allNotifications);
                 //creaEvents.emit('crea.notifications.unread', unread);
@@ -170,7 +170,7 @@ import HttpClient from "../lib/http";
     });
 
     creaEvents.on('crea.dom.ready', function () {
-        console.log('DOM ready received');
+        //console.log('DOM ready received');
         $.holdReady(false);
         $(window).scroll(function (event) {
             let scrollHeight = $(document).height();

@@ -337,7 +337,7 @@ import Autocomplete from "../components/Autocomplete";
     }
 
     creaEvents.on('crea.content.loaded', function () {
-        console.log('Content loaded!');
+        //console.log('Content loaded!');
         setUp();
 
         let token = getParameterByName('token');

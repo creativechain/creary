@@ -6,21 +6,21 @@
             @include('modules.banner')
         </div>
 
-        <section class="cta cta-4 space--xxs border--bottom d-none d-md-block navbar-filter">
-            <div class="container post-container-home">
-                <div class="row align-items-end">
-                    @include('modules.navbar-filter-home')
-                </div>
+        <section v-pre class="cta cta-4 space--xxs border--bottom navbar-filter">
+            <div v-cloak id="navbar-filter" class="container post-container-home">
+                @include('modules.navbar-filter-home')
             </div>
+            <script src="{{ asset('js/control/navbar-filter.js') }}"></script>
+
         </section>
 
-        <section v-cloak id="navbar-mobile" class="cta cta-4 space--xxs border--bottom d-block d-sm-block d-md-none navbar-filter mobile">
+        <!--<section v-cloak id="navbar-mobile" class="cta cta-4 space--xxs border--bottom d-block d-sm-block d-md-none navbar-filter mobile">
             <div class="container post-container-home">
                 <div class="row align-items-end">
                     <div class="col-md-12 text-center">
                         <ul class="list-inline navbar-followin-home">
                             <li class="list-inline-item" v-if="session" v-bind:class="{'active': isUserFeed()}">
-                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
+                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FEED') }}</a>
                             </li>
                             <li class="list-inline-item" v-bind:class="{'active': nav === 'popular'}">
                                 <a href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>
@@ -38,8 +38,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-        <script src="{{ asset('js/control/navbar-mobile.js') }}"></script>
+        </section>-->
+        {{--<script src="{{ asset('js/control/navbar-mobile.js') }}"></script>--}}
 
         <div v-cloak id="home-posts">
             <section v-if="state.discussion_idx[discuss][category].length > 0" class="pt-4">
@@ -72,7 +72,7 @@
                 </section>
             </div>
 
-            <div v-else-if="discuss === 'feed' && state.discussion_idx[discuss][category].length === 0" class="view-empty">
+            <div v-else-if="!cleaningContent && discuss === 'feed' && state.discussion_idx[discuss][category].length === 0" class="view-empty">
                 <section class="height-60 bg--light text-center">
                     <div class="container pos-vertical-center">
                         <div class="row align-items-center">

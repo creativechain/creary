@@ -49,42 +49,105 @@
         </div>
 
         <form action="" class="row">
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
-                    <input v-model="title" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.TITLE" v-on:input="removeTitleEmojis"
-                           class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TITLE') }}" />
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
+                <input v-model="title" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.TITLE" v-on:input="removeTitleEmojis"
+                       class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TITLE') }}" />
+            </div>
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
+                <input v-model="description" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.DESCRIPTION" v-on:input="removeDescriptionEmojis"
+                       class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_DESCRIPTION') }}" />
+            </div>
+
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.MAIN_CATEGORY') }}</label>
+                <div class="input-select">
+                    <select v-model="mainCategory">
+                        <option value="">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
+                        <option v-for="c in selectableCategories" v-bind:value="c.tag">
+                            @{{ c.text }}
+                        </option>
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
-                    <input v-model="description" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.DESCRIPTION" v-on:input="removeDescriptionEmojis"
-                           class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_DESCRIPTION') }}" />
-                </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
-                    <input id="publish-tags" class="validate-required"
-                           type="text" value="" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TAGS') }}" />
-                </div>
-                <div class="col-md-12">
-                    <label>{{ __('lang.PUBLISH.QUESTION') }}</label>
-                    <div class="input-radio-step-2">
-                        <div class="input-radio">
-                            <span class="input__label">{{ __('lang.COMMON.YES') }}</span>
-                            <input id="radio-1" type="radio" name="adult" v-model="adult" v-bind:value="true" />
-                            <label for="radio-1"></label>
-                        </div>
-                        <div class="input-radio">
-                            <span class="input__label">{{ __('lang.COMMON.NO') }}</span>
-                            <input id="radio-2" type="radio" name="adult" v-model="adult" v-bind:value="false"/>
-                            <label for="radio-2"></label>
-                        </div>
+
+            </div>
+
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
+                <input id="publish-tags" class="validate-required"
+                       type="text" value="" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TAGS') }}" />
+            </div>
+
+            <div class="col-md-12">
+                <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
+                <div class="d-flex mb-3">
+                    <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
+                        <input type="number" v-model="mainBeneficiary.weight" name="account" placeholder="0" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                    </div>
+
+                    <div class="input-icon">
+                        <i class="material-icons email">alternate_email</i>
+                        <input type="text" v-model="mainBeneficiary.account" name="weight" disabled class="disabled"/>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <p class="error-color-form">
-                        @{{ error || "" }}
-                    </p>
+
+                <template v-for="b in Object.keys(beneficiaries)">
+                    <div v-if="b !== null" class="d-flex mb-3" >
+                        <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
+                            <input type="number"
+                                   autocomplete="off"
+                                   v-model="beneficiaries[b].weight"
+                                   v-on:input="updateBeneficiariesWeight"
+                                   v-bind:name="'weight' + b"
+                                   placeholder="0" class="text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
+                        </div>
+
+                        <div class="input-icon">
+                            <i class="material-icons email">alternate_email</i>
+                            <input type="text"
+                                   autocomplete="off"
+                                   v-model="beneficiaries[b].account"
+                                   v-bind:name="'account' + b"
+                                   placeholder="" />
+                        </div>
+                        <div class="input-icon cursor-link">
+                            <a href="" v-on:click="deleteBeneficiary($event, b)" class="close"><i class="material-icons email">close</i></a>
+                        </div>
+                    </div>
+                </template>
+
+
+                <div class="btn btn--sm" v-on:click="addBeneficiary">
+                    <span class="btn__text text__dark">{{ __('lang.PUBLISH.ADD_BENEFICIARY') }}</span>
                 </div>
-            </form>
+            </div>
+
+
+
+
+
+            <div class="col-md-12">
+                <label>{{ __('lang.PUBLISH.QUESTION') }}</label>
+                <div class="input-radio-step-2">
+                    <div class="input-radio">
+                        <span class="input__label">{{ __('lang.COMMON.YES') }}</span>
+                        <input id="radio-1" type="radio" name="adult" v-model="adult" v-bind:value="true" />
+                        <label for="radio-1"></label>
+                    </div>
+                    <div class="input-radio">
+                        <span class="input__label">{{ __('lang.COMMON.NO') }}</span>
+                        <input id="radio-2" type="radio" name="adult" v-model="adult" v-bind:value="false"/>
+                        <label for="radio-2"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <p class="error-color-form">
+                    @{{ error || "" }}
+                </p>
+            </div>
+        </form>
     </div>
 </div>
 

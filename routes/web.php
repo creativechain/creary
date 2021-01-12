@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'CrearyController@home')->name('home');
 
 Route::get('/search', 'CrearyController@search')->name('search');
+Route::get('/accounts/search', 'CrearyController@accountsSearch')->name('accounts.search');
 Route::get('/welcome', 'CrearyController@welcome')->name('welcome');
 Route::get('/validate', 'CrearyController@welcome')->name('validate');
 Route::get('/~witness', 'CrearyController@witnesses')->name('witnesses');
@@ -31,7 +32,7 @@ Route::get('/{category}', 'CrearyController@home')
     ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$');
 
 Route::get('/{category}/{tag}', 'CrearyController@home')
-    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$')
+    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active|search)$')
     ->where('tag', '^([\w\d\-\/]+)$');
 
 Route::get('/{user}', 'CrearyController@profile')

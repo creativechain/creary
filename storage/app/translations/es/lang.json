@@ -165,7 +165,8 @@
         "RECOMMEND_MORE": "y %s más",
         "BLOCKED_USER_ALERT_TITLE": "¡Atención!",
         "BLOCKED_USER_ALERT_MESSAGE": "Este usuario ha sido reportado por muchos usuarios de buena reputación de nuestra comunidad. Existen diferentes razones para reportar a los usuarios:\n                                Suplantación de identidad, incumplimiento de copyright, spam, fraude u otros comportamientos considerados maliciosos o negativos para la comunidad.",
-        "BLOCKED_PROFILE_ALERT_MESSAGE": "Este perfil ha recibido alguna denuncia de suplantación de identidad o infracción de derechos de autor. Para activar la visualización de los proyectos contacta con legal@creary.net."
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "Este perfil ha recibido alguna denuncia de suplantación de identidad o infracción de derechos de autor. Para activar la visualización de los proyectos contacta con legal@creary.net.",
+        "BENEFICIARIES": "BENEFICIARIOS"
     },
     "PROFILE_MENU": {
         "LOGOUT": "Cerrar sesión",
@@ -346,8 +347,16 @@
         "NO_TITLE_TAG_OR_IMAGE": "Debes añadir una imagen destacada, un título y una etiqueta como mínimo",
         "RELOAD_DOWNLOAD_FILE": "Es necesario volver a cargar el archivo de descarga:",
         "PUBLISH_NOT_AVAILABLE_TITLE": "Publicaciones en Mantenimiento",
-        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "En estos momentos las publicaciones se encuentra en mantenimiento. Podras volver a publicar tus obras muy pronto."
-
+        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "En estos momentos las publicaciones se encuentra en mantenimiento. Podras volver a publicar tus obras muy pronto.",
+        "ADD_VIDEO": "Añadir video",
+        "VIDEO_SUPPORT": "(Youtube, Vimeo)",
+        "MAIN_CATEGORY": "CATEGORÍA PRINCIPAL",
+        "SELECT_A_CATEGORY": "Selecciona una categoría de la lista",
+        "BENEFICIARIES": "BENEFICIARIOS",
+        "ADD_BENEFICIARY": "Añadir beneficiario",
+        "NO_BENEFICIARY_FILLED": "Por favor, rellena correctamente todos los beneficiarios añadidos",
+        "MAX_BENEFICIARIES_REACHED": "Solo se pueden añadir hasta %s como máximo",
+        "BENEFICIARY_WEIGHT_OVERFLOW": "La suma del porcentaje de todos los beneficiarios no puede exceder de 100."
     },
     "WITNESS": {
         "WITNESSES": "TESTIGOS",
@@ -503,27 +512,43 @@
     },
     "FAQS": {"FAQ_TITLE": "Preguntas Frecuentes"},
     "HOME": {
+        "MENU_FEED": "Siguiendo",
+        "MENU_POPULAR": "Popular",
+        "MENU_NOW": "Ahora",
+        "MENU_PROMOTED": "Promocionado",
+        "MENU_SKYROCKETS": "Skyrockets",
+        "MENU_FILTER_ALL": "Todo",
         "DROPDOWN_USER_PROFILE_PROJECTS": "Proyectos",
         "DROPDOWN_USER_PROFILE_POSTS": "Publicaciones",
         "DROPDOWN_USER_PROFILE_LIKES": "Likes",
         "DROPDOWN_USER_PROFILE_FOLLOWERS": "Seguidores",
-        "MENU_POPULAR": "Popular",
         "SECONDARY_TOP_MENU_ALL_LICENSES": "Todas las licencias",
-        "MENU_FOLLOWING": "Siguiendo",
         "DROPDOWN_USER_PROFILE_FOLLOWING": "Siguiendo",
         "SEARCH_ACTIVE": "Buscar",
-        "MENU_NOW": "Ahora",
-        "MENU_PROMOTED": "Promocionado",
         "DROPDOWN_PENDING_PAYOUT": "Pagos pendientes",
         "DROPDOWN_PAST_PAYOUT": "Pagos anteriores",
         "DROPDOWN_REFUSED_PAYOUT": "Pagos rechazados",
-        "MENU_SKYROCKETS": "Skyrockets",
         "MENU_LOGIN": "Iniciar sesión",
         "EMPTY_TITLE": "Bienvenido a tu sección destacada de usuarios a los que sigues.",
         "EMPTY_SUBTITLE": "Sigue a gente con gustos similares al tuyo para ver qué ideas nuevas y originales descubren.",
         "PROMOTION_COST": "Coste de promoción",
         "NO_SEARCH_RESULTS_1": "Tu búsqueda no tiene resultados",
         "NO_SEARCH_RESULTS_2": "Revisa si hay fallos de escritura o prueba con otros términos de búsqueda."
+    },
+    "FILTER": {
+        "FILTER": "Filtro",
+        "ALL": "Todo",
+        "FEED": "Siguiendo",
+        "POPULAR": "Popular",
+        "NOW": "Ahora",
+        "PROMOTED": "Promocionado",
+        "SKYROCKETS": "Skyrockets",
+        "LICENSES": "Licencias",
+        "SELECT_LICENSES": "Selecciona Licencia",
+        "DOWNLOADS": "Descargas",
+        "SELECT_DOWNLOADS": "Selecciona descargas",
+        "FREE_DOWNLOADS": "Descargas gratuitas",
+        "PAYMENT_DOWNLOADS": "Descargas de pago"
     },
     "NOTIFICATIONS": {
         "TITLE" : "NOTIFICACIONES",
@@ -654,6 +679,12 @@
             "DESCRIPTION": "Términos y Condiciones de Creativechain FDN para el servicio de Creary.net"
         },
         "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+    },
+    "NAVBAR": {
+        "SEE_ALL_RESULTS": "Mostrar todos los miembros"
+    },
+    "ACCOUNT_SEARCH": {
+        "RESULTS_TITLE": "Resultados de"
     }
 
 }
