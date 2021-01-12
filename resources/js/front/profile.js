@@ -1199,10 +1199,8 @@ import MentionNotification from "../components/notifications/MentionNotification
                     crea.broadcast.accountUpdate(ownerKey, session.account.username, createAuth(keys.owner.pub), createAuth(keys.active.pub), createAuth(keys.posting.pub), keys.memo.pub, metadata, function (err, data) {
                         globalLoading.show = false;
 
-                        if (err) {
-                            if (callback) {
-                                callback(err);
-                            }
+                        if (catchError(err)) {
+                            callback(err);
                         } else {
                             updateUserSession();
 
