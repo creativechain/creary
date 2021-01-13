@@ -67,8 +67,8 @@
         </div>
 
     </div>
-    <div v-if="canShowFilter()" class="col-6 col-md-2 text-right order-1 order-md-2">
-        <div class="btn btn--sm button-filter" value="show/hide">
+    <div class="col-6 col-md-2 text-right order-1 order-md-2">
+        <a href="#" class="btn btn--sm button-filter" v-bind:class="{ disabled: !enableFilter() }" value="show/hide" v-bind:aria-disabled="!enableFilter()">
             <svg xmlns="http://www.w3.org/2000/svg" width="13.458" height="8.145" viewBox="0 0 13.458 8.145" class="mr-2">
                 <g id="Grupo_9843" data-name="Grupo 9843" transform="translate(-327.801 -77.38)">
                     <path id="Trazado_9403" data-name="Trazado 9403" d="M-852.945,81.211h8.608" transform="translate(1185.597 0.241)" fill="none" stroke="#23221c" stroke-width="2"/>
@@ -77,11 +77,11 @@
                 </g>
             </svg>
             {{ __('lang.FILTER.FILTER') }}
-        </div>
+        </a>
     </div>
 </div>
 
-<div v-if="canShowFilter()" class="row mt-3 row-filter-select" style="display: none;">
+<div class="row mt-3 row-filter-select" style="display: none;">
     <div class="col-12 col-md-6">
         <span class="font-weight-bold">{{ __('lang.FILTER.LICENSES') }}</span>
         <div class="input-select select-filter">

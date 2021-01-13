@@ -36,7 +36,7 @@ import { categorySlider } from "./category-slider";
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
                     closeCategoryDropdown: closeCategoryDropdown,
-                    canShowFilter: function () {
+                    enableFilter: function () {
                         return (
                             this.isUserFeed() ||
                             (this.category === "search" && this.discuss)
