@@ -217,7 +217,7 @@
     <form v-on:submit="performSearch" autocomplete="off">
         <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
-                <input v-model="search" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                <input v-model="search" type="text" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
         @include('modules.vista-resultados-navbar')
