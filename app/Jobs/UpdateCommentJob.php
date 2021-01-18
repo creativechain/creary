@@ -36,7 +36,7 @@ class UpdateCommentJob implements ShouldQueue
     public function handle()
     {
         //
-        if ($this->data->type === 'comment' && $this->data->parent_author === '') {
+        if ($this->data->type === 'comment' && $this->data->parent_author === '' || $this->data->type === 'reblog') {
             $comment = Comments::query()
                 ->where('permlink', $this->data->permlink)
                 ->where('author', $this->data->author)

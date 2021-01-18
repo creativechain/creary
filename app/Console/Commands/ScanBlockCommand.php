@@ -2,20 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\CreaUser;
 use App\Http\Crea\CrearyClient;
 use App\Jobs\SendNotificationJob;
 use App\Jobs\UpdateAccountJob;
 use App\Jobs\UpdateCommentJob;
-use App\Notifications\CrearyNotification;
 use App\Utils\CreaOperationsUtils;
-use App\Utils\Obj;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 
 class ScanBlockCommand extends Command
 {
@@ -70,9 +64,9 @@ class ScanBlockCommand extends Command
                         switch ($data->type) {
                             case 'vote':
                             case 'comment':
+                            case 'reblog':
                                 UpdateCommentJob::dispatch($data);
                             case 'comment_download':
-                            case 'reblog':
                             case 'follow':
                                 $notInitialDate = Carbon::parse(env('CREA_NOTIFICATION_INITIAL_DATE'));
                                 if ($timestamp->isAfter($notInitialDate)) {
