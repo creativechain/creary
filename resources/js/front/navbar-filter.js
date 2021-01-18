@@ -87,7 +87,7 @@ import { categorySlider } from './category-slider';
                         cancelEventPropagation(event);
 
                         if (discuss !== this.discuss) {
-                            if (this.isUserFeed()) {
+                            if (this.isUserFeed() || this.category === 'search') {
                                 this.category = 'popular';
                             }
 
@@ -163,6 +163,10 @@ import { categorySlider } from './category-slider';
         } else {
             retrieveContent(`/${category}`, params);
         }
+
+        if (category !== 'search') {
+            creaEvents.emit('crea.search.update', null);
+        }
     }
 
     function loadOldContent(cleanContent = false) {
@@ -195,6 +199,9 @@ import { categorySlider } from './category-slider';
             if (hasPrevQuery) {
                 navbarFilter.needResetContent = false;
                 commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
+                if (navbarFilter.category === 'search') {
+                    creaEvents.emit('crea.search.start', 'search', navbarFilter.discuss, hasPrevQuery);
+                }
             } else {
                 let adult = navbarFilter.account && navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1;
                 let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
@@ -206,6 +213,7 @@ import { categorySlider } from './category-slider';
                     commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
                 } else {
                     commentsApi.searchByReward(discuss, download, license, 20, onResult);
+                    creaEvents.emit('crea.search.start', 'search', navbarFilter.discuss, hasPrevQuery);
                 }
             }
         });

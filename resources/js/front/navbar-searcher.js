@@ -1,33 +1,27 @@
-import {
-    cancelEventPropagation,
-    getParameterByName,
-    getPathPart,
-    isUserFeed,
-    jsonify,
-} from "../lib/util";
-import HttpClient from "../lib/http";
-import Avatar from "../components/Avatar";
-import { isInHome } from "../common/common";
-import { AccountsApi, TagsApi } from "../lib/creary-api";
+import { cancelEventPropagation, getParameterByName, getPathPart, isUserFeed, jsonify } from '../lib/util';
+import HttpClient from '../lib/http';
+import Avatar from '../components/Avatar';
+import { isInHome } from '../common/common';
+import { AccountsApi, TagsApi } from '../lib/creary-api';
 
 (function () {
     const SEARCH_LIMIT = 3;
     const MIN_SEARCH_CHARS = 2;
 
-    Vue.component("avatar", Avatar);
+    Vue.component('avatar', Avatar);
 
     let navbarSearch;
 
     function setUp() {
         let search;
         let category = getPathPart();
-        if (category === "search") {
+        if (category === 'search') {
             search = getPathPart(null, 1);
         }
 
         navbarSearch = new Vue({
-            el: "#navbar-search",
-            name: "searcher",
+            el: '#navbar-search',
+            name: 'searcher',
             data: {
                 lang: lang,
                 search: search,
@@ -51,7 +45,7 @@ import { AccountsApi, TagsApi } from "../lib/creary-api";
                     if (this.isInHome()) {
                         cancelEventPropagation(event);
                         this.search = tag.name;
-                        creaEvents.emit("crea.content.tag", tag.name);
+                        creaEvents.emit('crea.content.tag', tag.name);
                     }
                 },
                 performSearch: function (event) {
@@ -60,7 +54,7 @@ import { AccountsApi, TagsApi } from "../lib/creary-api";
                     let that = this;
 
                     if (this.search && this.search.length >= MIN_SEARCH_CHARS) {
-                        console.log("Searching", this.search);
+                        console.log('Searching', this.search);
 
                         //Accounts search
                         if (this.accounts.http) {
@@ -69,19 +63,15 @@ import { AccountsApi, TagsApi } from "../lib/creary-api";
                             this.accounts.http = new AccountsApi();
                         }
 
-                        this.accounts.http.search(
-                            this.search,
-                            this.limit,
-                            (err, result) => {
-                                if (err) {
-                                    this.accounts.items = [];
-                                } else {
-                                    this.accounts.items = result.data;
-                                }
-
-                                this.$forceUpdate();
+                        this.accounts.http.search(this.search, this.limit, (err, result) => {
+                            if (err) {
+                                this.accounts.items = [];
+                            } else {
+                                this.accounts.items = result.data;
                             }
-                        );
+
+                            this.$forceUpdate();
+                        });
 
                         //Tags search
                         if (this.tags.http) {
@@ -90,19 +80,15 @@ import { AccountsApi, TagsApi } from "../lib/creary-api";
                             this.tags.http = new TagsApi();
                         }
 
-                        this.tags.http.search(
-                            this.search,
-                            this.limit,
-                            (err, result) => {
-                                if (err) {
-                                    this.tags.items = [];
-                                } else {
-                                    this.tags.items = result.data;
-                                }
-
-                                this.$forceUpdate();
+                        this.tags.http.search(this.search, this.limit, (err, result) => {
+                            if (err) {
+                                this.tags.items = [];
+                            } else {
+                                this.tags.items = result.data;
                             }
-                        );
+
+                            this.$forceUpdate();
+                        });
                     } else {
                         let cleanSection = function (section) {
                             section.http = null;
@@ -119,8 +105,13 @@ import { AccountsApi, TagsApi } from "../lib/creary-api";
         });
     }
 
-    creaEvents.on("crea.modal.ready", function () {
-        console.log("Setting up searcher!");
+    creaEvents.on('crea.modal.ready', function () {
+        console.log('Setting up searcher!');
         setUp();
+    });
+
+    creaEvents.on('crea.search.update', function (search) {
+        navbarSearch.search = null;
+        navbarSearch.$forceUpdate();
     });
 })();

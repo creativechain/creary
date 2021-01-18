@@ -1,25 +1,25 @@
-@import "imported/welcome";
-@import "imported/simple-view-home";
-@import "imported/color";
-@import "imported/profile";
-@import "imported/wallet";
-@import "imported/list-user";
-@import "imported/modal";
-@import "imported/coming-soon";
-@import "imported/publish";
-@import "imported/view-publish-post-2";
-@import "imported/notifications";
-@import "imported/explorer";
-@import "imported/buttons";
-@import "imported/recover-account";
-@import "imported/faq";
-@import "imported/witnesses";
-@import "imported/exchange";
-@import "imported/legal";
-@import "imported/modal-post";
-@import "imported/navbar";
-@import "imported/custom";
-@import "imported/filter-category.scss";
+@import 'imported/welcome';
+@import 'imported/simple-view-home';
+@import 'imported/color';
+@import 'imported/profile';
+@import 'imported/wallet';
+@import 'imported/list-user';
+@import 'imported/modal';
+@import 'imported/coming-soon';
+@import 'imported/publish';
+@import 'imported/view-publish-post-2';
+@import 'imported/notifications';
+@import 'imported/explorer';
+@import 'imported/buttons';
+@import 'imported/recover-account';
+@import 'imported/faq';
+@import 'imported/witnesses';
+@import 'imported/exchange';
+@import 'imported/legal';
+@import 'imported/modal-post';
+@import 'imported/navbar';
+@import 'imported/custom';
+@import 'imported/filter-category.scss';
 
 .square-card {
     position: relative;
@@ -31,7 +31,7 @@
     height: 100%;
 }
 .square-card:after {
-    content: "";
+    content: '';
     display: block;
     padding-bottom: 100%;
 }
@@ -129,14 +129,14 @@ label {
     background: transparent !important;
 }
 .view-all {
-    background-image: url("/img/crea-web/icon-view-mode-all.png");
+    background-image: url('/img/crea-web/icon-view-mode-all.png');
     width: 18px;
     height: 18px;
     background-repeat: no-repeat;
     float: right;
 }
 .img-view-all {
-    background-image: url("/img/icons/grid.svg") !important;
+    background-image: url('/img/icons/grid.svg') !important;
     width: 18px;
     height: 18px;
     background-repeat: no-repeat;
@@ -264,10 +264,8 @@ a:hover {
     transform-origin: 50% 50%;
     -webkit-transform: rotate3d(0, 0, 1, 0deg);
     transform: rotate3d(0, 0, 1, 0deg);
-    -webkit-animation: 2156ms spinner-arc ease-in-out infinite,
-        1829ms spinner-rotate linear infinite;
-    animation: 2156ms spinner-arc ease-in-out infinite,
-        1829ms spinner-rotate linear infinite;
+    -webkit-animation: 2156ms spinner-arc ease-in-out infinite, 1829ms spinner-rotate linear infinite;
+    animation: 2156ms spinner-arc ease-in-out infinite, 1829ms spinner-rotate linear infinite;
 }
 .spinner .ring {
     fill: none;
@@ -326,6 +324,11 @@ a:hover {
     z-index: 9999;
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+.loading-search {
+    background-color: transparent;
+}
+
 .center-loading {
     width: 24px;
     margin: 0 auto;
@@ -345,7 +348,7 @@ a:hover {
         margin-bottom: 0;
     }
     .img-user-avatar {
-        background-image: url("/img/crea-web/publish/demo-vertical.jpg");
+        background-image: url('/img/crea-web/publish/demo-vertical.jpg');
         background-size: cover;
         width: 30px;
         height: 30px;
@@ -538,7 +541,7 @@ img {
         border-left: 1px solid #ececec;
         border-radius: 6px 6px 0 0;
         .img-post-list {
-            background-image: url("/img/post-default-preview.jpg");
+            background-image: url('/img/post-default-preview.jpg');
             height: 175px;
             background-size: cover;
             background-position: 50% 50%;
@@ -566,13 +569,13 @@ img {
             }
         }
         .icon-recommended.hover-recommended {
-            background-image: url("/img/recommended/recomended-hover.svg");
+            background-image: url('/img/recommended/recomended-hover.svg');
         }
         .icon-recommended.my-active {
-            background-image: url("/img/recommended/recomended-my-active.svg");
+            background-image: url('/img/recommended/recomended-my-active.svg');
         }
         .icon-recommended.active {
-            background-image: url("/img/recommended/recomended-active.svg");
+            background-image: url('/img/recommended/recomended-active.svg');
         }
         .pre-recommended {
             animation-name: parpadeo;
@@ -803,7 +806,7 @@ img {
         border-radius: 50px;
     }
     .img-user-avatar {
-        background-image: url("/img/crea-web/publish/demo-vertical.jpg");
+        background-image: url('/img/crea-web/publish/demo-vertical.jpg');
         background-size: cover;
         width: 30px;
         height: 30px;
@@ -835,54 +838,54 @@ img {
         margin-top: 1px;
     }
     .img-buzz.advanced {
-        background-image: url("/img/buzz/advanced.svg");
+        background-image: url('/img/buzz/advanced.svg');
     }
     .img-buzz.advanced:hover {
-        background-image: url("/img/buzz/advanced_active.svg ");
+        background-image: url('/img/buzz/advanced_active.svg ');
     }
     .img-buzz.expert {
-        background-image: url("/img/buzz/expert.svg");
+        background-image: url('/img/buzz/expert.svg');
     }
     .img-buzz.expert:hover {
-        background-image: url("/img/buzz/expert_active.svg ");
+        background-image: url('/img/buzz/expert_active.svg ');
     }
     .img-buzz.genius {
-        background-image: url("/img/buzz/genius.svg");
+        background-image: url('/img/buzz/genius.svg');
     }
     .img-buzz.genius:hover {
-        background-image: url("/img/buzz/genius_active.svg ");
+        background-image: url('/img/buzz/genius_active.svg ');
     }
     .img-buzz.guru {
-        background-image: url("/img/buzz/guru.svg");
+        background-image: url('/img/buzz/guru.svg');
     }
     .img-buzz.guru:hover {
-        background-image: url("/img/buzz/guru_active.svg");
+        background-image: url('/img/buzz/guru_active.svg');
     }
     .img-buzz.influencer {
-        background-image: url("/img/buzz/influencer.svg");
+        background-image: url('/img/buzz/influencer.svg');
     }
     .img-buzz.influencer:hover {
-        background-image: url("/img/buzz/influencer_active.svg");
+        background-image: url('/img/buzz/influencer_active.svg');
     }
     .img-buzz.master {
-        background-image: url("/img/buzz/master.svg");
+        background-image: url('/img/buzz/master.svg');
     }
     .img-buzz.master:hover {
-        background-image: url("/img/buzz/master_active.svg");
+        background-image: url('/img/buzz/master_active.svg');
     }
     .img-buzz.novice {
-        background-image: url("/img/buzz/novice.svg");
+        background-image: url('/img/buzz/novice.svg');
         width: 20px;
     }
     .img-buzz.novice:hover {
-        background-image: url("/img/buzz/novice_active.svg");
+        background-image: url('/img/buzz/novice_active.svg');
     }
     .img-buzz.trainee {
-        background-image: url("/img/buzz/trainee.svg ");
+        background-image: url('/img/buzz/trainee.svg ');
         width: 16px;
     }
     .img-buzz.trainee:hover {
-        background-image: url("/img/buzz/trainee_active.svg ");
+        background-image: url('/img/buzz/trainee_active.svg ');
     }
 }
 .dropdown .dropdown__content {
@@ -973,7 +976,7 @@ img {
     }
 }
 @media (max-width: 767px) {
-    .boxed div[class*="col-"]:not(.boxed) {
+    .boxed div[class*='col-']:not(.boxed) {
         padding: 0 10px;
     }
     #menu1 {
@@ -1006,4 +1009,4 @@ img {
     }
 }
 
-@import "responsive";
+@import 'responsive';

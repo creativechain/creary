@@ -59,9 +59,17 @@
                             <div class="col-md-12 text-center">
 
                                 <div class="row mt-2">
-                                    <div class="col-md-4 col-sm-6">
+                                    <div v-if="!loading" class="col-md-4 col-sm-6">
                                         <p class="title">{{ __('lang.HOME.NO_SEARCH_RESULTS_1') }}</p>
                                         <p class="subtitle">{{ __('lang.HOME.NO_SEARCH_RESULTS_2') }}</p>
+                                    </div>
+                                    <div v-else class="loading loading-search">
+                                        <div v-cloak  class="center-loading">
+                                            <svg viewBox="0 0 50 50" class="spinner">
+                                                <circle class="ring" cx="25" cy="25" r="22.5" />
+                                                <circle class="line" cx="25" cy="25" r="22.5" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
