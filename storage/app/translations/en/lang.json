@@ -548,7 +548,8 @@
         "DOWNLOADS": "Downloads",
         "SELECT_DOWNLOADS": "Select downloads",
         "FREE_DOWNLOADS": "Free downloads",
-        "PAYMENT_DOWNLOADS": "Payment downloads"
+        "PAYMENT_DOWNLOADS": "Payment downloads",
+        "SEARCH": "Search: %s"
     },
     "NOTIFICATIONS": {
         "TITLE" : "NOTIFICATIONS",

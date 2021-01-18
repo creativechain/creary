@@ -1,9 +1,9 @@
-import { cancelEventPropagation, getPathPart, isUserFeed } from "../lib/util";
-import { LICENSE } from "../lib/license";
-import * as mutexify from "mutexify";
-import { CommentsApi, TagsApi } from "../lib/creary-api";
-import { catchError, parsePost, updateUrl } from "../common/common";
-import { categorySlider } from "./category-slider";
+import { cancelEventPropagation, getPathPart, isUserFeed } from '../lib/util';
+import { LICENSE } from '../lib/license';
+import * as mutexify from 'mutexify';
+import { CommentsApi, TagsApi } from '../lib/creary-api';
+import { catchError, parsePost, updateUrl } from '../common/common';
+import { categorySlider } from './category-slider';
 
 (function () {
     let oldApiCallLock = mutexify();
@@ -12,20 +12,16 @@ import { categorySlider } from "./category-slider";
     function setUp(session, account, isFeed) {
         if (!navbarFilter) {
             navbarFilter = new Vue({
-                el: "#navbar-filter",
-                name: "navbar-filter",
+                el: '#navbar-filter',
+                name: 'navbar-filter',
                 data: {
                     lang: lang,
                     session: session,
                     account: account,
-                    availableLicenses: [
-                        LICENSE.NON_PERMISSION,
-                        LICENSE.CREATIVE_COMMONS,
-                        LICENSE.FREE_CONTENT,
-                    ],
+                    availableLicenses: [LICENSE.NON_PERMISSION, LICENSE.CREATIVE_COMMONS, LICENSE.FREE_CONTENT],
                     discussions: [],
                     discussReady: false,
-                    category: isFeed ? "feed" : "popular",
+                    category: isFeed ? 'feed' : 'popular',
                     discuss: null,
                     license: null,
                     download: null,
@@ -37,27 +33,27 @@ import { categorySlider } from "./category-slider";
                     loadContent: loadContent,
                     closeCategoryDropdown: closeCategoryDropdown,
                     enableFilter: function () {
-                        return (
-                            this.isUserFeed() ||
-                            (this.category === "search" && this.discuss)
-                        );
+                        return this.isUserFeed() || (this.category === 'search' && this.discuss);
+                    },
+                    getFilterText: function () {
+                        //discuss === 'feed' ? lang.FILTER.FEED : lang.FILTER[category.toUpperCase()]
+                        if (this.isUserFeed()) {
+                            return this.lang.FILTER.FEED;
+                        } else if (this.category === 'search') {
+                            return String.format(this.lang.FILTER.SEARCH, '"' + this.discuss + '"');
+                        } else {
+                            return this.lang.FILTER[this.category.toUpperCase()];
+                        }
                     },
                     linkForTag: function (tag) {
-                        let link = "";
-                        if (
-                            ![
-                                "popular",
-                                "now",
-                                "promoted",
-                                "skyrockets",
-                            ].includes(this.category)
-                        ) {
-                            link += "/popular";
+                        let link = '';
+                        if (!['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
+                            link += '/popular';
                         } else {
-                            link += "/" + this.category;
+                            link += '/' + this.category;
                         }
 
-                        link += "/" + tag.name;
+                        link += '/' + tag.name;
                         return link;
                     },
                     getParams: function () {
@@ -74,9 +70,9 @@ import { categorySlider } from "./category-slider";
                         cancelEventPropagation(event);
 
                         if (category !== this.category) {
-                            if (category === "feed") {
-                                this.category = "@" + this.account.user.name;
-                                this.discuss = "feed";
+                            if (category === 'feed') {
+                                this.category = '@' + this.account.user.name;
+                                this.discuss = 'feed';
                             } else {
                                 this.category = category;
                                 this.discuss = null;
@@ -92,7 +88,7 @@ import { categorySlider } from "./category-slider";
 
                         if (discuss !== this.discuss) {
                             if (this.isUserFeed()) {
-                                this.category = "popular";
+                                this.category = 'popular';
                             }
 
                             this.discuss = discuss;
@@ -153,17 +149,13 @@ import { categorySlider } from "./category-slider";
     function loadContent() {
         navbarFilter.$forceUpdate();
 
-        console.log(
-            "Loading content for",
-            navbarFilter.category,
-            navbarFilter.discuss
-        );
+        console.log('Loading content for', navbarFilter.category, navbarFilter.discuss);
 
         let category = navbarFilter.category;
         let discuss = navbarFilter.discuss;
         let params = navbarFilter.getParams();
 
-        if (category === "feed") {
+        if (category === 'feed') {
             let user = getPathPart();
             retrieveContent(`/${user}/feed`, params);
         } else if (discuss) {
@@ -174,11 +166,9 @@ import { categorySlider } from "./category-slider";
     }
 
     function loadOldContent(cleanContent = false) {
-        console.log("Received load old content");
+        console.log('Received load old content');
         oldApiCallLock(function (release) {
-            let hasPrevQuery =
-                navbarFilter.oldApiCall &&
-                navbarFilter.oldApiCall.next_page_url;
+            let hasPrevQuery = navbarFilter.oldApiCall && navbarFilter.oldApiCall.next_page_url;
             let commentsApi = new CommentsApi();
 
             let onResult = function (err, result) {
@@ -196,13 +186,7 @@ import { categorySlider } from "./category-slider";
                         discussion_idx.push(`${c.author}/${c.permlink}`);
                     });
 
-                    creaEvents.emit(
-                        "crea.content.add",
-                        result.data,
-                        accountNames,
-                        discussion_idx,
-                        cleanContent
-                    );
+                    creaEvents.emit('crea.content.add', result.data, accountNames, discussion_idx, cleanContent);
                 }
 
                 release();
@@ -210,43 +194,18 @@ import { categorySlider } from "./category-slider";
 
             if (hasPrevQuery) {
                 navbarFilter.needResetContent = false;
-                commentsApi.get(
-                    navbarFilter.oldApiCall.next_page_url,
-                    onResult
-                );
+                commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
             } else {
-                let adult =
-                    navbarFilter.account &&
-                    navbarFilter.account.user.metadata.adult_content === "hide"
-                        ? 0
-                        : 1;
-                let discuss = navbarFilter.discuss
-                    ? navbarFilter.discuss
-                    : null;
+                let adult = navbarFilter.account && navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1;
+                let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
                 let download = navbarFilter.download;
-                let license = navbarFilter.license
-                    ? navbarFilter.license.flag
-                    : null;
+                let license = navbarFilter.license ? navbarFilter.license.flag : null;
 
                 if (isUserFeed()) {
                     let following = navbarFilter.account.user.followings;
-                    commentsApi.feed(
-                        following,
-                        discuss,
-                        adult,
-                        download,
-                        license,
-                        20,
-                        onResult
-                    );
+                    commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
                 } else {
-                    commentsApi.searchByReward(
-                        discuss,
-                        download,
-                        license,
-                        20,
-                        onResult
-                    );
+                    commentsApi.searchByReward(discuss, download, license, 20, onResult);
                 }
             }
         });
@@ -254,8 +213,8 @@ import { categorySlider } from "./category-slider";
 
     function retrieveContent(urlFilter, params) {
         /*if (isInHome()) {
-            cancelEventPropagation(event);
-        }*/
+                cancelEventPropagation(event);
+            }*/
 
         updateUrl(urlFilter);
         let category = getPathPart(urlFilter);
@@ -270,7 +229,7 @@ import { categorySlider } from "./category-slider";
                         //User not follows anything, load empty content
                         urlState.content = {};
                         creaEvents.emit(
-                            "crea.posts",
+                            'crea.posts',
                             urlFilter,
                             urlFilter,
                             urlState,
@@ -292,7 +251,7 @@ import { categorySlider } from "./category-slider";
                                     if (count <= 0) {
                                         //creaEvents.emit('crea.posts', urlFilter, urlFilter, urlState);
                                         creaEvents.emit(
-                                            "crea.posts",
+                                            'crea.posts',
                                             urlFilter,
                                             urlFilter,
                                             urlState,
@@ -304,31 +263,18 @@ import { categorySlider } from "./category-slider";
 
                                 urlState.content = {};
                                 result.data.forEach(function (d) {
-                                    let permlink = d.author + "/" + d.permlink;
+                                    let permlink = d.author + '/' + d.permlink;
 
                                     if (!urlState.content[permlink]) {
-                                        crea.api.getContent(
-                                            d.author,
-                                            d.permlink,
-                                            function (err, result) {
-                                                if (err) {
-                                                    console.error(
-                                                        "Error getting",
-                                                        permlink,
-                                                        err
-                                                    );
-                                                } else {
-                                                    urlState.content[
-                                                        permlink
-                                                    ] = parsePost(
-                                                        result,
-                                                        d.reblogged_by
-                                                    );
-                                                }
-
-                                                onContentFetched();
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
                                             }
-                                        );
+
+                                            onContentFetched();
+                                        });
                                     }
                                 });
                             } else {
@@ -339,48 +285,30 @@ import { categorySlider } from "./category-slider";
 
                     let commentsApi = new CommentsApi();
                     if (navbarFilter.oldApiCall) {
-                        console.log(
-                            "Calling feed next page",
-                            navbarFilter.oldApiCall.next_page_url
-                        );
+                        console.log('Calling feed next page', navbarFilter.oldApiCall.next_page_url);
                         if (navbarFilter.oldApiCall.next_page_url) {
                             navbarFilter.needResetContent = false;
-                            commentsApi.get(
-                                navbarFilter.oldApiCall.next_page_url,
-                                onFeedComments
-                            );
+                            commentsApi.get(navbarFilter.oldApiCall.next_page_url, onFeedComments);
                         }
                     } else {
                         let followings = navbarFilter.account.user.followings;
                         let adult = params.adult;
                         //If is user feed, no search ocnfigured
-                        let search =
-                            params.search === "feed" ? null : params.search;
+                        let search = params.search === 'feed' ? null : params.search;
                         let download = params.download;
-                        let license = params.license
-                            ? params.license.flag
-                            : null;
+                        let license = params.license ? params.license.flag : null;
 
-                        commentsApi.feed(
-                            followings,
-                            search,
-                            adult,
-                            download,
-                            license,
-                            20,
-                            onFeedComments
-                        );
+                        commentsApi.feed(followings, search, adult, download, license, 20, onFeedComments);
                     }
-                } else if (category === "search") {
+                } else if (category === 'search') {
                     loadOldContent(true);
                 } else {
                     //Check if state has content. If not has content, search in creary api
 
-                    let hasContent =
-                        urlState.discussion_idx[discuss][category].length > 0;
+                    let hasContent = urlState.discussion_idx[discuss][category].length > 0;
                     if (hasContent) {
                         creaEvents.emit(
-                            "crea.posts",
+                            'crea.posts',
                             urlFilter,
                             urlFilter,
                             urlState,
@@ -398,7 +326,7 @@ import { categorySlider } from "./category-slider";
 
     function loadCategorySlider() {
         setTimeout(function () {
-            console.log("Loading category slider");
+            console.log('Loading category slider');
             mr.sliders.documentReady($);
             navbarFilter.discussReady = true;
 
@@ -407,53 +335,53 @@ import { categorySlider } from "./category-slider";
     }
 
     function loadButtonFilterToggle() {
-        $(".button-filter").on("click", function () {
-            $(".row-filter-select").fadeToggle("show");
+        $('.button-filter').on('click', function () {
+            $('.row-filter-select').fadeToggle('show');
         });
     }
 
     function closeCategoryDropdown() {
         setTimeout(() => {
-            $("#category-select").removeClass("dropdown--active");
-            console.log("Closing dropdown");
+            $('#category-select').removeClass('dropdown--active');
+            console.log('Closing dropdown');
         }, 100);
     }
 
-    creaEvents.on("crea.session.login", function (s, a) {
+    creaEvents.on('crea.session.login', function (s, a) {
         preSetup(s, a);
     });
 
-    creaEvents.on("crea.session.logout", function (s, a) {
+    creaEvents.on('crea.session.logout', function (s, a) {
         preSetup(false, false);
     });
 
-    creaEvents.on("crea.session.update", function (session, account) {
+    creaEvents.on('crea.session.update', function (session, account) {
         setUp(session, account);
     });
 
-    creaEvents.on("crea.content.old", function () {
+    creaEvents.on('crea.content.old', function () {
         loadOldContent();
     });
 
-    creaEvents.on("crea.content.path", function (category, discuss) {
+    creaEvents.on('crea.content.path', function (category, discuss) {
         navbarFilter.category = category;
         navbarFilter.discuss = discuss;
         navbarFilter.$forceUpdate();
     });
 
-    creaEvents.on("crea.content.tag", function (tag) {
-        navbarFilter.category = "search";
+    creaEvents.on('crea.content.tag', function (tag) {
+        navbarFilter.category = 'search';
         navbarFilter.discuss = tag;
         navbarFilter.resetContentFilters();
     });
 
-    creaEvents.on("crea.content.load", function () {
+    creaEvents.on('crea.content.load', function () {
         loadContent();
     });
 
-    creaEvents.on("crea.dom.ready", function () {
+    creaEvents.on('crea.dom.ready', function () {
         let category = getPathPart();
-        if (category === "search") {
+        if (category === 'search') {
             loadButtonFilterToggle();
         }
     });

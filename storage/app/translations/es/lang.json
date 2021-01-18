@@ -548,7 +548,8 @@
         "DOWNLOADS": "Descargas",
         "SELECT_DOWNLOADS": "Selecciona descargas",
         "FREE_DOWNLOADS": "Descargas gratuitas",
-        "PAYMENT_DOWNLOADS": "Descargas de pago"
+        "PAYMENT_DOWNLOADS": "Descargas de pago",
+        "SEARCH": "Búsqueda: %s"
     },
     "NOTIFICATIONS": {
         "TITLE" : "NOTIFICACIONES",
