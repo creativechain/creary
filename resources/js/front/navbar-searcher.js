@@ -111,7 +111,9 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
     });
 
     creaEvents.on('crea.search.update', function (search) {
-        navbarSearch.search = null;
-        navbarSearch.$forceUpdate();
+        if (navbarSearch) {
+            navbarSearch.search = null;
+            navbarSearch.$forceUpdate();
+        }
     });
 })();
