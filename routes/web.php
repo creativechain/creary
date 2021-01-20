@@ -29,10 +29,10 @@ Route::get('/terms_and_conditions', 'CrearyController@terms')->name('terms');
 Route::get('/privacy_policy', 'CrearyController@privacy')->name('privacy');
 
 Route::get('/{category}', 'CrearyController@home')
-    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$');
+    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active|search)$');
 
 Route::get('/{category}/{tag}', 'CrearyController@home')
-    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active|search)$')
+    ->where('category', '^(skyrockets|votes|responses|popular|promoted|cashout|payout|now|active)$')
     ->where('tag', '^([\w\d\-\/]+)$');
 
 Route::get('/{user}', 'CrearyController@profile')

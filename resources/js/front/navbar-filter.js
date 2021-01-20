@@ -1,4 +1,4 @@
-import { cancelEventPropagation, getPathPart, isUserFeed } from '../lib/util';
+import { cancelEventPropagation, getParameterByName, getPathPart, isUserFeed } from '../lib/util';
 import { LICENSE } from '../lib/license';
 import * as mutexify from 'mutexify';
 import { CommentsApi, TagsApi } from '../lib/creary-api';
@@ -22,6 +22,7 @@ import { categorySlider } from './category-slider';
                     discussions: [],
                     discussReady: false,
                     category: isFeed ? 'feed' : 'popular',
+                    search: getParameterByName('q'),
                     discuss: null,
                     license: null,
                     download: null,
@@ -40,25 +41,41 @@ import { categorySlider } from './category-slider';
                         if (this.isUserFeed()) {
                             return this.lang.FILTER.FEED;
                         } else if (this.category === 'search') {
-                            return String.format(this.lang.FILTER.SEARCH, '"' + this.discuss + '"');
+                            return String.format(this.lang.FILTER.SEARCH, '"' + this.search + '"');
                         } else {
                             return this.lang.FILTER[this.category.toUpperCase()];
                         }
                     },
                     linkForTag: function (tag) {
                         let link = '';
-                        if (!['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
-                            link += '/popular';
+                        if (tag) {
+                            if (this.isUserFeed()) {
+                                link += `${window.location.pathname}?q=`;
+                            } else if (this.category === 'search') {
+                                link += '/search?q=';
+                            } else if (['popular', 'now', 'promoted', 'skyrockets'].includes(this.category)) {
+                                link += `/${this.category}/`;
+                            } else {
+                                link += '/popular/';
+                            }
+
+                            link += tag.name;
                         } else {
-                            link += '/' + this.category;
+                            //All
+                            if (this.isUserFeed()) {
+                                link += window.location.pathname;
+                            } else if (this.category === 'search') {
+                                link += '/popular';
+                            } else {
+                                link += `/${this.category}`;
+                            }
                         }
 
-                        link += '/' + tag.name;
                         return link;
                     },
                     getParams: function () {
                         return {
-                            search: this.isUserFeed() ? null : this.discuss,
+                            search: this.isUserFeed() || this.category === 'search' ? this.search : this.discuss,
                             download: this.download,
                             license: this.license,
                         };
@@ -86,12 +103,13 @@ import { categorySlider } from './category-slider';
                     onSelectDiscuss: function (event, discuss) {
                         cancelEventPropagation(event);
 
-                        if (discuss !== this.discuss) {
-                            if (this.isUserFeed() || this.category === 'search') {
-                                this.category = 'popular';
-                            }
-
+                        if ((this.isUserFeed() || this.category === 'search') && discuss !== this.search) {
+                            this.search = discuss;
+                            this.discuss = this.isUserFeed() ? this.discuss : null;
+                            this.resetContentFilters();
+                        } else if (discuss !== this.discuss) {
                             this.discuss = discuss;
+                            this.search = null;
                             this.resetContentFilters();
                         }
                     },
@@ -155,9 +173,18 @@ import { categorySlider } from './category-slider';
         let discuss = navbarFilter.discuss;
         let params = navbarFilter.getParams();
 
-        if (category === 'feed') {
+        if (discuss === 'feed') {
             let user = getPathPart();
-            retrieveContent(`/${user}/feed`, params);
+            let urlFilter = `/${user}/feed`;
+            if (params.search) {
+                urlFilter += `?q=${params.search}`;
+            }
+
+            retrieveContent(urlFilter, params);
+        } else if (category === 'search') {
+            let urlFilter = `/search?q=${params.search}`;
+
+            retrieveContent(urlFilter, params);
         } else if (discuss) {
             retrieveContent(`/${category}/${discuss}`, params);
         } else {
@@ -200,20 +227,20 @@ import { categorySlider } from './category-slider';
                 navbarFilter.needResetContent = false;
                 commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
                 if (navbarFilter.category === 'search') {
-                    creaEvents.emit('crea.search.start', 'search', navbarFilter.discuss, hasPrevQuery);
+                    creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
                 }
             } else {
                 let adult = navbarFilter.account && navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1;
-                let discuss = navbarFilter.discuss ? navbarFilter.discuss : null;
+                let search = navbarFilter.search;
                 let download = navbarFilter.download;
                 let license = navbarFilter.license ? navbarFilter.license.flag : null;
 
                 if (isUserFeed()) {
                     let following = navbarFilter.account.user.followings;
-                    commentsApi.feed(following, discuss, adult, download, license, 20, onResult);
+                    commentsApi.feed(following, search, adult, download, license, 20, onResult);
                 } else {
-                    commentsApi.searchByReward(discuss, download, license, 20, onResult);
-                    creaEvents.emit('crea.search.start', 'search', navbarFilter.discuss, hasPrevQuery);
+                    commentsApi.searchByReward(search, download, license, 20, onResult);
+                    creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
                 }
             }
         });
@@ -227,6 +254,7 @@ import { categorySlider } from './category-slider';
         updateUrl(urlFilter);
         let category = getPathPart(urlFilter);
         let discuss = getPathPart(urlFilter, 1);
+        console.log('retrieveContent', category, discuss, urlFilter);
 
         crea.api.getState(urlFilter, function (err, urlState) {
             if (!catchError(err)) {
@@ -301,8 +329,7 @@ import { categorySlider } from './category-slider';
                     } else {
                         let followings = navbarFilter.account.user.followings;
                         let adult = params.adult;
-                        //If is user feed, no search ocnfigured
-                        let search = params.search === 'feed' ? null : params.search;
+                        let search = params.search;
                         let download = params.download;
                         let license = params.license ? params.license.flag : null;
 
@@ -379,7 +406,8 @@ import { categorySlider } from './category-slider';
 
     creaEvents.on('crea.content.tag', function (tag) {
         navbarFilter.category = 'search';
-        navbarFilter.discuss = tag;
+        navbarFilter.discuss = null;
+        navbarFilter.search = tag;
         navbarFilter.resetContentFilters();
     });
 

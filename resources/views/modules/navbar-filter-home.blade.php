@@ -50,10 +50,10 @@
                             </a>
                         </div>
                         <ul class="filter-list">
-                            <li v-bind:class="{ active: !discuss }" class="category">
-                                <a v-bind:href="'/' + category" >{{ __('lang.FILTER.ALL') }}</a>
+                            <li v-bind:class="{ active: (!discuss && !search) || (discuss === 'feed' && !search) }" class="category">
+                                <a v-bind:href="linkForTag()" >{{ __('lang.FILTER.ALL') }}</a>
                             </li>
-                            <li v-for="t in discussions" class="category" v-bind:class="{ active: discuss === t.name }">
+                            <li v-for="t in discussions" class="category" v-bind:class="{ active: (discuss === t.name || search === t.name) }">
                                 <a  class="text-capitalize"
                                     v-bind:href="linkForTag(t)"
                                     v-on:click="onSelectDiscuss($event, t.name)">

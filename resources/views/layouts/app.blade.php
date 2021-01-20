@@ -220,7 +220,7 @@
                 <input v-model="search" type="text" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
-        @include('modules.vista-resultados-navbar')
+        @include('modules.search-results-view')
     </form>
 </div>
 <!-- fin search mobile -->
@@ -502,7 +502,7 @@
                                     </span>
 
                                     <div class="dropdown__container">
-                                        @include('modules.vista-resultados-navbar')
+                                        @include('modules.search-results-view')
                                     </div>
                                 </div>
                             </li>

@@ -451,7 +451,7 @@ import { CommentsApi } from '../lib/creary-api';
             if (session) {
                 urlFilter = urlFilter ? urlFilter : '/@' + session.account.username + '/feed';
                 updateUrl(urlFilter);
-                creaEvents.emit('crea.content.path', 'feed');
+                creaEvents.emit('crea.content.path', '@' + session.account.username, 'feed');
                 //creaEvents.emit('crea.content.filter', urlFilter);
             } else {
                 updateUrl('/popular');
@@ -470,7 +470,7 @@ import { CommentsApi } from '../lib/creary-api';
                         showProfile(category);
                     } else {
                         //Show user feed
-                        creaEvents.emit('crea.content.path', 'feed');
+                        creaEvents.emit('crea.content.path', '@' + session.account.username, 'feed');
                         creaEvents.emit('crea.content.load');
                     }
                 } else {
@@ -804,10 +804,10 @@ import { CommentsApi } from '../lib/creary-api';
         }
     });
 
-    creaEvents.on('crea.search.start', function (category, discuss, hasPrevQuery) {
-        console.log(category, discuss, hasPrevQuery);
+    creaEvents.on('crea.search.start', function (category, search, hasPrevQuery) {
+        console.log(category, search, hasPrevQuery);
         if (!hasPrevQuery) {
-            initEmptyHome(`/${category}/${discuss}`, function () {
+            initEmptyHome(`/${category}?q=${search}`, function () {
                 homePosts.loading = !hasPrevQuery;
             });
         } else {

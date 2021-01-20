@@ -16,7 +16,7 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
         let search;
         let category = getPathPart();
         if (category === 'search') {
-            search = getPathPart(null, 1);
+            search = getParameterByName('q');
         }
 
         navbarSearch = new Vue({
