@@ -4,6 +4,7 @@
 /public/storage
 /public/robots.txt
 /storage/*.key
+/public/mix-manifest.json
 /vendor
 .env
 .env.backup
