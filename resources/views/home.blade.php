@@ -90,6 +90,9 @@
                                     <div class="col-md-4 col-sm-6">
                                         <p class="title">{{ __('lang.HOME.EMPTY_TITLE') }}</p>
                                         <p class="subtitle">{{ __('lang.HOME.EMPTY_SUBTITLE') }}</p>
+                                        <div class="pt-4">
+                                            <a href="/popular">{{ __('lang.HOME.POPULAR_PROJECTS') }}</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

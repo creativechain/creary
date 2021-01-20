@@ -237,7 +237,11 @@ import { categorySlider } from './category-slider';
 
                 if (isUserFeed()) {
                     let following = navbarFilter.account.user.followings;
-                    commentsApi.feed(following, search, adult, download, license, 20, onResult);
+                    if (following.length > 0) {
+                        commentsApi.feed(following, search, adult, download, license, 20, onResult);
+                    } else {
+                        onResult(null, { data: [] });
+                    }
                 } else {
                     commentsApi.searchByReward(search, download, license, 20, onResult);
                     creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
@@ -333,7 +337,11 @@ import { categorySlider } from './category-slider';
                         let download = params.download;
                         let license = params.license ? params.license.flag : null;
 
-                        commentsApi.feed(followings, search, adult, download, license, 20, onFeedComments);
+                        if (followings.length > 0) {
+                            commentsApi.feed(followings, search, adult, download, license, 20, onFeedComments);
+                        } else {
+                            noFeedContent();
+                        }
                     }
                 } else if (category === 'search') {
                     loadOldContent(true);

@@ -533,7 +533,8 @@
         "EMPTY_SUBTITLE": "Sigue a gente con gustos similares al tuyo para ver qué ideas nuevas y originales descubren.",
         "PROMOTION_COST": "Coste de promoción",
         "NO_SEARCH_RESULTS_1": "Tu búsqueda no tiene resultados",
-        "NO_SEARCH_RESULTS_2": "Revisa si hay fallos de escritura o prueba con otros términos de búsqueda."
+        "NO_SEARCH_RESULTS_2": "Revisa si hay fallos de escritura o prueba con otros términos de búsqueda.",
+        "POPULAR_PROJECTS": "Proyectos Populares"
     },
     "FILTER": {
         "FILTER": "Filtro",
