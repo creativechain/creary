@@ -91,7 +91,12 @@
                                         <p class="title">{{ __('lang.HOME.EMPTY_TITLE') }}</p>
                                         <p class="subtitle">{{ __('lang.HOME.EMPTY_SUBTITLE') }}</p>
                                         <div class="pt-4">
-                                            <a href="/popular">{{ __('lang.HOME.POPULAR_PROJECTS') }}</a>
+                                            <a class="btn btn--sm btn--primary" href="/popular">
+                                                <span class="btn__text btn-publish-navbar font-weight-bold">
+                                                    {{ __('lang.HOME.POPULAR_PROJECTS') }}
+                                                </span>
+                                            </a>
+<!--                                            <a href="/popular">{{ __('lang.HOME.POPULAR_PROJECTS') }}</a>-->
                                         </div>
                                     </div>
                                 </div>

@@ -161,12 +161,12 @@
                 </a>
             </li>-->
             <li>
-                <a href="/privacy_policy">
+                <a href="{{ route('privacy') }}">
                     <span>{{ __('lang.DOTS_MENU.PRIVACY') }}</span>
                 </a>
             </li>
             <li>
-                <a href="/terms_and_conditions">
+                <a href="{{ route('terms') }}">
                     <span>{{ __('lang.DOTS_MENU.TERMS') }}</span>
                 </a>
             </li>

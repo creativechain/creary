@@ -53,4 +53,3 @@ Route::get('/{category}/{user}/{permlink}', 'CrearyController@postCategory')
 Route::get('/{user}/{permlink}', 'CrearyController@post')
     ->where('user', '^(\@[\w\d\.-]+)$')
     ->where('permlink', '^([\w\d-]+)$');
-
