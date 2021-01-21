@@ -32,9 +32,10 @@ import { categorySlider } from './category-slider';
                 methods: {
                     isUserFeed: isUserFeed,
                     loadContent: loadContent,
+                    closeFilters: closeFilters,
                     closeCategoryDropdown: closeCategoryDropdown,
                     enableFilter: function () {
-                        return this.isUserFeed() || (this.category === 'search' && this.discuss);
+                        return this.isUserFeed() || this.category === 'search';
                     },
                     getFilterText: function () {
                         //discuss === 'feed' ? lang.FILTER.FEED : lang.FILTER[category.toUpperCase()]
@@ -93,6 +94,7 @@ import { categorySlider } from './category-slider';
                             } else {
                                 this.category = category;
                                 this.discuss = null;
+                                this.closeFilters();
                             }
 
                             this.resetContentFilters();
@@ -387,6 +389,10 @@ import { categorySlider } from './category-slider';
             $('#category-select').removeClass('dropdown--active');
             console.log('Closing dropdown');
         }, 100);
+    }
+
+    function closeFilters() {
+        $('.row-filter-select').fadeToggle('show');
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
