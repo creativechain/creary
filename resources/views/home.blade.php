@@ -90,7 +90,7 @@
                                     <div class="col-md-4 col-sm-6">
                                         <p class="title">{{ __('lang.HOME.EMPTY_TITLE') }}</p>
                                         <p class="subtitle">{{ __('lang.HOME.EMPTY_SUBTITLE') }}</p>
-                                        <div class="pt-4">
+                                        <div class="mt-1">
                                             <a class="btn btn--sm btn--primary" href="/popular">
                                                 <span class="btn__text btn-publish-navbar font-weight-bold">
                                                     {{ __('lang.HOME.POPULAR_PROJECTS') }}
