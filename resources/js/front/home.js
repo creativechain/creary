@@ -145,6 +145,8 @@ import { CommentsApi } from '../lib/creary-api';
                     },
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
+                        let state = this.state;
+                        state.postsData = state.content;
                         creaEvents.emit('navigation.post.data', post, this.state, this.discuss, this.category);
                         showModal('#modal-post');
                     },
@@ -565,7 +567,7 @@ import { CommentsApi } from '../lib/creary-api';
 
                             //Update Posts
                             discussions.forEach(function (d) {
-                                let permlink = d.author + '/' + d.permlink;
+                                let permlink = `${d.author}/${d.permlink}`;
                                 homePosts.state.content[permlink] = d;
                                 homePosts.state.discussion_idx[discuss][category].push(permlink);
                             });
@@ -707,8 +709,9 @@ import { CommentsApi } from '../lib/creary-api';
                                             //Update accounts
                                             newAccounts.forEach(function (a) {
                                                 homePosts.state.accounts[a.name] = a;
-                                            }); //Update Posts
+                                            });
 
+                                            //Update Posts
                                             let discuss = homePosts.discuss;
                                             topDiscussions.forEach(function (d) {
                                                 let permlink = d.author + '/' + d.permlink;
