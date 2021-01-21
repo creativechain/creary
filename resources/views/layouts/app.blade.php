@@ -496,7 +496,7 @@
                     <div class="bar__module float-lg-right float-md-right hidden-xs">
                         <ul class="list-inline ul-navbar-invitado" style="display: inline-flex;align-items: center;justify-content: flex-end;">
                             <li v-pre class="hidden-xs">
-                                <div id="navbar-search" class="dropdown dropdown-search">
+                                <div id="navbar-search" ref="searcher" class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i>
                                         <input v-model="search" v-on:input="performSearch" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
                                     </span>

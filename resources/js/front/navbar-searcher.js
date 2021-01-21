@@ -37,6 +37,7 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
             },
             methods: {
                 isInHome: isInHome,
+                closeResults: closeResults,
                 reset: function reset() {
                     this.search = null;
                     this.limit = SEARCH_LIMIT;
@@ -45,13 +46,12 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
                     if (this.isInHome()) {
                         cancelEventPropagation(event);
                         this.search = tag.name;
+                        this.closeResults();
                         creaEvents.emit('crea.content.tag', tag.name);
                     }
                 },
                 performSearch: function (event) {
                     cancelEventPropagation(event);
-
-                    let that = this;
 
                     if (this.search && this.search.length >= MIN_SEARCH_CHARS) {
                         console.log('Searching', this.search);
@@ -103,6 +103,12 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
                 },
             },
         });
+    }
+
+    function closeResults() {
+        setTimeout(function () {
+            $('#navbar-search').removeClass('dropdown--active');
+        }, 100);
     }
 
     creaEvents.on('crea.modal.ready', function () {
