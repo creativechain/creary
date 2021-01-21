@@ -38,7 +38,7 @@ import { categorySlider } from './category-slider';
                     },
                     getFilterText: function () {
                         //discuss === 'feed' ? lang.FILTER.FEED : lang.FILTER[category.toUpperCase()]
-                        if (this.isUserFeed()) {
+                        if (this.isUserFeed() || this.discuss === 'feed') {
                             return this.lang.FILTER.FEED;
                         } else if (this.category === 'search') {
                             return String.format(this.lang.FILTER.SEARCH, '"' + this.search + '"');
@@ -174,9 +174,8 @@ import { categorySlider } from './category-slider';
         let params = navbarFilter.getParams();
 
         if (discuss === 'feed') {
-            let user = getPathPart();
-            let urlFilter = `/${user}/feed`;
-            if (params.search) {
+            let urlFilter = `/${category}/feed`;
+            if (params.search && params.search !== 'feed') {
                 urlFilter += `?q=${params.search}`;
             }
 
