@@ -264,8 +264,6 @@ import { categorySlider } from './category-slider';
         crea.api.getState(urlFilter, function (err, urlState) {
             if (!catchError(err)) {
                 if (isUserFeed()) {
-                    loadButtonFilterToggle();
-
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
@@ -392,7 +390,10 @@ import { categorySlider } from './category-slider';
     }
 
     function closeFilters() {
-        $('.row-filter-select').fadeToggle('show');
+        let filters = $('.row-filter-select');
+        if (filters.css('display') !== 'none') {
+            filters.fadeToggle('show');
+        }
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
@@ -430,7 +431,7 @@ import { categorySlider } from './category-slider';
 
     creaEvents.on('crea.dom.ready', function () {
         let category = getPathPart();
-        if (category === 'search') {
+        if (category === 'search' || isUserFeed()) {
             loadButtonFilterToggle();
         }
     });
