@@ -57,8 +57,8 @@ class CommentsController extends Controller
         }
 
         if ($search) {
-            $query->where(function ($query) use ($search) {
-                $query->whereHas('tags', function ($query) use ($search) {
+            $query->where(function (Builder $query) use ($search) {
+                return $query->orWhereHas('tags', function (Builder $query) use ($search) {
                     return $query->where('name', 'like', "%$search%");
                 })
                     ->orWhere('title', 'like', "%$search%")
@@ -68,11 +68,12 @@ class CommentsController extends Controller
         }
 
         $query->where(function ($query) use ($following){
-            return $query->where('reblogged_by', 'elemMatch', ['$in' => $following])
+            return $query->orWhere('reblogged_by', 'elemMatch', ['$in' => $following])
                 ->orWhereIn('author', $following);
         });
 
         $comments = $query
+            ->with('tags')
             ->orderByDesc('created_at')
             ->paginate($limit)
             ->appends($request->except('page'));
