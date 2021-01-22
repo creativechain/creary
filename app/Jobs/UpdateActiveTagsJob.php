@@ -48,6 +48,8 @@ class UpdateActiveTagsJob implements ShouldQueue
             $tagsIds = array_merge($tagsIds, $c->tags_ids);
         }
 
+        $tagsIds = array_unique($tagsIds);
+
         $tags = Tags::query()
             ->whereIn('_id', $tagsIds)
             ->get();

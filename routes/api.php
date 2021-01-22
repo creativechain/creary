@@ -44,6 +44,7 @@ Route::group(['middleware' => ['cors']], function () {
     Route::group(['prefix' => 'tags'], function () {
 
         Route::get('/', 'Api\TagsController@index')->name('tags.index');
+        Route::get('/active', 'Api\TagsController@mostActiveTags')->name('tags.active');
         Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
     });
 

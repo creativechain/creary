@@ -1,17 +1,16 @@
-import {EventEmitter} from "events";
-import HttpClient from "./http";
-import {jsonify} from "./util";
+import { EventEmitter } from 'events';
+import HttpClient from './http';
+import { jsonify } from './util';
 
 const OPTIONS = {
-    base_url: apiOptions.apiCrea
-}
+    base_url: apiOptions.apiCrea,
+};
 
 class CrearyApi extends EventEmitter {
     constructor(api, options = OPTIONS) {
         super();
         this._api = api;
         this._options = options;
-
     }
 
     /**
@@ -19,10 +18,10 @@ class CrearyApi extends EventEmitter {
      * @private
      */
     __initializeClient(endpoint, callback, buildUrl = true) {
-        let url = buildUrl ? this._options.base_url + '/' + this._api +  endpoint : endpoint;
+        let url = buildUrl ? this._options.base_url + '/' + this._api + endpoint : endpoint;
         this._http = new HttpClient(url);
         this._http.setHeaders({
-            Accept: 'application/json'
+            Accept: 'application/json',
         });
 
         this.__setCallback(callback);
@@ -145,7 +144,7 @@ class CommentsApi extends CrearyApi {
      */
     comment(author, permlink, callback) {
         this.__initializeClient(`/${author}/${permlink}`, callback);
-        this.__get()
+        this.__get();
     }
 
     multipleComments(permlinks, callback) {
@@ -166,6 +165,11 @@ class TagsApi extends CrearyApi {
      */
     index(limit = 20, callback) {
         this.__initializeClient('/', callback);
+        this.__get({ limit });
+    }
+
+    activeTags(limit = 20, callback) {
+        this.__initializeClient('/active', callback);
         this.__get({ limit });
     }
 
@@ -197,6 +201,4 @@ class AccountsApi extends CrearyApi {
         this.__get({ search, limit });
     }
 }
-export {
-    CrearyApi, CommentsApi, TagsApi, AccountsApi
-}
+export { CrearyApi, CommentsApi, TagsApi, AccountsApi };
