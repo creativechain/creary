@@ -14,7 +14,7 @@ class Comments extends Model
     protected $connection = 'mongodb';
     protected $fillable = ['cashout_at', 'created_at', 'updated_at'];
     protected $dates = ['cashout_at', 'created_at', 'updated_at'];
-
+    protected $hidden = ['tags_ids'];
 
     public function __construct(array $attributes = [])
     {
