@@ -43,6 +43,33 @@ class TagsController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
+    public function mostActiveTags(Request $request) {
+        $validations = array(
+            'limit' => 'sometimes|numeric',
+        );
+
+        $validatedData = Validator::make($request->all(), $validations);
+        if ($validatedData->fails()) {
+            return response([
+                'status' => 'error',
+                'message' => $validatedData->errors(),
+                'error' => 'invalid_parameter'
+            ], 400);
+        }
+
+        $limit = intval($request->get('limit', 20));
+
+        $tags = Tags::query()
+            ->orderByDesc('active_comments')
+            ->paginate($limit);
+
+        return response($tags);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function search(Request $request) {
         $validations = array(
             'limit' => 'sometimes|numeric',

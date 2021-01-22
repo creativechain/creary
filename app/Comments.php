@@ -81,7 +81,7 @@ class Comments extends Model
                     ]);
 
                 $mT->comments()->attach($this->_id);
-                $mT->setCommentsCount();
+                $mT->updateCounters();
                 $mT->save();
             }
 
