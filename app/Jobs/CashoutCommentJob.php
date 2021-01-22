@@ -37,7 +37,7 @@ class CashoutCommentJob implements ShouldQueue
         //
         $unpaidComments = Comments::query()
             ->where('is_paid', false)
-            ->where('cashout_at', '>=', Carbon::now())
+            ->where('cashout_at', '<=', Carbon::now())
             ->get();
 
         $cc = new CrearyClient();
