@@ -116,12 +116,15 @@ class CommentsController extends Controller
             $query->where('license', $license);
         }
 
-        $comments = $query->where('is_paid', true)
-            ->where('title', 'like', "%$search%")
-            ->orWhereHas('tags', function ($query) use ($search) {
-                return $query->where('name', 'like', "%$search%");
+        $comments = $query
+            ->where('is_paid', true)
+            ->where(function (Builder $query) use ($search) {
+                return $query->orWhere('title', 'like', "%$search%")
+                    ->orWhereHas('tags', function ($query) use ($search) {
+                        return $query->where('name', 'like', "%$search%");
+                    })
+                    ->orWhere('description', 'like', "%$search%");
             })
-            ->orWhere('description', 'like', "%$search%")
             ->orderByDesc('reward')
             ->paginate($limit)
             ->appends($request->except('page'));
