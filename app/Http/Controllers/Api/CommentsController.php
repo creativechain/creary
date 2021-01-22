@@ -125,6 +125,7 @@ class CommentsController extends Controller
                     })
                     ->orWhere('description', 'like', "%$search%");
             })
+            ->with('tags')
             ->orderByDesc('reward')
             ->paginate($limit)
             ->appends($request->except('page'));
