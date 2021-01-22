@@ -31,9 +31,9 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CashoutCommentJob())->everyMinute()
             ->withoutOverlapping();
 
-        $schedule->job(new UpdateActiveTagsJob())
+        /*$schedule->job(new UpdateActiveTagsJob())
             ->everyMinute()
-            ->withoutOverlapping();
+            ->withoutOverlapping();*/
     }
 
     /**
