@@ -168,7 +168,7 @@ class TagsApi extends CrearyApi {
         this.__get({ limit });
     }
 
-    activeTags(limit = 20, callback) {
+    active(limit = 20, callback) {
         this.__initializeClient('/active', callback);
         this.__get({ limit });
     }

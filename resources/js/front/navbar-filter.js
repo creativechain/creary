@@ -94,6 +94,7 @@ import { categorySlider } from './category-slider';
                             } else {
                                 this.category = category;
                                 this.discuss = null;
+                                this.search = null;
                                 this.closeFilters();
                             }
 
@@ -155,7 +156,7 @@ import { categorySlider } from './category-slider';
 
     function fetchUsedTags() {
         let tagsApi = new TagsApi();
-        tagsApi.index(20, function (err, result) {
+        tagsApi.active(20, function (err, result) {
             if (!catchError(err)) {
                 navbarFilter.discussions = result.data;
             } else {
