@@ -44,8 +44,10 @@ class CashoutCommentJob implements ShouldQueue
         Log::debug('Updating ' . $unpaidComments->count() . ' comments!');
         foreach ($unpaidComments as $c) {
             /** @var Comments $c */
+            Log::debug('Updating comment ' . $c->author . '/' . $c->permlink);
             $commentData = $cc->getPost($c->author, $c->permlink);
             $c->applyData($commentData);
+            Log::debug('Paid: ' . ($c->isPaid ? 'true' : 'false') . ', Cashout: ' . $c->cashout_at->toString());
         }
     }
 }
