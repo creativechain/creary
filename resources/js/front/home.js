@@ -479,6 +479,7 @@ import { CommentsApi } from '../lib/creary-api';
                     //Avoid show feed if current user is not logged
                     showProfile(category);
                 }
+            } else if (category) {
             } else {
                 creaEvents.emit('crea.content.path', category, discuss);
                 creaEvents.emit('crea.content.load');

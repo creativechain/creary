@@ -787,7 +787,7 @@ import { CommentsApi } from '../lib/creary-api';
 
     function updatePostData() {
         if (postContainer) {
-            setUp(postContainer.state);
+            showPostIndex(postContainer.state.postIndex, postContainer.state);
         }
     }
 

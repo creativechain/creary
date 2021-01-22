@@ -168,6 +168,13 @@ import { categorySlider } from './category-slider';
     }
 
     function loadContent() {
+        let currentPath = window.location.pathname;
+        let postMatch = currentPath.match(/^([\w\d\-\/]+)\/(@[\w\.\d-]+)\/([\w\d-]+)$/);
+        console.log('PostMatch', postMatch);
+        if (postMatch) {
+            return;
+        }
+
         navbarFilter.$forceUpdate();
 
         console.log('Loading content for', navbarFilter.category, navbarFilter.discuss);
