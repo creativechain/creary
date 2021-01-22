@@ -49,6 +49,7 @@ class UpdateActiveTagsJob implements ShouldQueue
         }
 
         $tagsIds = array_unique($tagsIds);
+        Log::debug('Selected ' . count($tagsIds) . ' ids of tags');;
 
         $tags = Tags::query()
             ->whereIn('_id', $tagsIds)
