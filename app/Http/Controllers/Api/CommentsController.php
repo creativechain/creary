@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Comments;
 use App\Http\Controllers\Controller;
 use App\Http\Crea\CrearyClient;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -56,9 +57,14 @@ class CommentsController extends Controller
         }
 
         if ($search) {
-            $query->whereHas('tags', function ($query) use ($search) {
-                return $query->where('name', 'like', "%$search%");
+            $query->where(function ($query) use ($search) {
+                $query->whereHas('tags', function ($query) use ($search) {
+                    return $query->where('name', 'like', "%$search%");
+                })
+                    ->orWhere('title', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
             });
+
         }
 
         $query->where(function ($query) use ($following){
