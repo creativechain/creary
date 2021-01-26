@@ -2,7 +2,7 @@
     <div class="col-6 col-md-2 order-0 order-md-0">
         <div id="category-select" class="dropdown dropdown-popular">
             <span class="dropdown__trigger">@{{ getFilterText() }} <i class="stack-down-open"></i></span>
-            <div class="dropdown__container">
+            <div class="dropdown__container nav-filter-items">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3 col-lg-2 dropdown__content">
