@@ -3,6 +3,7 @@ import HttpClient from '../lib/http';
 import Avatar from '../components/Avatar';
 import { isInHome } from '../common/common';
 import { AccountsApi, TagsApi } from '../lib/creary-api';
+import { isBreakpoint } from '../lib/design';
 
 (function () {
     const SEARCH_LIMIT = 3;
@@ -12,6 +13,7 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
 
     let navbarSearch;
 
+    let elId = isBreakpoint('xs') ? '#navbar-search-mobile' : '#navbar-search';
     function setUp() {
         let search;
         let category = getPathPart();
@@ -20,7 +22,7 @@ import { AccountsApi, TagsApi } from '../lib/creary-api';
         }
 
         navbarSearch = new Vue({
-            el: '#navbar-search',
+            el: elId,
             name: 'searcher',
             data: {
                 lang: lang,
