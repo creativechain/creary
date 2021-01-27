@@ -39,49 +39,58 @@ class CommentsController extends Controller
         $search = $request->get('search', false);
 
         $username = $request->cookie('creary_username');
-        $creaClient = new CrearyClient();
-        $followings = $creaClient->getAccountFollowings($username);
-        //dd($followings);
-        $following = $followings['blog'];
+        if ($username) {
+            $creaClient = new CrearyClient();
+            $followings = $creaClient->getAccountFollowings($username);
+            //dd($followings);
+            $following = $followings['blog'];
 
-        $query = Comments::query();
+            $query = Comments::query();
 
-        //Only avoid return adult content if field $adult = false (Not show adult content)
-        if (!$adult) {
-            $query->where('adult', false);
-        }
+            //Only avoid return adult content if field $adult = false (Not show adult content)
+            if (!$adult) {
+                $query->where('adult', false);
+            }
 
-        if ($download) {
-            $query->where('download', $download);
-        }
+            if ($download) {
+                $query->where('download', $download);
+            }
 
-        if ($license) {
-            $query->where('license', $license);
-        }
+            if ($license) {
+                $query->where('license', $license);
+            }
 
-        if ($search) {
-            $query->where(function (Builder $query) use ($search) {
-                return $query->orWhereHas('tags', function (Builder $query) use ($search) {
-                    return $query->where('name', 'like', "%$search%");
-                })
-                    ->orWhere('title', 'like', "%$search%")
-                    ->orWhere('description', 'like', "%$search%");
+            if ($search) {
+                $query->where(function (Builder $query) use ($search) {
+                    return $query->orWhereHas('tags', function (Builder $query) use ($search) {
+                        return $query->where('name', 'like', "%$search%");
+                    })
+                        ->orWhere('title', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%");
+                });
+
+            }
+
+            $query->where(function ($query) use ($following){
+                return $query->orWhere('reblogged_by', 'elemMatch', ['$in' => $following])
+                    ->orWhereIn('author', $following);
             });
 
+            $comments = $query
+                ->with('tags')
+                ->orderByDesc('created_at')
+                ->paginate($limit)
+                ->appends($request->except('page'));
+
+            return response($comments);
+        } else {
+            return response([
+                'status' => 'error',
+                'message' => 'No user detected',
+                'error' => 'guest_user'
+            ], 403);
         }
 
-        $query->where(function ($query) use ($following){
-            return $query->orWhere('reblogged_by', 'elemMatch', ['$in' => $following])
-                ->orWhereIn('author', $following);
-        });
-
-        $comments = $query
-            ->with('tags')
-            ->orderByDesc('created_at')
-            ->paginate($limit)
-            ->appends($request->except('page'));
-
-        return response($comments);
 
     }
 
