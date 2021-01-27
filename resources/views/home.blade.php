@@ -50,7 +50,7 @@
                         </template>
                     </div>
                     <div class="row pt-5" v-bind:class="{ hidden: !moreLoading }">
-                        <div class="col-12 text-center">
+                        <div class="col-12 d-flex justify-content-center">
                             <svg viewBox="0 0 50 50" class="spinner">
                                 <circle class="ring" cx="25" cy="25" r="22.5" />
                                 <circle class="line" cx="25" cy="25" r="22.5" />
