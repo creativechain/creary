@@ -138,6 +138,38 @@ class CrearyClient
     }
 
     /**
+     * @param $accountName
+     * @param string $what
+     * @param int $limit
+     * @return array|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getAccountFollowings($accountName, $what = 'blog', $limit = 1000) {
+        $rpcData = $this->buildRpcData('condenser_api.get_following', array($accountName, '', $what, $limit));
+
+        $response = $this->callRequest($rpcData);
+
+        if ($response['result']) {
+            $followings = $response['result'];
+            $parsedFollowings = array();
+
+            foreach ($followings as $following) {
+                $what = $following['what'][0];
+                $user = $following['following'];
+                if (!isset($parsedFollowings[$what])) {
+                    $parsedFollowings[$what] = array();
+                }
+
+                $parsedFollowings[$what][] = $user;
+            }
+
+            return $parsedFollowings;
+        }
+
+        return null;
+    }
+
+    /**
      * @param $height
      * @param bool $parse
      * @return Obj|mixed

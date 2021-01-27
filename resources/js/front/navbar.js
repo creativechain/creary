@@ -164,7 +164,7 @@ import { CommentsApi } from '../lib/creary-api';
 
                     let commentsApi = new CommentsApi();
                     let adult = navbarContainer.user.metadata.adult_content === 'hide' ? 0 : 1;
-                    commentsApi.feed(navbarContainer.user.followings, null, adult, 20, function (err, result) {
+                    commentsApi.feed(null, adult, 20, function (err, result) {
                         if (!catchError(err)) {
                             if (result.to) {
                                 let count = result.to;

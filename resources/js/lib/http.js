@@ -3,7 +3,8 @@
  */
 
 import * as EventEmitter from 'events';
-import {clean, randomNumber} from './util';
+import { default as axios } from 'axios';
+import { clean, randomNumber } from './util';
 
 class HttpClient extends EventEmitter {
     constructor(url) {
@@ -15,47 +16,40 @@ class HttpClient extends EventEmitter {
         this.headers = {};
         this.mimeType = 'multipart/form-data';
         this.contentType = false;
-        this.xhr = null;
+        this.requestToken = null;
     }
 
     __exec() {
         let that = this;
+        this.requestToken = axios.CancelToken.source();
 
         let settings = {
             url: this.url,
             method: this.method,
             headers: this.headers,
-            mimeType: this.mimeType,
-            contentType: this.contentType,
-            crossDomain: true,
-            processData: false
         };
 
         if (this.params) {
             if (this.method === 'GET') {
-                settings.processData = true;
-                settings.data = this.params;
+                let query = new URLSearchParams(this.params).toString();
+                settings.url += `?${query}`;
             } else {
-                let form = new FormData();
-                let keys = Object.keys(this.params);
-
-                keys.forEach(function (k) {
-                    form.append(k, that.params[k]);
-                });
-                settings.data = form;
+                settings.data = this.params;
             }
         }
 
-        this.xhr = $.ajax(settings)
-            .done(function (data, textStatus, jqXHR) {
-                that.emit('done' + that.id, data, textStatus, jqXHR);
+        axios(settings)
+            .then((response) => {
+                this.emit('always' + this.id, response.data, response.statusText, response.request);
+                if (response.status >= 200 && response.status <= 299) {
+                    this.emit('done' + this.id, response.data, response.statusText, response.request);
+                } else {
+                    this.emit('fail' + this.id, response.data, response.statusText, response.request);
+                }
             })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                that.emit('fail' + that.id, jqXHR, textStatus, errorThrown);
-            })
-            .always(function (data, textStatus, jqXHR) {
-                that.emit('always' + that.id, data, textStatus, jqXHR);
-            })
+            .catch((error) => {
+                that.emit('error' + that.id, error);
+            });
     }
 
     /**
@@ -85,7 +79,6 @@ class HttpClient extends EventEmitter {
      * @returns {HttpClient}
      */
     post(params) {
-
         this.params = clean(params);
         this.method = 'POST';
         this.__exec();
@@ -107,8 +100,8 @@ class HttpClient extends EventEmitter {
     }
 
     abort() {
-        if (this.xhr) {
-            this.xhr.abort();
+        if (this.requestToken) {
+            this.requestToken.cancel();
         }
     }
 }

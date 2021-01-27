@@ -247,7 +247,7 @@ import { categorySlider } from './category-slider';
                 if (isUserFeed()) {
                     let following = navbarFilter.account.user.followings;
                     if (following.length > 0) {
-                        commentsApi.feed(following, search, adult, download, license, 20, onResult);
+                        commentsApi.feed(search, adult, download, license, 20, onResult);
                     } else {
                         onResult(null, { data: [] });
                     }
@@ -347,7 +347,7 @@ import { categorySlider } from './category-slider';
                         let license = params.license ? params.license.flag : null;
 
                         if (followings.length > 0) {
-                            commentsApi.feed(followings, search, adult, download, license, 20, onFeedComments);
+                            commentsApi.feed(search, adult, download, license, 20, onFeedComments);
                         } else {
                             noFeedContent();
                         }

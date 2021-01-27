@@ -16,8 +16,6 @@ class CommentsController extends Controller
 
     public function feed(Request $request) {
         $validations = array(
-            'following' => 'required|array',
-            'following.*' => 'sometimes|string|distinct',
             'search' => 'sometimes|string',
             'adult' => 'sometimes|boolean',
             'download' => 'sometimes|string',
@@ -39,7 +37,12 @@ class CommentsController extends Controller
         $download = $request->get('download', false);
         $license = intval($request->get('license', 0));
         $search = $request->get('search', false);
-        $following = $request->get('following');
+
+        $username = $request->cookie('creary_username');
+        $creaClient = new CrearyClient();
+        $followings = $creaClient->getAccountFollowings($username);
+        //dd($followings);
+        $following = $followings['blog'];
 
         $query = Comments::query();
 

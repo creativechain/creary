@@ -110,7 +110,6 @@ class CommentsApi extends CrearyApi {
 
     /**
      *
-     * @param following
      * @param search
      * @param adult
      * @param download
@@ -118,9 +117,9 @@ class CommentsApi extends CrearyApi {
      * @param limit
      * @param callback
      */
-    feed(following, search = null, adult = null, download = null, license = null, limit = 20, callback) {
+    feed(search = null, adult = null, download = null, license = null, limit = 20, callback) {
         this.__initializeClient('/feed', callback);
-        this.__get({ following, search, adult, download, license, limit });
+        this.__get({ search, adult, download, license, limit });
     }
 
     /**
