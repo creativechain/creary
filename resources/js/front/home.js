@@ -121,6 +121,7 @@ import { CommentsApi } from '../lib/creary-api';
                     cleaningContent: false,
                     search: getParameterByName('query'),
                     loading: false,
+                    moreLoading: false,
                     simpleView: false,
                     lang: lang,
                 },
@@ -358,6 +359,11 @@ import { CommentsApi } from '../lib/creary-api';
         if (isUserFeed()) {
             //Retrieve another accounts
             getAccounts(authors, function (err, result) {
+                if (homePosts) {
+                    //Hide more loading
+                    homePosts.moreLoading = false;
+                }
+
                 if (!catchError(err)) {
                     let accounts = {};
                     result.forEach(function (a) {
@@ -433,6 +439,11 @@ import { CommentsApi } from '../lib/creary-api';
 
             let commentsApi = new CommentsApi();
             commentsApi.multipleComments(ck, function (err, result) {
+                if (homePosts) {
+                    //Hide more loading
+                    homePosts.moreLoading = false;
+                }
+
                 if (!catchError(err)) {
                     result.forEach((d) => {
                         onReblogs(d);
@@ -540,6 +551,9 @@ import { CommentsApi } from '../lib/creary-api';
 
         let onHomeInit = function () {
             let hideSearchLoading = function () {
+                //Hide more loading
+                homePosts.moreLoading = false;
+
                 if (homePosts.category === 'search') {
                     homePosts.loading = false;
                 }
@@ -582,8 +596,9 @@ import { CommentsApi } from '../lib/creary-api';
                             homePosts.cleaningContent = false;
                             homePosts.$forceUpdate();
                             creaEvents.emit('navigation.state.update', homePosts.state);
-                            hideSearchLoading();
                         }
+
+                        hideSearchLoading();
 
                         if (callback) {
                             callback();
@@ -651,6 +666,7 @@ import { CommentsApi } from '../lib/creary-api';
     creaEvents.on('crea.scroll.bottom', function () {
         if (!onScrollCalling) {
             onScrollCalling = true;
+            homePosts.moreLoading = true;
 
             let category = getPathPart();
             if (isUserFeed()) {
@@ -693,6 +709,9 @@ import { CommentsApi } from '../lib/creary-api';
 
                     if (apiCall) {
                         apiCall(lastPage.author, lastPage.permlink, discuss, 21, function (err, result) {
+                            //Hide more loading
+                            homePosts.moreLoading = false;
+
                             if (err) {
                                 console.error(err);
                             } else {

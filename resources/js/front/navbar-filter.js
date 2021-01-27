@@ -280,7 +280,7 @@ import { categorySlider } from './category-slider';
                             urlFilter,
                             urlFilter,
                             urlState,
-                            false,
+                            navbarFilter.hasContent(),
                             navbarFilter.needResetContent
                         );
                     };
@@ -336,6 +336,8 @@ import { categorySlider } from './category-slider';
                         if (navbarFilter.oldApiCall.next_page_url) {
                             navbarFilter.needResetContent = false;
                             commentsApi.get(navbarFilter.oldApiCall.next_page_url, onFeedComments);
+                        } else {
+                            noFeedContent();
                         }
                     } else {
                         let followings = navbarFilter.account.user.followings;
