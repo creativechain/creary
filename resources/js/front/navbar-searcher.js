@@ -14,6 +14,7 @@ import { isBreakpoint } from '../lib/design';
     let navbarSearch;
 
     let elId = isBreakpoint('xs') ? '#navbar-search-mobile' : '#navbar-search';
+
     function setUp() {
         let search;
         let category = getPathPart();

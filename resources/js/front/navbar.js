@@ -2,18 +2,12 @@
  * Created by ander on 25/09/18.
  */
 
-import R from "../lib/resources";
-import Session from "../lib/session";
-import mqtt from "mqtt";
-import HttpClient from "../lib/http";
-import {
-    jsonify,
-    getPathPart,
-    isUserFeed,
-    isSmallScreen,
-    cancelEventPropagation,
-} from "../lib/util";
-import { login, logout } from "../common/login";
+import R from '../lib/resources';
+import Session from '../lib/session';
+import mqtt from 'mqtt';
+import HttpClient from '../lib/http';
+import { jsonify, getPathPart, isUserFeed, isSmallScreen, cancelEventPropagation } from '../lib/util';
+import { login, logout } from '../common/login';
 import {
     catchError,
     performSearch,
@@ -24,21 +18,21 @@ import {
     updateUrl,
     parsePost,
     refreshAccessToken,
-} from "../common/common";
+} from '../common/common';
 
-import Errors from "../lib/error";
+import Errors from '../lib/error';
 
-import Avatar from "../components/Avatar";
-import { CommentsApi } from "../lib/creary-api";
+import Avatar from '../components/Avatar';
+import { CommentsApi } from '../lib/creary-api';
 
 (function () {
-    Vue.component("avatar", Avatar);
+    Vue.component('avatar', Avatar);
 
     let navbarContainer;
     let canLoadBootstrapScripts = false;
 
     let navbarRightMenu = new Vue({
-        el: "#navbar-right-menu",
+        el: '#navbar-right-menu',
         data: {
             lang: lang,
         },
@@ -52,8 +46,8 @@ import { CommentsApi } from "../lib/creary-api";
     function updateNavbarSession(session, userData) {
         if (!navbarContainer) {
             navbarContainer = new Vue({
-                el: "#navbar-container",
-                name: "navbar-container",
+                el: '#navbar-container',
+                name: 'navbar-container',
                 data: {
                     lang: lang,
                     session: session,
@@ -63,29 +57,30 @@ import { CommentsApi } from "../lib/creary-api";
                         xs: isSmallScreen(),
                         username: {
                             error: null,
-                            value: "",
+                            value: '',
                         },
                         password: {
                             error: null,
-                            value: "",
+                            value: '',
                         },
                     },
                     unreadNotifications: 0,
                 },
                 mounted: function mounted() {
                     //this.applyRightMenuEvents($);
-                    $("#modal-login").parent().removeAttr("modal-attached");
+                    $('#modal-login').parent().removeAttr('modal-attached');
+                    mr.notifications.documentReady($);
                 },
                 methods: {
                     applyRightMenuEvents: function applyRightMenuEvents($) {
                         mr.notifications.documentReady($);
                         mr.tabs.documentReady($);
                         mr.toggleClass.documentReady($);
-                        console.log("applying menus");
+                        console.log('applying menus');
                     },
                     closeLogin: function closeLogin() {
-                        hideModal("#modal-login");
-                        hideModal("#modal-login-d");
+                        hideModal('#modal-login');
+                        hideModal('#modal-login-d');
                     },
                     logout: logout,
                     login: function (event) {
@@ -93,28 +88,22 @@ import { CommentsApi } from "../lib/creary-api";
                         let that = this;
 
                         if (!this.loginForm.username.error) {
-                            login(
-                                this.loginForm.username.value,
-                                this.loginForm.password.value,
-                                function (err) {
-                                    console.log(err);
-                                    if (err) {
-                                        console.error(err);
+                            login(this.loginForm.username.value, this.loginForm.password.value, function (err) {
+                                console.log(err);
+                                if (err) {
+                                    console.error(err);
 
-                                        if (err === Errors.USER_LOGIN_ERROR) {
-                                            that.loginForm.password.error =
-                                                that.lang.ERROR[err].TITLE;
-                                            console.error(that.lang.ERROR[err]);
-                                        } else {
-                                            that.loginForm.password.error =
-                                                that.lang.ERROR.UNKNOWN_ERROR;
-                                            console.error(that.lang.ERROR[err]);
-                                        }
+                                    if (err === Errors.USER_LOGIN_ERROR) {
+                                        that.loginForm.password.error = that.lang.ERROR[err].TITLE;
+                                        console.error(that.lang.ERROR[err]);
                                     } else {
-                                        that.closeLogin();
+                                        that.loginForm.password.error = that.lang.ERROR.UNKNOWN_ERROR;
+                                        console.error(that.lang.ERROR[err]);
                                     }
+                                } else {
+                                    that.closeLogin();
                                 }
-                            );
+                            });
                         }
                     },
                     isUserFeed: isUserFeed,
@@ -144,18 +133,15 @@ import { CommentsApi } from "../lib/creary-api";
             crea.api.lookupAccountNames(accounts, function (err, result) {
                 if (err) {
                     console.error(err);
-                    navbarContainer.loginForm.username.error =
-                        lang.ERROR.INVALID_USERNAME;
+                    navbarContainer.loginForm.username.error = lang.ERROR.INVALID_USERNAME;
                 } else if (result[0] == null) {
-                    navbarContainer.loginForm.username.error =
-                        lang.ERROR.USERNAME_NOT_EXISTS;
+                    navbarContainer.loginForm.username.error = lang.ERROR.USERNAME_NOT_EXISTS;
                 } else {
                     navbarContainer.loginForm.username.error = null;
                 }
             });
         } else {
-            navbarContainer.loginForm.username.error =
-                lang.ERROR.INVALID_USERNAME;
+            navbarContainer.loginForm.username.error = lang.ERROR.INVALID_USERNAME;
         }
     }
 
@@ -173,99 +159,66 @@ import { CommentsApi } from "../lib/creary-api";
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
-                        creaEvents.emit(
-                            "crea.posts",
-                            urlFilter,
-                            filter,
-                            urlState
-                        );
+                        creaEvents.emit('crea.posts', urlFilter, filter, urlState);
                     };
 
                     let commentsApi = new CommentsApi();
-                    let adult =
-                        navbarContainer.user.metadata.adult_content === "hide"
-                            ? 0
-                            : 1;
-                    commentsApi.feed(
-                        navbarContainer.user.followings,
-                        null,
-                        adult,
-                        20,
-                        function (err, result) {
-                            if (!catchError(err)) {
-                                if (result.to) {
-                                    let count = result.to;
+                    let adult = navbarContainer.user.metadata.adult_content === 'hide' ? 0 : 1;
+                    commentsApi.feed(navbarContainer.user.followings, null, adult, 20, function (err, result) {
+                        if (!catchError(err)) {
+                            if (result.to) {
+                                let count = result.to;
 
-                                    let onContentFetched = function onContentFetched() {
-                                        count--;
+                                let onContentFetched = function onContentFetched() {
+                                    count--;
 
-                                        if (count <= 0) {
-                                            creaEvents.emit(
-                                                "crea.posts",
-                                                urlFilter,
-                                                filter,
-                                                urlState
-                                            );
-                                        }
-                                    };
+                                    if (count <= 0) {
+                                        creaEvents.emit('crea.posts', urlFilter, filter, urlState);
+                                    }
+                                };
 
-                                    urlState.content = {};
-                                    result.data.forEach(function (d) {
-                                        let permlink =
-                                            d.author + "/" + d.permlink;
+                                urlState.content = {};
+                                result.data.forEach(function (d) {
+                                    let permlink = d.author + '/' + d.permlink;
 
-                                        if (!urlState.content[permlink]) {
-                                            crea.api.getContent(
-                                                d.author,
-                                                d.permlink,
-                                                function (err, result) {
-                                                    if (err) {
-                                                        console.error(
-                                                            "Error getting",
-                                                            permlink,
-                                                            err
-                                                        );
-                                                    } else {
-                                                        urlState.content[
-                                                            permlink
-                                                        ] = parsePost(
-                                                            result,
-                                                            d.reblogged_by
-                                                        );
-                                                    }
+                                    if (!urlState.content[permlink]) {
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
+                                            }
 
-                                                    onContentFetched();
-                                                }
-                                            );
-                                        }
-                                    });
-                                } else {
-                                    noFeedContent();
-                                }
+                                            onContentFetched();
+                                        });
+                                    }
+                                });
+                            } else {
+                                noFeedContent();
                             }
                         }
-                    );
+                    });
                 } else {
-                    creaEvents.emit("crea.posts", urlFilter, filter, urlState);
+                    creaEvents.emit('crea.posts', urlFilter, filter, urlState);
                 }
             }
         });
     }
 
     function retrieveNewContent(event) {
-        retrieveContent(event, "/now");
+        retrieveContent(event, '/now');
     }
 
     function retrieveTrendingContent(event) {
-        retrieveContent(event, "/popular");
+        retrieveContent(event, '/popular');
     }
 
     function retrieveHotContent(event) {
-        retrieveContent(event, "/skyrockets");
+        retrieveContent(event, '/skyrockets');
     }
 
     function retrievePromotedContent(event) {
-        retrieveContent(event, "/promoted");
+        retrieveContent(event, '/promoted');
     }
 
     /**
@@ -287,32 +240,24 @@ import { CommentsApi } from "../lib/creary-api";
                 username: username,
                 password: account.getSignature(),
                 clean: true,
-                protocol: "wss",
+                protocol: 'wss',
                 //protocolId: 'MQTT',
             };
 
-            console.log("MQTT options", options);
+            console.log('MQTT options', options);
             const mqttClient = mqtt.connect(options);
-            mqttClient.on("connect", function (connack) {
-                console.log("MQTT connected!");
+            mqttClient.on('connect', function (connack) {
+                console.log('MQTT connected!');
 
                 //Subcribe to notifications messages
-                mqttClient.subscribe(
-                    `${username}/notification`,
-                    function (err, granted) {
-                        console.log("Subscription topic", err, granted);
-                    }
-                );
+                mqttClient.subscribe(`${username}/notification`, function (err, granted) {
+                    console.log('Subscription topic', err, granted);
+                });
             });
 
-            mqttClient.on("message", function (topic, message, packet) {
-                console.log(
-                    "Message received",
-                    topic,
-                    message.toString("utf8"),
-                    packet
-                );
-                creaEvents.emit("crea.notifications.update", session);
+            mqttClient.on('message', function (topic, message, packet) {
+                console.log('Message received', topic, message.toString('utf8'), packet);
+                creaEvents.emit('crea.notifications.update', session);
             });
         }
     }
@@ -335,20 +280,20 @@ import { CommentsApi } from "../lib/creary-api";
         }
     }
 
-    creaEvents.on("crea.notifications.unread", function (unreadNotifications) {
+    creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
         navbarContainer.unreadNotifications = unreadNotifications.total;
         navbarContainer.$forceUpdate();
     });
 
-    creaEvents.on("crea.posts", function () {
+    creaEvents.on('crea.posts', function () {
         navbarContainer.nav = getPathPart();
     });
 
-    creaEvents.on("crea.session.update", function (session, account) {
+    creaEvents.on('crea.session.update', function (session, account) {
         updateNavbarSession(session, account);
     });
 
-    creaEvents.on("crea.session.login", function (session, account) {
+    creaEvents.on('crea.session.login', function (session, account) {
         updateNavbarSession(session, account);
         if (window.mqtt_enable) {
             prepareNotifClient(session);
@@ -358,21 +303,21 @@ import { CommentsApi } from "../lib/creary-api";
         enableProfileMenu();
     });
 
-    creaEvents.on("crea.session.logout", function () {
+    creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
         //console.log('Emitting', 'crea.modal.ready', 'event');
-        creaEvents.emit("crea.modal.ready", true);
+        creaEvents.emit('crea.modal.ready', true);
 
         enableRightMenu();
     });
 
-    creaEvents.on("crea.dom.ready", function () {
+    creaEvents.on('crea.dom.ready', function () {
         canLoadBootstrapScripts = true;
     });
 
-    creaEvents.on("crea.content.filter", function (filter) {
-        if (!filter.startsWith("/")) {
-            filter = "/" + filter;
+    creaEvents.on('crea.content.filter', function (filter) {
+        if (!filter.startsWith('/')) {
+            filter = '/' + filter;
         }
 
         retrieveContent(null, filter);

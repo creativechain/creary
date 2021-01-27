@@ -212,14 +212,16 @@
 
 
 <!-- search mobile -->
-<div v-cloak id="navbar-search-mobile" class="notification pos-top pos-right search-box bg--white border--bottom p-0" data-animation="from-top"
+<div id="navbar-search-mobile" class="notification pos-top pos-right search-box bg--white border--bottom p-0"
+     data-animation="from-top"
      data-notification-link="search-box">
-    <form v-on:submit="performSearch" autocomplete="off">
+    <form autocomplete="off">
         <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
-                <input v-model="search" type="text" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                <input v-model="search" v-on:input="performSearch" type="text" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
+
         @include('modules.search-results-view')
     </form>
 </div>

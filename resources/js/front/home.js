@@ -491,6 +491,8 @@ import { CommentsApi } from '../lib/creary-api';
                     showProfile(category);
                 }
             } else if (category) {
+                creaEvents.emit('crea.content.path', category);
+                creaEvents.emit('crea.content.load');
             } else {
                 creaEvents.emit('crea.content.path', category, discuss);
                 creaEvents.emit('crea.content.load');
