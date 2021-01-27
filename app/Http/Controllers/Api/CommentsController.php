@@ -173,7 +173,7 @@ class CommentsController extends Controller
      */
     public function showMultiple(Request $request) {
         $validations = array(
-            'comments' => 'required|as¡¡string'
+            'comments' => 'required|string'
         );
 
         $validatedData = Validator::make($request->all(), $validations);
