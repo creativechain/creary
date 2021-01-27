@@ -111,6 +111,7 @@ import { isBreakpoint } from '../lib/design';
     function closeResults() {
         setTimeout(function () {
             $('#navbar-search').removeClass('dropdown--active');
+            $('div.notification-close-cross:nth-child(2)').click();
         }, 100);
     }
 
