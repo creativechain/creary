@@ -35,9 +35,8 @@ class CrearyApi extends EventEmitter {
     __setCallback(callback) {
         this._http.when('done', function (response) {
             try {
-                let data = jsonify(response);
                 if (callback) {
-                    callback(null, data);
+                    callback(null, response);
                 }
             } catch (e) {
                 if (callback) {
