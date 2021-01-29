@@ -61,6 +61,7 @@ import { CommentsApi } from '../lib/creary-api';
     Vue.component('username', Username);
     Vue.component('btn-follow', ButtonFollow);
 
+    let currentPage;
     let postContainer, otherProjectsContainer;
     let promoteModal, downloadModal, reportModal, reportCommentModal;
     let session, userAccount;
@@ -904,6 +905,13 @@ import { CommentsApi } from '../lib/creary-api';
         });
     }
 
+    function updateCurrentPage() {
+        currentPage = {
+            pathname: window.location.pathname,
+            title: document.title,
+        };
+    }
+
     $(window).bind('popstate', function (event) {
         if (event.originalEvent.state && event.originalEvent.state.post) {
             setUp(event.originalEvent.state, true);
@@ -949,12 +957,7 @@ import { CommentsApi } from '../lib/creary-api';
         updatePostData();
     });
 
-    creaEvents.on('crea.content.prepare', function () {
-        currentPage = {
-            pathname: window.location.pathname,
-            title: document.title,
-        };
-    });
+    creaEvents.on('crea.content.prepare', updateCurrentPage);
 
     creaEvents.on('crea.modal.ready', function () {
         console.log('MODALS Ready');
