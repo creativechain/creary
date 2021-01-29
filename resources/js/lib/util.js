@@ -332,6 +332,16 @@ function uniqueId() {
     return Math.random().toString(36).substr(2, 9);
 }
 
+/**
+ *
+ * @param topLevel
+ * @returns {string}
+ */
+function domain(topLevel = 2) {
+    let parts = location.hostname.split('.');
+    return parts.slice(topLevel * -1).join('.');
+}
+
 function makeMentions(comment, state) {
     let body = comment.body || comment;
 
@@ -419,4 +429,5 @@ export {
     linkfy,
     uniqueId,
     makeMentions,
+    domain,
 };

@@ -1,37 +1,63 @@
-
 /**
  * Created by ander on 25/09/18.
  */
 
-import Session from "../lib/session";
-import { Account, DEFAULT_ROLES } from "../lib/account";
+import Session from '../lib/session';
+import { Account, DEFAULT_ROLES } from '../lib/account';
 import R from '../lib/resources';
 import { Asset, Vests } from '../lib/amount';
 import { License, LICENSE } from '../lib/license';
 import HttpClient from '../lib/http';
-import { jsonify, jsonstring, getPathPart, clone, toLocaleDate, cancelEventPropagation, toUrl, NaNOr, createAuth } from '../lib/util';
+import {
+    jsonify,
+    jsonstring,
+    getPathPart,
+    clone,
+    toLocaleDate,
+    cancelEventPropagation,
+    toUrl,
+    NaNOr,
+    createAuth,
+} from '../lib/util';
 import { vestingCrea, delegatedCrea, vestsToCgy, cgyToVests, receivedDelegatedCGY } from '../common/creautil';
-import { parseAccount, parsePost, catchError, refreshAccessToken, CONSTANTS, showProfile, updateUrl, requireRoleKey,
-    updateUserSession, hideModal, showModal, resizeImage, uploadToIpfs, ignoreUser, goTo, showAlert, getDiscussion } from "../common/common";
-import Errors from "../lib/error";
+import {
+    parseAccount,
+    parsePost,
+    catchError,
+    refreshAccessToken,
+    CONSTANTS,
+    showProfile,
+    updateUrl,
+    requireRoleKey,
+    updateUserSession,
+    hideModal,
+    showModal,
+    resizeImage,
+    uploadToIpfs,
+    ignoreUser,
+    goTo,
+    showAlert,
+    getDiscussion,
+} from '../common/common';
+import Errors from '../lib/error';
 
 //Components import
-import Avatar from "../components/Avatar";
-import Recommend from "../components/Recommend";
-import NewLike from "../components/NewLike";
-import LinkName from "../components/LinkName";
-import ButtonFollow from "../components/ButtonFollow";
-import Amount from "../components/Amount";
-import Username from "../components/Username";
-import FollowNotification from "../components/notifications/FollowNotification";
-import LikePostNotification from "../components/notifications/LikePostNotification";
-import CommentPostNotification from "../components/notifications/CommentPostNotification";
-import RecommendPostNotification from "../components/notifications/RecommendPostNotification";
-import DownloadNotification from "../components/notifications/DownloadNotification";
-import MentionNotification from "../components/notifications/MentionNotification";
+import Avatar from '../components/Avatar';
+import Recommend from '../components/Recommend';
+import NewLike from '../components/NewLike';
+import LinkName from '../components/LinkName';
+import ButtonFollow from '../components/ButtonFollow';
+import Amount from '../components/Amount';
+import Username from '../components/Username';
+import FollowNotification from '../components/notifications/FollowNotification';
+import LikePostNotification from '../components/notifications/LikePostNotification';
+import CommentPostNotification from '../components/notifications/CommentPostNotification';
+import RecommendPostNotification from '../components/notifications/RecommendPostNotification';
+import DownloadNotification from '../components/notifications/DownloadNotification';
+import MentionNotification from '../components/notifications/MentionNotification';
+import { CommentsApi } from '../lib/creary-api';
 
 (function () {
-
     //Load Vue components
     Vue.component('avatar', Avatar);
     Vue.component('recommend', Recommend);
@@ -47,7 +73,7 @@ import MentionNotification from "../components/notifications/MentionNotification
     Vue.component('download-notification', DownloadNotification);
     Vue.component('mention-notification', MentionNotification);
 
-    let tempNotifications = { all: [], unread: 0, page: 0};
+    let tempNotifications = { all: [], unread: 0, page: 0 };
     let profileContainer;
     let hideProfileInfoClass = '';
     let rewardsContainer = {};
@@ -65,12 +91,24 @@ import MentionNotification from "../components/notifications/MentionNotification
         let vestsCrea = parseFloat(vestingCrea(state.user, state.props).toPlainString(null, false));
         let delegatedVesting = parseFloat(delegatedCrea(state.user, state.props).toPlainString(null, false));
         let maxPowerDown = vestsCrea - delegatedVesting;
-        let withdrawn = vestsToCgy(state, new Vests(state.user.withdrawn).toFriendlyString(null, false), apiOptions.nai.CREA);
-        let toWithdraw = vestsToCgy(state, new Vests(state.user.to_withdraw).toFriendlyString(null, false), apiOptions.nai.CREA);
+        let withdrawn = vestsToCgy(
+            state,
+            new Vests(state.user.withdrawn).toFriendlyString(null, false),
+            apiOptions.nai.CREA
+        );
+        let toWithdraw = vestsToCgy(
+            state,
+            new Vests(state.user.to_withdraw).toFriendlyString(null, false),
+            apiOptions.nai.CREA
+        );
         let withdrawNote = '';
 
         if (toWithdraw.amount - withdrawn.amount > 0) {
-            withdrawNote = String.format(lang.WALLET.DE_ENERGIZE_TEXT, toWithdraw.toFriendlyString(null, false), withdrawn.toFriendlyString(null, false));
+            withdrawNote = String.format(
+                lang.WALLET.DE_ENERGIZE_TEXT,
+                toWithdraw.toFriendlyString(null, false),
+                withdrawn.toFriendlyString(null, false)
+            );
         }
 
         if (!walletModalDeEnergize) {
@@ -84,7 +122,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                     finalAmount: 0,
                     sliderValue: 0,
                     amountByWeek: '',
-                    withdrawNote: withdrawNote
+                    withdrawNote: withdrawNote,
                 },
                 methods: {
                     formatString: String.format,
@@ -92,10 +130,16 @@ import MentionNotification from "../components/notifications/MentionNotification
                         amount += 0.0001;
                         let asset = Asset.parse({
                             amount: amount,
-                            nai: apiOptions.nai.CREA
+                            nai: apiOptions.nai.CREA,
                         });
                         //this.finalAmount = parseFloat(asset.toPlainString(null, false));
-                        this.amountByWeek = amount < 0.001 ? '' : String.format(this.lang.WALLET.DE_ENERGIZE_AMOUNT_BY_WEEK, asset.divide(8).toFriendlyString(null, false));
+                        this.amountByWeek =
+                            amount < 0.001
+                                ? ''
+                                : String.format(
+                                      this.lang.WALLET.DE_ENERGIZE_AMOUNT_BY_WEEK,
+                                      asset.divide(8).toFriendlyString(null, false)
+                                  );
                     },
                     onManualChange: function onManualChange(event) {
                         if (event) {
@@ -122,17 +166,22 @@ import MentionNotification from "../components/notifications/MentionNotification
                             let finalAmount = that.finalAmount + ' CREA';
                             console.log(finalAmount);
                             let vests = cgyToVests(that.state, finalAmount);
-                            crea.broadcast.withdrawVesting(activeKey, username, vests.toFriendlyString(null, false), function (err, result) {
-                                globalLoading.show = false;
+                            crea.broadcast.withdrawVesting(
+                                activeKey,
+                                username,
+                                vests.toFriendlyString(null, false),
+                                function (err, result) {
+                                    globalLoading.show = false;
 
-                                if (!catchError(err)) {
-                                    that.hideModalDeEnergize();
-                                    updateUserSession();
+                                    if (!catchError(err)) {
+                                        that.hideModalDeEnergize();
+                                        updateUserSession();
+                                    }
                                 }
-                            });
+                            );
                         });
-                    }
-                }
+                    },
+                },
             });
         } else {
             walletModalDeEnergize.session = session;
@@ -154,7 +203,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                     memo: '',
                     config: clone(defaultModalConfig),
                     toError: false,
-                    toExchange: false
+                    toExchange: false,
                 },
                 mounted: function mounted() {
                     let that = this;
@@ -187,28 +236,37 @@ import MentionNotification from "../components/notifications/MentionNotification
                         this.amount = this.config.total_amount.toPlainString();
                     },
                     sendCrea: function sendCrea() {
-                        if (this.toError || this.toExchange || !this.amount) {//TODO: SHOW ERRORS
+                        if (this.toError || this.toExchange || !this.amount) {
+                            //TODO: SHOW ERRORS
                         } else if (this.config.confirmed) {
                             let that = this;
                             let amountData = {
                                 amount: that.amount,
                                 nai: that.config.nai.toLowerCase(),
-                                round: true
+                                round: true,
                             };
                             let amount = Asset.parse(amountData).toFriendlyString(null, false);
                             requireRoleKey(this.session.account.username, 'active', function (activeKey) {
                                 globalLoading.show = true;
                                 console.log('Key:', activeKey, that.config.op);
-                                transfer(activeKey, that.config.op, that.session, that.config.to, amount, that.memo, function (err, result) {
-                                    globalLoading.show = false;
+                                transfer(
+                                    activeKey,
+                                    that.config.op,
+                                    that.session,
+                                    that.config.to,
+                                    amount,
+                                    that.memo,
+                                    function (err, result) {
+                                        globalLoading.show = false;
 
-                                    if (!catchError(err)) {
-                                        if (result) {
-                                            updateUserSession();
-                                            that.hideModalSend();
+                                        if (!catchError(err)) {
+                                            if (result) {
+                                                updateUserSession();
+                                                that.hideModalSend();
+                                            }
                                         }
                                     }
-                                });
+                                );
                             });
                         } else {
                             this.config.confirmed = true;
@@ -220,7 +278,7 @@ import MentionNotification from "../components/notifications/MentionNotification
 
                         if (!crea.utils.validateAccountName(username)) {
                             let accounts = [username];
-                            console.log("Checking", accounts);
+                            console.log('Checking', accounts);
                             let that = this;
                             crea.api.lookupAccountNames(accounts, function (err, result) {
                                 if (err) {
@@ -242,8 +300,8 @@ import MentionNotification from "../components/notifications/MentionNotification
                         } else {
                             this.toError = true;
                         }
-                    }
-                }
+                    },
+                },
             });
         } else {
             walletModalSend.state = state;
@@ -261,7 +319,14 @@ import MentionNotification from "../components/notifications/MentionNotification
      * @param navSection
      * @param walletSection
      */
-    function updateProfileView(state, session, account, usernameFilter, navSection = 'projects', walletSection = 'balance') {
+    function updateProfileView(
+        state,
+        session,
+        account,
+        usernameFilter,
+        navSection = 'projects',
+        walletSection = 'balance'
+    ) {
         //console.log('Updating profile', jsonify(jsonstring(account)), jsonify(jsonstring(state)));
         let withdrawingSavings = state.user ? state.user.savings_withdraw_requests : 0;
 
@@ -271,7 +336,10 @@ import MentionNotification from "../components/notifications/MentionNotification
         if (state.user.to_withdraw > 0 && session && state.user.name === session.account.username) {
             let date = toLocaleDate(state.user.next_vesting_withdrawal);
             if (date.valueOf() > 0) {
-                nextDeEnergize = String.format(lang.WALLET.NEXT_DE_ENERGIZE, toLocaleDate(state.user.next_vesting_withdrawal).fromNow());
+                nextDeEnergize = String.format(
+                    lang.WALLET.NEXT_DE_ENERGIZE,
+                    toLocaleDate(state.user.next_vesting_withdrawal).fromNow()
+                );
             }
         }
 
@@ -292,21 +360,21 @@ import MentionNotification from "../components/notifications/MentionNotification
                     state: state,
                     filter: usernameFilter,
                     navbar: {
-                        section: navSection
+                        section: navSection,
                     },
                     profile: state.user.metadata,
                     walletTab: walletSection,
                     hideProfileInfoClass: hideProfileInfoClass,
                     history: {
                         data: [],
-                        accounts: {}
+                        accounts: {},
                     },
                     blocked: {},
                     showPriv: {
                         posting: false,
                         active: false,
                         owner: false,
-                        memo: false
+                        memo: false,
                     },
                     changePass: {
                         username: session ? session.account.username : null,
@@ -315,12 +383,12 @@ import MentionNotification from "../components/notifications/MentionNotification
                         matchedPass: null,
                         checkedLostPass: false,
                         checkedStoredPass: false,
-                        error: null
+                        error: null,
                     },
                     notifications: tempNotifications,
                     nextDeEnergize: nextDeEnergize,
                     savingsWithdrawNote: savingsWithdrawNote,
-                    simpleView: false //No used, but is needed
+                    simpleView: false, //No used, but is needed
                 },
                 updated: function updated() {
                     let t = $('#wallet-tabs').prev();
@@ -333,7 +401,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                     inputTags.tagsinput({
                         maxTags: CONSTANTS.MAX_TAGS,
                         maxChars: CONSTANTS.TEXT_MAX_SIZE.TAG,
-                        delimiter: ' '
+                        delimiter: ' ',
                     });
 
                     if (this.profile.tags) {
@@ -377,7 +445,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     text: this.lang.WALLET.TRANSFER_CREA_TEXT,
                                     button: this.lang.BUTTON.CONFIRM,
                                     nai: apiOptions.symbol.CREA,
-                                    total_amount: Asset.parseString(this.state.user.balance)
+                                    total_amount: Asset.parseString(this.state.user.balance),
                                 };
                                 break;
 
@@ -389,7 +457,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     nai: apiOptions.symbol.CREA,
                                     total_amount: Asset.parseString(this.state.user.balance),
                                     to: this.session.account.username,
-                                    disableTo: true
+                                    disableTo: true,
                                 };
                                 break;
 
@@ -401,7 +469,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     nai: apiOptions.symbol.CBD,
                                     total_amount: Asset.parseString(this.state.user.cbd_balance),
                                     to: this.session.account.username,
-                                    disableTo: true
+                                    disableTo: true,
                                 };
                                 break;
 
@@ -413,7 +481,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CBD,
                                     to: this.session.account.username,
-                                    total_amount: Asset.parseString(this.state.user.savings_cbd_balance)
+                                    total_amount: Asset.parseString(this.state.user.savings_cbd_balance),
                                 };
                                 break;
 
@@ -425,7 +493,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CREA,
                                     to: this.session.account.username,
-                                    total_amount: Asset.parseString(this.state.user.savings_balance)
+                                    total_amount: Asset.parseString(this.state.user.savings_balance),
                                 };
                                 break;
 
@@ -437,7 +505,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     nai: apiOptions.symbol.CREA,
                                     total_amount: Asset.parseString(this.state.user.balance),
                                     to: this.session.account.username,
-                                    disableTo: true
+                                    disableTo: true,
                                 };
                                 break;
 
@@ -448,7 +516,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
                                     button: this.lang.BUTTON.SEND,
                                     nai: apiOptions.symbol.CBD,
-                                    total_amount: Asset.parseString(this.state.user.cbd_balance)
+                                    total_amount: Asset.parseString(this.state.user.cbd_balance),
                                 };
                                 break;
                         }
@@ -500,7 +568,7 @@ import MentionNotification from "../components/notifications/MentionNotification
 
                         if (featuredImage && featuredImage.hash) {
                             return {
-                                url: apiOptions.ipfs + featuredImage.hash
+                                url: apiOptions.ipfs + featuredImage.hash,
                             };
                         } else if (featuredImage && featuredImage.url) {
                             return featuredImage;
@@ -575,13 +643,14 @@ import MentionNotification from "../components/notifications/MentionNotification
                             amount = amount.add(Asset.parseString(post.curator_payout_value));
                         } //amount.amount = parseInt(amount.amount / 1000000000);
 
-
                         return '$ ' + amount.toPlainString();
                     },
                     getPendingPayouts: function getPendingPayouts(post) {
                         let PRICE_PER_CREA = Asset.parse({
-                            amount: Asset.parseString(this.state.feed_price.base).toFloat() / Asset.parseString(this.state.feed_price.quote).toFloat(),
-                            nai: 'cbd'
+                            amount:
+                                Asset.parseString(this.state.feed_price.base).toFloat() /
+                                Asset.parseString(this.state.feed_price.quote).toFloat(),
+                            nai: 'cbd',
                         });
                         let CBD_PRINT_RATE = this.state.props.cbd_print_rate;
                         let CBD_PRINT_RATE_MAX = 10000;
@@ -591,22 +660,36 @@ import MentionNotification from "../components/notifications/MentionNotification
                         let PERCENT_CREA_DOLLARS = post.percent_crea_dollars / 20000;
                         let PENDING_PAYOUT_CBD = Asset.parse({
                             amount: PENDING_PAYOUT.toFloat() * PERCENT_CREA_DOLLARS,
-                            nai: 'cbd'
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_CGY = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'cgy'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'cgy',
                         });
                         let PENDING_PAYOUT_PRINTED_CBD = Asset.parse({
-                            amount: NaNOr((PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX)), 0),
-                            nai: 'cbd'
+                            amount: NaNOr(PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX), 0),
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_PRINTED_CREA = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'crea'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) /
+                                    PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'crea',
                         });
 
-                        return '(' + PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_CGY.toFriendlyString(null, false);
+                        return (
+                            '(' +
+                            PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) +
+                            ', ' +
+                            PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) +
+                            ', ' +
+                            PENDING_PAYOUT_CGY.toFriendlyString(null, false)
+                        );
                     },
                     dateFromNow: function dateFromNow(date) {
                         return toLocaleDate(date).fromNow();
@@ -629,7 +712,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 that.state.content[updatedPost.link] = updatedPost;
                                 that.$forceUpdate();
                             }
-                        })
+                        });
                     },
                     getLicense: function getLicense(flag) {
                         if (flag) {
@@ -660,13 +743,18 @@ import MentionNotification from "../components/notifications/MentionNotification
                         requireRoleKey(username, 'active', function (activeKey) {
                             globalLoading.show = true;
                             let vests = new Vests(0);
-                            crea.broadcast.withdrawVesting(activeKey, username, vests.toFriendlyString(null, false), function (err, result) {
-                                globalLoading.show = false;
+                            crea.broadcast.withdrawVesting(
+                                activeKey,
+                                username,
+                                vests.toFriendlyString(null, false),
+                                function (err, result) {
+                                    globalLoading.show = false;
 
-                                if (!catchError(err)) {
-                                    updateUserSession();
+                                    if (!catchError(err)) {
+                                        updateUserSession();
+                                    }
                                 }
-                            });
+                            );
                         });
                     },
                     navigateTo: function navigateTo(event, tab) {
@@ -712,7 +800,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                                     }
                                 });
                             });
-
                         }
                     },
                     loadAvatar: function loadAvatar(event) {
@@ -729,7 +816,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                             updateUserSession();
                         });
                     },
-                    markReadNotifications : markReadNotifications,
+                    markReadNotifications: markReadNotifications,
                     changePassword: function changePassword() {
                         let that = this;
 
@@ -744,10 +831,12 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 //Check radio inputs
                                 let passValidation = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$/;
                                 console.log(this.changePass.newPass.match(passValidation));
-                                if (this.changePass.newPass.match(passValidation) || this.changePass.newPass.length >= 52) {
+                                if (
+                                    this.changePass.newPass.match(passValidation) ||
+                                    this.changePass.newPass.length >= 52
+                                ) {
                                     if (this.changePass.checkedLostPass && this.changePass.checkedStoredPass) {
                                         let session = Session.create(this.changePass.username, this.changePass.oldPass); //Check if current is valid
-
 
                                         session.login(function (err, result) {
                                             if (err) {
@@ -756,7 +845,11 @@ import MentionNotification from "../components/notifications/MentionNotification
                                                 }
                                             } else {
                                                 //Current pass is valid
-                                                let keys = Account.generate(that.changePass.username, that.changePass.newPass, DEFAULT_ROLES).keys;
+                                                let keys = Account.generate(
+                                                    that.changePass.username,
+                                                    that.changePass.newPass,
+                                                    DEFAULT_ROLES
+                                                ).keys;
                                                 sendAccountUpdate(null, keys, function (err, result) {
                                                     let s = Session.getAlive();
 
@@ -773,15 +866,14 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 } else {
                                     setError(that.lang.CHANGE_PASSWORD.ERROR_INSECURE_PASSWORD);
                                 }
-
                             } else {
                                 setError(that.lang.CHANGE_PASSWORD.ERROR_MATCHED_PASSWORDS);
                             }
                         } else {
                             setError(that.lang.CHANGE_PASSWORD.ERROR_CURRENT_PASSWORD);
                         }
-                    }
-                }
+                    },
+                },
             });
         } else {
             console.log('Updating data');
@@ -821,12 +913,12 @@ import MentionNotification from "../components/notifications/MentionNotification
             totalRewardsCrea: 0,
             rewards24CBD: 0,
             rewardsWeekCBD: 0,
-            totalRewardsCBD: 0
+            totalRewardsCBD: 0,
         };
         let today = moment();
         let oneDay = 60 * 60 * 24 * 1000;
         let yesterday = today.subtract(1, 'day').valueOf();
-        let lastWeek =today.subtract(7, 'days').valueOf();
+        let lastWeek = today.subtract(7, 'days').valueOf();
         let firstDate, finalDate;
         let rewardsOp = [];
 
@@ -895,10 +987,10 @@ import MentionNotification from "../components/notifications/MentionNotification
                     session: session,
                     state: state,
                     rewards: rewards,
-                    rewardsOp: rewardsOp
+                    rewardsOp: rewardsOp,
                 },
                 methods: {
-                    vestsToCgy: function (_vestsToCgy) {
+                    vestsToCgy: (function (_vestsToCgy) {
                         function vestsToCgy(_x) {
                             return _vestsToCgy.apply(this, arguments);
                         }
@@ -908,14 +1000,14 @@ import MentionNotification from "../components/notifications/MentionNotification
                         };
 
                         return vestsToCgy;
-                    }(function (vests) {
+                    })(function (vests) {
                         return vestsToCgy(this.state, vests);
                     }),
                     parseAsset: Asset.parse,
                     formatTime: function formatTime(date) {
                         return moment(date).format('DD MMM HH:MM');
-                    }
-                }
+                    },
+                },
             });
         } else {
             rewardsContainer[rewardView].session = session;
@@ -933,7 +1025,7 @@ import MentionNotification from "../components/notifications/MentionNotification
                     lang: lang,
                     session: session,
                     account: account,
-                    blocked: blocked
+                    blocked: blocked,
                 },
                 methods: {
                     unlock: function unlock(user) {
@@ -942,8 +1034,8 @@ import MentionNotification from "../components/notifications/MentionNotification
                                 updateUserSession();
                             }
                         });
-                    }
-                }
+                    },
+                },
             });
         } else {
             blockedContainer.session = session;
@@ -961,13 +1053,13 @@ import MentionNotification from "../components/notifications/MentionNotification
                     state: state,
                     session: session,
                     account: account,
-                    following: following
+                    following: following,
                 },
                 methods: {
                     onFollow: function onFollow() {
                         updateUserSession();
-                    }
-                }
+                    },
+                },
             });
         } else {
             followingContainer.state = state;
@@ -986,13 +1078,13 @@ import MentionNotification from "../components/notifications/MentionNotification
                     state: state,
                     session: session,
                     account: account,
-                    follower: follower
+                    follower: follower,
                 },
                 methods: {
                     onFollow: function onFollow() {
                         updateUserSession();
-                    }
-                }
+                    },
+                },
             });
         } else {
             followerContainer.state = state;
@@ -1052,7 +1144,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                 }
             });
         }
-
     }
 
     function fetchFollowing(state, session, account) {
@@ -1121,7 +1212,7 @@ import MentionNotification from "../components/notifications/MentionNotification
      * @param usernameFilter
      */
     function detectNav(state, session, account, usernameFilter) {
-        let nav = getPathPart(null,1);
+        let nav = getPathPart(null, 1);
         let walletNav = 'balances';
 
         if (!nav || nav.isEmpty()) {
@@ -1179,36 +1270,45 @@ import MentionNotification from "../components/notifications/MentionNotification
                     let user = profileContainer.state.user;
                     keys = {
                         memo: {
-                            pub: user.memo_key
+                            pub: user.memo_key,
                         },
                         active: {
-                            pub: user.active.key_auths[0][0]
+                            pub: user.active.key_auths[0][0],
                         },
                         posting: {
-                            pub: user.posting.key_auths[0][0]
+                            pub: user.posting.key_auths[0][0],
                         },
                         owner: {
-                            pub: user.owner.key_auths[0][0]
-                        }
+                            pub: user.owner.key_auths[0][0],
+                        },
                     };
                 }
 
                 console.log(keys);
                 requireRoleKey(session.account.username, 'owner', function (ownerKey) {
                     globalLoading.show = true;
-                    crea.broadcast.accountUpdate(ownerKey, session.account.username, createAuth(keys.owner.pub), createAuth(keys.active.pub), createAuth(keys.posting.pub), keys.memo.pub, metadata, function (err, data) {
-                        globalLoading.show = false;
+                    crea.broadcast.accountUpdate(
+                        ownerKey,
+                        session.account.username,
+                        createAuth(keys.owner.pub),
+                        createAuth(keys.active.pub),
+                        createAuth(keys.posting.pub),
+                        keys.memo.pub,
+                        metadata,
+                        function (err, data) {
+                            globalLoading.show = false;
 
-                        if (catchError(err)) {
-                            callback(err);
-                        } else {
-                            updateUserSession();
+                            if (catchError(err)) {
+                                callback(err);
+                            } else {
+                                updateUserSession();
 
-                            if (callback) {
-                                callback(null, data);
+                                if (callback) {
+                                    callback(null, data);
+                                }
                             }
                         }
-                    });
+                    );
                 });
             } else {
                 globalLoading.show = false;
@@ -1220,7 +1320,10 @@ import MentionNotification from "../components/notifications/MentionNotification
         } else {
             //Show alert to avoid update
             let title = lang.ERROR.ACCOUNT_UPDATE_THRESHOLD_EXCEEDED.TITLE;
-            let message = String.format(lang.ERROR.ACCOUNT_UPDATE_THRESHOLD_EXCEEDED.BODY, toLocaleDate(lastUpdate).fromNow());
+            let message = String.format(
+                lang.ERROR.ACCOUNT_UPDATE_THRESHOLD_EXCEEDED.BODY,
+                toLocaleDate(lastUpdate).fromNow()
+            );
             showAlert(title, message);
         }
     }
@@ -1333,8 +1436,8 @@ import MentionNotification from "../components/notifications/MentionNotification
                 state.content = {};
                 state.discussion_idx = {
                     '': {
-                        profile: []
-                    }
+                        profile: [],
+                    },
                 };
 
                 if (callback) {
@@ -1379,7 +1482,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                             let permlink = d.author + '/' + d.permlink;
                             state.content[permlink] = d;
                             state.discussion_idx[''].profile.push(permlink);
-
                         }
 
                         detectNav(state, session, account, profileName);
@@ -1401,13 +1503,20 @@ import MentionNotification from "../components/notifications/MentionNotification
         let cgy = profileContainer.state.user.reward_vesting_balance;
         requireRoleKey(profileContainer.session.account.username, 'posting', function (activeKey) {
             globalLoading.show = true;
-            crea.broadcast.claimRewardBalance(activeKey, profileContainer.session.account.username, creaBalance, cbd, cgy, function (err, result) {
-                globalLoading.show = false;
+            crea.broadcast.claimRewardBalance(
+                activeKey,
+                profileContainer.session.account.username,
+                creaBalance,
+                cbd,
+                cgy,
+                function (err, result) {
+                    globalLoading.show = false;
 
-                if (!catchError(err)) {
-                    updateUserSession();
+                    if (!catchError(err)) {
+                        updateUserSession();
+                    }
                 }
-            });
+            );
         });
     }
 
@@ -1443,7 +1552,15 @@ import MentionNotification from "../components/notifications/MentionNotification
 
                 case CONSTANTS.TRANSFER.TRANSFER_FROM_SAVINGS_CREA:
                 case CONSTANTS.TRANSFER.TRANSFER_FROM_SAVINGS_CBD:
-                    crea.broadcast.transferFromSavings(wif, from, parseInt(moment().valueOf() / 1000), to, amount, memo, callback);
+                    crea.broadcast.transferFromSavings(
+                        wif,
+                        from,
+                        parseInt(moment().valueOf() / 1000),
+                        to,
+                        amount,
+                        memo,
+                        callback
+                    );
                     break;
 
                 case CONSTANTS.TRANSFER.TRANSFER_TO_VESTS:
@@ -1479,14 +1596,13 @@ import MentionNotification from "../components/notifications/MentionNotification
                     nai: apiOptions.symbol.CREA,
                     confirmed: false,
                     to: null,
-                    disableTo: false
+                    disableTo: false,
                 };
             }
         } else if (settingsPart) {
             let username = getPathPart();
             showProfile(username);
             return;
-
         }
 
         handleView(session, account);
@@ -1497,67 +1613,56 @@ import MentionNotification from "../components/notifications/MentionNotification
             lastPage = 1;
         }
 
-        let http = new HttpClient(apiOptions.apiUrl + '/creary/blog');
-        http.when('done', function (response) {
-            let data = jsonify(response).data;
+        let commentsApi = new CommentsApi();
+        let author = getPathPart();
+        commentsApi.portfolio(author, lastPage, 20, function (err, response) {
+            if (!catchError(err)) {
+                let data = response.data;
+                let posts = [];
+                let count = data.length;
 
-            let posts = [];
-            let count = data.length;
-
-            let onPostData = function() {
-                --count;
-                if (count <= 0) {
-                    if (callback) {
-                        callback(null, posts);
-
+                let onPostData = function () {
+                    --count;
+                    if (count <= 0) {
+                        if (callback) {
+                            callback(null, posts);
+                        }
                     }
-                }
-            };
+                };
 
-            data.forEach(function (d) {
-                let permlink = d.author + '/' + d.permlink;
+                data.forEach(function (d) {
+                    let permlink = d.author + '/' + d.permlink;
 
-                crea.api.getContent(d.author, d.permlink, function (err, result) {
-                    if (err || result.author.length <= 0) {
-                        console.error('Error getting', permlink, err);
-                    } else {
-                        let p = parsePost(result);
-                        p.reblogged_by = d.reblogged_by;
+                    crea.api.getContent(d.author, d.permlink, function (err, result) {
+                        if (err || result.author.length <= 0) {
+                            console.error('Error getting', permlink, err);
+                        } else {
+                            let p = parsePost(result);
+                            p.reblogged_by = d.reblogged_by;
 
-                        posts.push(p);
-                    }
+                            posts.push(p);
+                        }
 
-                    onPostData();
+                        onPostData();
+                    });
                 });
-            });
 
-            if (data.length === 0) {
-                onPostData();
+                if (data.length === 0) {
+                    onPostData();
+                } else {
+                    ++lastPage;
+                }
             } else {
-                ++lastPage;
+                onScrollCalling = false;
             }
-        });
-
-        http.when('fail', function (jqXHR, textStatus, errorThrown) {
-            onScrollCalling = false;
-            catchError(textStatus);
-        });
-
-        refreshAccessToken(function (accessToken) {
-            http.headers = {
-                Authorization: 'Bearer ' + accessToken
-            };
-
-            http.post({
-                author: getPathPart().replace('@', ''),
-                page: lastPage
-            });
         });
     }
 
     function markReadNotifications() {
         let username = profileContainer.session.account.username;
-        let http = new HttpClient(`${window.location.protocol}//${window.location.host}/~api/notification/@${username}/markRead`);
+        let http = new HttpClient(
+            `${window.location.protocol}//${window.location.host}/~api/notification/@${username}/markRead`
+        );
         http.when('done', function (data, textStatus) {
             console.log(data, textStatus);
             notificationsMarkedAsRead = true;
@@ -1610,7 +1715,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                 creaEvents.emit('crea.notifications.more', profileContainer.session);
             } else {
                 getProfileDiscussions(function (err, discussions) {
-
                     //Remove first duplicate post
                     //discussions.shift();
 
@@ -1621,7 +1725,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                         let d2 = toLocaleDate(k2.created);
                         return d2.valueOf() - d1.valueOf();
                     });
-
 
                     for (let x = 0; x < discussions.length; x++) {
                         let d = discussions[x];
@@ -1638,8 +1741,6 @@ import MentionNotification from "../components/notifications/MentionNotification
                     creaEvents.emit('navigation.state.update', profileContainer.state);
                 });
             }
-
         }
     });
-
 })();

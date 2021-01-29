@@ -167,6 +167,34 @@ class CommentsController extends Controller
 
     /**
      * @param Request $request
+     * @param $author
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function portfolio(Request  $request, $author) {
+        $validations = array(
+            'limit' => 'sometimes|numeric',
+        );
+
+        $validatedData = Validator::make($request->all(), $validations);
+        if ($validatedData->fails()) {
+            return response([
+                'status' => 'error',
+                'message' => $validatedData->errors(),
+                'error' => 'invalid_parameter'
+            ], 400);
+        }
+
+        $limit = intval($request->get('limit', 20));
+
+        return Comments::query()
+            ->where('author', $author)
+            ->orderByDesc('created_at')
+            ->paginate($limit)
+            ->appends($request->except('page'));
+    }
+
+    /**
+     * @param Request $request
      * @param $user
      * @param $permlink
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response

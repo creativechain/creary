@@ -145,9 +145,26 @@ class CommentsApi extends CrearyApi {
         this.__get();
     }
 
+    /**
+     *
+     * @param permlinks
+     * @param callback
+     */
     multipleComments(permlinks, callback) {
         this.__initializeClient('/multiple', callback);
         this.__get({ comments: permlinks });
+    }
+
+    /**
+     *
+     * @param author
+     * @param page
+     * @param limit
+     * @param callback
+     */
+    portfolio(author, page = 1, limit = 20, callback) {
+        this.__initializeClient(`/${author}/portfolio`, callback);
+        this.__get({ page, limit });
     }
 }
 

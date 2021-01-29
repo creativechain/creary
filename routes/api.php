@@ -54,7 +54,12 @@ Route::group(['middleware' => ['cors']], function () {
         Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
         Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
         Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
-        Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show');
+        Route::get('/{author}/portfolio', 'Api\CommentsController@portfolio')->name('comments.portfolio')
+            ->where('author', '^(@[\w\.\d-]+)$');
+
+        Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show')
+            ->where('author', '^(\@[\w\d\.-]+)$')
+            ->where('permlink', '^([\w\d-]+)$');
     });
 });
 
