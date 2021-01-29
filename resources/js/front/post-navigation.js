@@ -1,34 +1,31 @@
 import R from '../lib/resources';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
-import HttpClient from '../lib/http';
 import {
-    jsonify,
-    humanFileSize,
-    toLocaleDate,
     cancelEventPropagation,
-    randomNumber,
     clone,
+    humanFileSize,
     makeMentions,
     NaNOr,
+    randomNumber,
+    toLocaleDate,
 } from '../lib/util';
 import {
-    CONSTANTS,
-    goTo,
-    updateUrl,
     catchError,
-    makeDownload,
-    requireRoleKey,
-    showPost,
+    CONSTANTS,
+    deleteComment,
+    goTo,
+    hideModal,
     ignoreUser,
     makeComment,
-    deleteComment,
-    updateUserSession,
-    parsePost,
+    makeDownload,
     parseAccount,
-    refreshAccessToken,
-    hideModal,
+    parsePost,
+    requireRoleKey,
     showModal,
+    showPost,
+    updateUrl,
+    updateUserSession,
 } from '../common/common';
 
 //Components import
@@ -61,7 +58,6 @@ import { CommentsApi } from '../lib/creary-api';
     Vue.component('username', Username);
     Vue.component('btn-follow', ButtonFollow);
 
-    let currentPage;
     let postContainer, otherProjectsContainer;
     let promoteModal, downloadModal, reportModal, reportCommentModal;
     let session, userAccount;
