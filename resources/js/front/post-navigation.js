@@ -970,7 +970,7 @@ import { CommentsApi } from '../lib/creary-api';
                 .on('modalClosed.modals.mr', function () {
                     console.log('Closing modal', currentPage);
                     $('body').css({ overflow: '' });
-                    updateUrl(currentPage.homeUrl, currentPage.homeTitle);
+                    updateUrl(currentPage.pathname, currentPage.title);
                 });
         }, 1000);
     });

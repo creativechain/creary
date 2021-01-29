@@ -548,6 +548,7 @@ import { CommentsApi } from '../lib/creary-api';
                     },
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
+                        creaEvents.emit('navigation.post.data');
                         creaEvents.emit('navigation.post.data', post, this.state, '', 'profile');
                         showModal('#modal-post');
                     },
