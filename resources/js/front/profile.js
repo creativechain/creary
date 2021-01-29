@@ -549,6 +549,8 @@ import { CommentsApi } from '../lib/creary-api';
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
                         creaEvents.emit('crea.content.prepare');
+                        let state = this.state;
+                        state.postsData = state.content;
                         creaEvents.emit('navigation.post.data', post, this.state, '', 'profile');
                         showModal('#modal-post');
                     },
