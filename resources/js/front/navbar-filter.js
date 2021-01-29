@@ -76,7 +76,10 @@ import { categorySlider } from './category-slider';
                     },
                     getParams: function () {
                         return {
-                            search: this.isUserFeed() || this.category === 'search' ? this.search : this.discuss,
+                            search:
+                                this.isUserFeed() || this.discuss === 'feed' || this.category === 'search'
+                                    ? this.search
+                                    : this.discuss,
                             download: this.download,
                             license: this.license,
                         };
