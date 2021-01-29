@@ -267,7 +267,7 @@ import { categorySlider } from './category-slider';
         updateUrl(urlFilter);
         let category = getPathPart(urlFilter);
         let discuss = getPathPart(urlFilter, 1);
-        console.log('retrieveContent', category, discuss, urlFilter);
+        console.log('retrieveContent', category, discuss, urlFilter, params);
 
         crea.api.getState(urlFilter, function (err, urlState) {
             if (!catchError(err)) {
