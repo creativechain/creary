@@ -902,8 +902,13 @@ import { CommentsApi } from '../lib/creary-api';
         });
     }
 
-    function updateLastPage() {
+    function updatePages() {
         lastPage = {
+            pathname: window.location.pathname,
+            title: document.title,
+        };
+
+        currentPage = {
             pathname: window.location.pathname,
             title: document.title,
         };
@@ -954,7 +959,7 @@ import { CommentsApi } from '../lib/creary-api';
         updatePostData();
     });
 
-    creaEvents.on('crea.content.prepare', updateLastPage);
+    creaEvents.on('crea.content.prepare', updatePages);
 
     creaEvents.on('crea.modal.ready', function () {
         console.log('MODALS Ready');
