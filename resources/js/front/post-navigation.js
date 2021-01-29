@@ -58,6 +58,7 @@ import { CommentsApi } from '../lib/creary-api';
     Vue.component('username', Username);
     Vue.component('btn-follow', ButtonFollow);
 
+    let lastPage;
     let postContainer, otherProjectsContainer;
     let promoteModal, downloadModal, reportModal, reportCommentModal;
     let session, userAccount;
@@ -901,8 +902,8 @@ import { CommentsApi } from '../lib/creary-api';
         });
     }
 
-    function updateCurrentPage() {
-        currentPage = {
+    function updateLastPage() {
+        lastPage = {
             pathname: window.location.pathname,
             title: document.title,
         };
@@ -953,7 +954,7 @@ import { CommentsApi } from '../lib/creary-api';
         updatePostData();
     });
 
-    creaEvents.on('crea.content.prepare', updateCurrentPage);
+    creaEvents.on('crea.content.prepare', updateLastPage);
 
     creaEvents.on('crea.modal.ready', function () {
         console.log('MODALS Ready');
@@ -964,9 +965,9 @@ import { CommentsApi } from '../lib/creary-api';
                     $('body').css({ overflow: 'hidden' });
                 })
                 .on('modalClosed.modals.mr', function () {
-                    console.log('Closing modal', currentPage);
+                    console.log('Closing modal', lastPage);
                     $('body').css({ overflow: '' });
-                    updateUrl(currentPage.pathname, currentPage.title);
+                    updateUrl(lastPage.pathname, lastPage.title);
                 });
         }, 1000);
     });
