@@ -6,27 +6,51 @@ import R from '../lib/resources';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
 import HttpClient from '../lib/http';
-import { jsonify, getPathPart, clone, humanFileSize, toLocaleDate, makeMentions, cancelEventPropagation, randomNumber,
-    NaNOr } from '../lib/util';
-import { catchError, CONSTANTS, showPost, goTo, makeComment, makeDownload, deleteComment, ignoreUser,
-    requireRoleKey, updateUserSession, hideModal, showModal, refreshAccessToken, parseAccount, parsePost } from "../common/common";
+import {
+    jsonify,
+    getPathPart,
+    clone,
+    humanFileSize,
+    toLocaleDate,
+    makeMentions,
+    cancelEventPropagation,
+    randomNumber,
+    NaNOr,
+} from '../lib/util';
+import {
+    catchError,
+    CONSTANTS,
+    showPost,
+    goTo,
+    makeComment,
+    makeDownload,
+    deleteComment,
+    ignoreUser,
+    requireRoleKey,
+    updateUserSession,
+    hideModal,
+    showModal,
+    refreshAccessToken,
+    parseAccount,
+    parsePost,
+} from '../common/common';
 
 //Components import
-import Amount from "../components/Amount";
-import Avatar from "../components/Avatar";
-import Recommend from "../components/Recommend";
-import RecommendPost from "../components/RecommendPost";
-import NewLike from "../components/NewLike";
-import LinkName from "../components/LinkName";
-import Username from "../components/Username";
-import PostLike from "../components/PostLike";
-import PostLikeBig from "../components/PostLikeBig";
-import PostAmount from "../components/PostAmount";
-import CommentLike from "../components/CommentLike";
-import ButtonFollow from "../components/ButtonFollow";
+import Amount from '../components/Amount';
+import Avatar from '../components/Avatar';
+import Recommend from '../components/Recommend';
+import RecommendPost from '../components/RecommendPost';
+import NewLike from '../components/NewLike';
+import LinkName from '../components/LinkName';
+import Username from '../components/Username';
+import PostLike from '../components/PostLike';
+import PostLikeBig from '../components/PostLikeBig';
+import PostAmount from '../components/PostAmount';
+import CommentLike from '../components/CommentLike';
+import ButtonFollow from '../components/ButtonFollow';
+import { CommentsApi } from '../lib/creary-api';
 
 (function () {
-
     //Load Vue components
     Vue.component('amount', Amount);
     Vue.component('avatar', Avatar);
@@ -75,7 +99,7 @@ import ButtonFollow from "../components/ButtonFollow";
                     active_response: null,
                     active_response_edit: null,
                     comments_shown: CONSTANTS.POST.MAX_COMMENT_SHOWN,
-                    navigation: false
+                    navigation: false,
                 },
                 mounted: function mounted() {
                     onVueReady();
@@ -148,7 +172,6 @@ import ButtonFollow from "../components/ButtonFollow";
                         return '$ ' + amount.toPlainString();
                     },
                     getPayout: function getPayout(post, sym, dec) {
-
                         post = post || this.state.post;
 
                         if (!dec) {
@@ -162,7 +185,6 @@ import ButtonFollow from "../components/ButtonFollow";
                             amount = amount.add(Asset.parseString(post.curator_payout_value));
                         } //amount.amount = parseInt(amount.amount / 1000000000);
 
-
                         return (sym ? '$ ' : '') + amount.toPlainString(dec);
                     },
                     getFriendlyPayout: function getFriendlyPayout(post) {
@@ -174,8 +196,10 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         post = post || this.state.post;
                         let PRICE_PER_CREA = Asset.parse({
-                            amount: Asset.parseString(this.state.feed_price.base).toFloat() / Asset.parseString(this.state.feed_price.quote).toFloat(),
-                            nai: 'cbd'
+                            amount:
+                                Asset.parseString(this.state.feed_price.base).toFloat() /
+                                Asset.parseString(this.state.feed_price.quote).toFloat(),
+                            nai: 'cbd',
                         });
                         let CBD_PRINT_RATE = this.state.props.cbd_print_rate;
                         let CBD_PRINT_RATE_MAX = 10000;
@@ -185,19 +209,26 @@ import ButtonFollow from "../components/ButtonFollow";
                         let PERCENT_CREA_DOLLARS = post.percent_crea_dollars / 20000;
                         let PENDING_PAYOUT_CBD = Asset.parse({
                             amount: PENDING_PAYOUT.toFloat() * PERCENT_CREA_DOLLARS,
-                            nai: 'cbd'
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_CGY = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'cgy'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'cgy',
                         });
                         let PENDING_PAYOUT_PRINTED_CBD = Asset.parse({
-                            amount: NaNOr((PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX)), 0),
-                            nai: 'cbd'
+                            amount: NaNOr(PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX), 0),
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_PRINTED_CREA = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'crea'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) /
+                                    PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'crea',
                         });
 
                         switch (asset) {
@@ -208,10 +239,18 @@ import ButtonFollow from "../components/ButtonFollow";
                             case 'crea':
                                 return PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false);
                             default:
-                                return '(' + PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_CGY.toFriendlyString(null, false) + ')';
+                                return (
+                                    '(' +
+                                    PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) +
+                                    ', ' +
+                                    PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) +
+                                    ', ' +
+                                    PENDING_PAYOUT_CGY.toFriendlyString(null, false) +
+                                    ')'
+                                );
                         }
                     },
-                    showMoreComments: function() {
+                    showMoreComments: function () {
                         this.comments_shown += CONSTANTS.POST.COMMENT_SHOW_INTERVAL;
                         this.$forceUpdate();
                     },
@@ -220,7 +259,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         if (featuredImage && featuredImage.hash) {
                             return {
-                                url: 'https://ipfs.creary.net/ipfs/' + featuredImage.hash
+                                url: 'https://ipfs.creary.net/ipfs/' + featuredImage.hash,
                             };
                         } else if (featuredImage && featuredImage.url) {
                             return featuredImage;
@@ -249,8 +288,11 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         return false;
                     },
-                    isCommentResponse: function(comment, parentComment) {
-                        return comment.parent_author === parentComment.author && comment.parent_permlink === parentComment.permlink;
+                    isCommentResponse: function (comment, parentComment) {
+                        return (
+                            comment.parent_author === parentComment.author &&
+                            comment.parent_permlink === parentComment.permlink
+                        );
                     },
                     editPost: function editPost() {
                         let route = this.state.post.author + '/' + this.state.post.permlink;
@@ -264,7 +306,6 @@ import ButtonFollow from "../components/ButtonFollow";
                         makeComment(comment, post, parentPost, function (err, result) {
                             globalLoading.show = false;
                             if (!catchError(err)) {
-
                                 if (commentReply) {
                                     that.cleanMakeResponse();
                                 } else {
@@ -272,16 +313,21 @@ import ButtonFollow from "../components/ButtonFollow";
                                 }
                                 fetchContent();
                             }
-                        })
+                        });
                     },
                     linkfy: function (comment) {
                         //return comment;
                         return makeMentions(comment, this.state);
                     },
                     mustShowCommentField: function (comment) {
-                        return (this.active_response != null && this.active_response.link === comment.link) || (this.active_response_edit != null && this.active_response_edit.parent_author === comment.author && this.active_response_edit.parent_permlink === comment.permlink);
+                        return (
+                            (this.active_response != null && this.active_response.link === comment.link) ||
+                            (this.active_response_edit != null &&
+                                this.active_response_edit.parent_author === comment.author &&
+                                this.active_response_edit.parent_permlink === comment.permlink)
+                        );
                     },
-                    setActiveComment: function(activeComment) {
+                    setActiveComment: function (activeComment) {
                         this.active_comment = activeComment;
                         if (reportCommentModal) {
                             reportCommentModal.active_comment = activeComment;
@@ -290,38 +336,38 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         this.$forceUpdate();
                     },
-                    setActiveCommentEdit: function(editComment) {
+                    setActiveCommentEdit: function (editComment) {
                         this.active_comment_edit = editComment;
                         this.comment = editComment.body;
                         this.$forceUpdate();
                     },
-                    cleanMakeComment: function() {
+                    cleanMakeComment: function () {
                         this.active_comment = null;
                         this.active_comment_edit = null;
                         this.comment = '';
                         this.$forceUpdate();
                     },
-                    cleanMakeResponse: function() {
+                    cleanMakeResponse: function () {
                         this.active_response = null;
                         this.active_response_edit = null;
                         this.response_comment = '';
                         this.$forceUpdate();
                     },
                     makeDownload: makeDownload,
-                    removeComment: function(comment) {
+                    removeComment: function (comment) {
                         let that = this;
                         deleteComment(comment, this.session, function (err, result) {
                             if (!catchError(err)) {
                                 globalLoading.show = false;
                                 fetchContent();
                             }
-                        })
+                        });
                     },
-                    editComment: function(comment) {
+                    editComment: function (comment) {
                         this.response_comment = comment.body;
                         this.active_response_edit = comment;
                     },
-                    ignoreUser: function (_ignoreUser) {
+                    ignoreUser: (function (_ignoreUser) {
                         function ignoreUser() {
                             return _ignoreUser.apply(this, arguments);
                         }
@@ -331,7 +377,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         };
 
                         return ignoreUser;
-                    }(function () {
+                    })(function () {
                         ignoreUser(this.state.post.author, true, function (err, result) {
                             fetchContent();
                         });
@@ -343,11 +389,18 @@ import ButtonFollow from "../components/ButtonFollow";
                             let username = this.session.account.username;
                             requireRoleKey(username, 'posting', function (postingKey) {
                                 globalLoading.show = true;
-                                crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
-                                    globalLoading.show = false;
-                                    catchError(err);
-                                    fetchContent();
-                                });
+                                crea.broadcast.vote(
+                                    postingKey,
+                                    username,
+                                    post.author,
+                                    post.permlink,
+                                    weight,
+                                    function (err, result) {
+                                        globalLoading.show = false;
+                                        catchError(err);
+                                        fetchContent();
+                                    }
+                                );
                             });
                         }
                     },
@@ -358,8 +411,8 @@ import ButtonFollow from "../components/ButtonFollow";
                     onFollow: function onFollow(err, result) {
                         catchError(err);
                         updateUserSession();
-                    }
-                }
+                    },
+                },
             });
         } else {
             postContainer.state = state;
@@ -370,13 +423,13 @@ import ButtonFollow from "../components/ButtonFollow";
         if (session) {
             if (!promoteModal) {
                 promoteModal = new Vue({
-                    el: "#modal-promote",
+                    el: '#modal-promote',
                     data: {
                         lang: lang,
                         session: session,
                         user: userAccount ? userAccount.user : null,
                         state: state,
-                        amount: 0
+                        amount: 0,
                     },
                     mounted: function mounted() {
                         onVueReady();
@@ -390,12 +443,12 @@ import ButtonFollow from "../components/ButtonFollow";
                             cancelEventPropagation(event);
                             let from = this.session.account.username;
                             let to = 'null';
-                            let memo = "@" + this.state.post.author + '/' + this.state.post.permlink;
+                            let memo = '@' + this.state.post.author + '/' + this.state.post.permlink;
                             let amount = parseFloat(this.amount) + 0.0001;
                             console.log(amount);
                             amount = Asset.parse({
                                 amount: amount,
-                                nai: apiOptions.nai.CBD
+                                nai: apiOptions.nai.CBD,
                             }).toFriendlyString(null, false);
                             console.log(amount);
                             let that = this;
@@ -410,8 +463,8 @@ import ButtonFollow from "../components/ButtonFollow";
                                     }
                                 });
                             });
-                        }
-                    }
+                        },
+                    },
                 });
             } else {
                 promoteModal.session = session;
@@ -423,11 +476,17 @@ import ButtonFollow from "../components/ButtonFollow";
                 if (!downloadModal) {
                     let price = Asset.parse(state.post.download.price);
 
-                    let balance = price.asset.symbol === apiOptions.symbol.CREA ? Asset.parseString('0.000 CREA') : Asset.parseString('0.000 CBD');
+                    let balance =
+                        price.asset.symbol === apiOptions.symbol.CREA
+                            ? Asset.parseString('0.000 CREA')
+                            : Asset.parseString('0.000 CBD');
                     let alreadyPayed = false;
 
                     if (session) {
-                        balance = price.asset.symbol === apiOptions.symbol.CREA ? Asset.parseString(userAccount.user.balance) : Asset.parseString(userAccount.user.cbd_balance);
+                        balance =
+                            price.asset.symbol === apiOptions.symbol.CREA
+                                ? Asset.parseString(userAccount.user.balance)
+                                : Asset.parseString(userAccount.user.cbd_balance);
                         alreadyPayed = state.post.download.downloaders.includes(userAccount.user.name);
                     }
 
@@ -443,8 +502,8 @@ import ButtonFollow from "../components/ButtonFollow";
                                 symbol: price.asset.symbol.toUpperCase(),
                                 balance: balance.toFriendlyString(null, false),
                                 alreadyPayed: alreadyPayed,
-                                confirmed: false
-                            }
+                                confirmed: false,
+                            },
                         },
                         mounted: function mounted() {
                             onVueReady();
@@ -459,8 +518,8 @@ import ButtonFollow from "../components/ButtonFollow";
                                 } else {
                                     this.modal.confirmed = true;
                                 }
-                            }
-                        }
+                            },
+                        },
                     });
                 } else {
                     downloadModal.session = session;
@@ -479,7 +538,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         lang: lang,
                         session: session,
                         user: userAccount ? userAccount.user : null,
-                        state: state
+                        state: state,
                     },
                     mounted: function mounted() {
                         onVueReady();
@@ -493,16 +552,23 @@ import ButtonFollow from "../components/ButtonFollow";
                                 let username = this.session.account.username;
                                 requireRoleKey(username, 'posting', function (postingKey) {
                                     globalLoading.show = true;
-                                    crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
-                                        globalLoading.show = false;
-                                        catchError(err);
-                                        fetchContent();
-                                    });
+                                    crea.broadcast.vote(
+                                        postingKey,
+                                        username,
+                                        post.author,
+                                        post.permlink,
+                                        weight,
+                                        function (err, result) {
+                                            globalLoading.show = false;
+                                            catchError(err);
+                                            fetchContent();
+                                        }
+                                    );
                                 });
                             }
-                        }
-                    }
-                })
+                        },
+                    },
+                });
             } else {
                 reportModal.session = session;
                 reportModal.user = userAccount ? userAccount.user : null;
@@ -517,7 +583,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         session: session,
                         user: userAccount ? userAccount.user : null,
                         state: state,
-                        active_comment: null
+                        active_comment: null,
                     },
                     mounted: function mounted() {
                         onVueReady();
@@ -531,17 +597,23 @@ import ButtonFollow from "../components/ButtonFollow";
                                 let username = this.session.account.username;
                                 requireRoleKey(username, 'posting', function (postingKey) {
                                     globalLoading.show = true;
-                                    crea.broadcast.vote(postingKey, username, post.author, post.permlink, weight, function (err, result) {
-                                        globalLoading.show = false;
-                                        catchError(err);
-                                        fetchContent();
-
-                                    });
+                                    crea.broadcast.vote(
+                                        postingKey,
+                                        username,
+                                        post.author,
+                                        post.permlink,
+                                        weight,
+                                        function (err, result) {
+                                            globalLoading.show = false;
+                                            catchError(err);
+                                            fetchContent();
+                                        }
+                                    );
                                 });
                             }
-                        }
-                    }
-                })
+                        },
+                    },
+                });
             } else {
                 reportCommentModal.session = session;
                 reportCommentModal.user = userAccount ? userAccount.user : null;
@@ -551,7 +623,6 @@ import ButtonFollow from "../components/ButtonFollow";
             //No session, so downloadModal and modalPromoted can not be mounted
             onVueReady(true);
         }
-
     }
 
     /**
@@ -576,7 +647,7 @@ import ButtonFollow from "../components/ButtonFollow";
                     lang: lang,
                     state: state,
                     otherProjects: discussions,
-                    navigation: false
+                    navigation: false,
                 },
                 updated: function () {
                     mr.sliders.documentReady($);
@@ -588,7 +659,7 @@ import ButtonFollow from "../components/ButtonFollow";
                         fl.each(function (index) {
                             let sl = $(this);
                             if (sl.children().length === 0) {
-                                sl.parent().remove()
+                                sl.parent().remove();
                             }
                         });
                     }, 500);
@@ -596,7 +667,7 @@ import ButtonFollow from "../components/ButtonFollow";
                 methods: {
                     loadPost: function (post, event) {
                         cancelEventPropagation(event);
-                        console.log('loading')
+                        console.log('loading');
                         let state = postContainer.state;
                         let moreProjects = [];
                         this.otherProjects.forEach(function (d) {
@@ -610,7 +681,14 @@ import ButtonFollow from "../components/ButtonFollow";
                         }
 
                         state.discussion_idx[discuss].more_projects = moreProjects;
-                        creaEvents.emit('navigation.post.data', post, postContainer.state, discuss, 'more_projects', moreProjects.indexOf(post.link));
+                        creaEvents.emit(
+                            'navigation.post.data',
+                            post,
+                            postContainer.state,
+                            discuss,
+                            'more_projects',
+                            moreProjects.indexOf(post.link)
+                        );
                         showModal('#modal-post');
                     },
                     getFeaturedImage: function getFeaturedImage(post) {
@@ -618,51 +696,54 @@ import ButtonFollow from "../components/ButtonFollow";
 
                         if (featuredImage && featuredImage.hash) {
                             return {
-                                url: 'https://ipfs.creary.net/ipfs/' + featuredImage.hash
+                                url: 'https://ipfs.creary.net/ipfs/' + featuredImage.hash,
                             };
                         } else if (featuredImage && featuredImage.url) {
                             return featuredImage;
                         }
 
                         return {};
-                    }
-                }
+                    },
+                },
             });
 
             otherProjects.$forceUpdate();
         };
 
         let date = new Date().toISOString().replace('Z', '');
-        crea.api.getDiscussionsByAuthorBeforeDateWith({
-            start_permlink: '',
-            limit: 100,
-            before_date: date,
-            author: author
-        }, function (err, result) {
-            if (!catchError(err)) {
-                let discussions = [];
-                result.discussions.forEach(function (d) {
-                    d.metadata = jsonify(d.json_metadata);
+        crea.api.getDiscussionsByAuthorBeforeDateWith(
+            {
+                start_permlink: '',
+                limit: 100,
+                before_date: date,
+                author: author,
+            },
+            function (err, result) {
+                if (!catchError(err)) {
+                    let discussions = [];
+                    result.discussions.forEach(function (d) {
+                        d.metadata = jsonify(d.json_metadata);
 
-                    if (d.permlink !== permlink && d.metadata.featuredImage) {
-                        discussions.push(d);
+                        if (d.permlink !== permlink && d.metadata.featuredImage) {
+                            discussions.push(d);
+                        }
+                    });
+
+                    if (discussions.length > 12) {
+                        let selectedDiscuss = [];
+
+                        for (let x = 0; x < 12; x++) {
+                            let r = randomNumber(0, discussions.length - 1);
+                            selectedDiscuss.push(discussions.splice(r, 1)[0]);
+                        }
+
+                        discussions = selectedDiscuss;
                     }
-                });
 
-                if (discussions.length > 12) {
-                    let selectedDiscuss = [];
-
-                    for (let x = 0; x < 12; x++) {
-                        let r = randomNumber(0, discussions.length - 1);
-                        selectedDiscuss.push(discussions.splice(r, 1)[0]);
-                    }
-
-                    discussions = selectedDiscuss;
+                    loadOtherProjects(discussions);
                 }
-
-                loadOtherProjects(discussions);
             }
-        });
+        );
     }
 
     function fetchContent() {
@@ -670,63 +751,50 @@ import ButtonFollow from "../components/ButtonFollow";
             //Delete first char "/"
             let parts = url.slice(1, url.length).split('/').length;
             let fetchContentState = function fetchContentState(finalUrl) {
-
                 crea.api.getState(finalUrl, function (err, result) {
                     if (!catchError(err)) {
+                        let finalParts = finalUrl.slice(1, finalUrl.length).split('/');
+                        let author = finalParts[1].slice(1, finalParts[1].length);
+                        let permlink = finalParts[2];
 
-                        refreshAccessToken(function (accessToken) {
-                            let finalParts = finalUrl.slice(1, finalUrl.length).split('/');
-                            let author = finalParts[1].slice(1, finalParts[1].length);
-                            let permlink = finalParts[2];
+                        let onReblogs = function (reblogs) {
+                            let aKeys = Object.keys(result.accounts);
 
-                            let http = new HttpClient(apiOptions.apiUrl + String.format('/creary/%s/%s', author, permlink));
+                            if (aKeys.length === 0) {
+                                goTo('/404');
+                            } else {
+                                aKeys.forEach(function (k) {
+                                    result.accounts[k] = parseAccount(result.accounts[k]);
+                                });
+                                result.postKey = getPostKey(finalUrl);
+                                result.post = parsePost(result.content[result.postKey], reblogs);
+                                result.author = parseAccount(result.accounts[result.post.author]); //Order comments by date, latest first
 
-                            let onReblogs = function(reblogs) {
-                                let aKeys = Object.keys(result.accounts);
+                                //console.log(clone(result.author));
+                                let cKeys = Object.keys(result.content);
+                                cKeys.sort(function (k1, k2) {
+                                    let d1 = toLocaleDate(result.content[k1].created);
+                                    let d2 = toLocaleDate(result.content[k2].created);
+                                    return d2.valueOf() - d1.valueOf();
+                                });
+                                cKeys.forEach(function (c) {
+                                    result.post[c] = parsePost(result.content[c]);
+                                });
+                                result.post.comments = cKeys;
+                                setUp(result);
 
-                                if (aKeys.length === 0) {
-                                    goTo('/404');
-                                } else {
-                                    aKeys.forEach(function (k) {
-                                        result.accounts[k] = parseAccount(result.accounts[k]);
-                                    });
-                                    result.postKey = getPostKey(finalUrl);
-                                    result.post = parsePost(result.content[result.postKey], reblogs);
-                                    result.author = parseAccount(result.accounts[result.post.author]); //Order comments by date, latest first
+                                fetchOtherProjects(result.post.author, result.post.permlink, result);
+                            }
+                        };
 
-                                    //console.log(clone(result.author));
-                                    let cKeys = Object.keys(result.content);
-                                    cKeys.sort(function (k1, k2) {
-                                        let d1 = toLocaleDate(result.content[k1].created);
-                                        let d2 = toLocaleDate(result.content[k2].created);
-                                        return d2.valueOf() - d1.valueOf();
-                                    });
-                                    cKeys.forEach(function (c) {
-                                        result.post[c] = parsePost(result.content[c]);
-                                    });
-                                    result.post.comments = cKeys;
-                                    setUp(result);
-
-                                    fetchOtherProjects(result.post.author, result.post.permlink, result);
-                                }
-                            };
-
-                            http.when('done', function (response) {
-                                let data = jsonify(response).data;
-
+                        let commentsApi = new CommentsApi();
+                        commentsApi.comment(`@${author}`, permlink, function (err, result) {
+                            if (!err) {
+                                let data = result.data;
                                 onReblogs(data.reblogged_by);
-                            });
-
-                            http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                                console.error(textStatus, errorThrown);
+                            } else {
                                 onReblogs();
-                            });
-
-                            http.headers = {
-                                Authorization: 'Bearer ' + accessToken
-                            };
-
-                            http.get({});
+                            }
                         });
                     }
                 });
@@ -734,7 +802,7 @@ import ButtonFollow from "../components/ButtonFollow";
 
             if (parts === 2) {
                 let author = getPathPart().replace('@', '');
-                let permlink = getPathPart(null,1);
+                let permlink = getPathPart(null, 1);
 
                 crea.api.getContent(author, permlink, function (err, result) {
                     if (!catchError(err)) {
@@ -767,5 +835,4 @@ import ButtonFollow from "../components/ButtonFollow";
 
         fetchContent();
     });
-
 })();

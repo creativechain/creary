@@ -891,7 +891,7 @@ import { CommentsApi } from '../lib/creary-api';
                 };
 
                 let commentApi = new CommentsApi();
-                commentApi.comment(post.author, post.permlink, function (err, result) {
+                commentApi.comment(`@${post.author}`, post.permlink, function (err, result) {
                     if (err) {
                         onPostReblogs();
                     } else {

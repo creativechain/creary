@@ -148,13 +148,14 @@ class CommentsController extends Controller
 
     /**
      * @param Request $request
-     * @param $user
+     * @param $author
      * @param $permlink
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function show(Request $request, $user, $permlink) {
+    public function show(Request $request, $author, $permlink) {
+        $author = str_replace('@', '', $author);
         $comment = Comments::query()
-            ->where('author', $user)
+            ->where('author', $author)
             ->where('permlink', $permlink)
             ->first();
 
