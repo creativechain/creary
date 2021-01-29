@@ -120,7 +120,7 @@ import HttpClient from '../lib/http';
             }
             let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
-                allNotifications = JSON.parse(data);
+                allNotifications = data;
                 //console.log('Notifications', allNotifications);
 
                 creaEvents.emit('crea.notifications.all', allNotifications);
