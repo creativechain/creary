@@ -27,6 +27,7 @@ class HttpClient extends EventEmitter {
             url: this.url,
             method: this.method,
             headers: this.headers,
+            withCredentials: true,
         };
 
         if (this.params) {

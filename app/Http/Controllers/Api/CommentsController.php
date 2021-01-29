@@ -42,8 +42,8 @@ class CommentsController extends Controller
         if ($username) {
             $creaClient = new CrearyClient();
             $followings = $creaClient->getAccountFollowings($username);
-            //dd($followings);
             $following = $followings['blog'];
+            //dd($following);
 
             $query = Comments::query();
 
@@ -75,6 +75,8 @@ class CommentsController extends Controller
                 return $query->orWhere('reblogged_by', 'elemMatch', ['$in' => $following])
                     ->orWhereIn('author', $following);
             });
+
+            //dd($query->toSql());
 
             $comments = $query
                 ->with('tags')
