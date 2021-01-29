@@ -185,7 +185,7 @@ class CommentsController extends Controller
         }
 
         $limit = intval($request->get('limit', 20));
-
+        $author = str_replace('@', '', $author);
         return Comments::query()
             ->where('author', $author)
             ->orderByDesc('created_at')
