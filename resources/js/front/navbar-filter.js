@@ -177,7 +177,7 @@ import { categorySlider } from './category-slider';
 
         navbarFilter.$forceUpdate();
 
-        console.log('Loading content for', navbarFilter.category, navbarFilter.discuss);
+        console.log('Loading content for', navbarFilter.category, navbarFilter.discuss, navbarFilter.isUserFeed());
 
         let category = navbarFilter.category;
         let discuss = navbarFilter.discuss;
