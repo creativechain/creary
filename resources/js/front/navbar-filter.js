@@ -121,7 +121,7 @@ import { categorySlider } from './category-slider';
                     },
                     onSelectLicense: function (event) {
                         //cancelEventPropagation(event);
-                        //console.log('selecting license', event);
+                        console.log('selecting license', this.license);
 
                         //this.license = license;
                         this.oldApiCall = null;
@@ -347,7 +347,7 @@ import { categorySlider } from './category-slider';
                         let adult = params.adult;
                         let search = params.search;
                         let download = params.download;
-                        let license = params.license ? params.license.flag : null;
+                        let license = params.license ? params.license : null;
 
                         if (followings.length > 0) {
                             commentsApi.feed(search, adult, download, license, 20, onFeedComments);

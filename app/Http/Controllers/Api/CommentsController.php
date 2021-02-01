@@ -57,7 +57,14 @@ class CommentsController extends Controller
             }
 
             if ($license) {
-                $query->where('license', $license);
+                if ($license === 1) {
+                    //Select all Creative Commons license flags
+                    $license = [3, 7, 11, 15, 19, 27];
+                } else {
+                    $license = [$license];
+                }
+
+                $query->whereIn('license', $license);
             }
 
             if ($search) {
