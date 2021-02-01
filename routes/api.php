@@ -34,38 +34,31 @@ Route::group(['prefix' => 'notification'], function () {
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
 
-Route::group(['middleware' => ['cors']], function () {
+Route::group(['prefix' => 'accounts'], function () {
 
-    Route::group(['prefix' => 'accounts'], function () {
+    Route::middleware(['throttle:search'])->get('/search', 'Api\AccountsController@search')->name('accounts.search');
+});
 
-        Route::middleware(['throttle:search'])->get('/search', 'Api\AccountsController@search')->name('accounts.search');
-    });
+Route::group(['prefix' => 'tags'], function () {
 
-    Route::group(['prefix' => 'tags'], function () {
+    Route::get('/', 'Api\TagsController@index')->name('tags.index');
+    Route::get('/active', 'Api\TagsController@mostActiveTags')->name('tags.active');
+    Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
+});
 
-        Route::get('/', 'Api\TagsController@index')->name('tags.index');
-        Route::get('/active', 'Api\TagsController@mostActiveTags')->name('tags.active');
-        Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
-    });
+Route::group(['prefix' => 'comments'], function () {
 
-    Route::group(['prefix' => 'comments'], function () {
+    //Route::get('/', 'Api\TagsController@index')->name('tags.index');
+    Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
+    Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
+    Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
 
-        //Route::get('/', 'Api\TagsController@index')->name('tags.index');
-        Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
-        Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
-        Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
+    Route::get('/{author}/portfolio', 'Api\CommentsController@portfolio')->name('comments.portfolio')
+        ->where('author', '^(@[\w\.\d-]+)$');
 
-        Route::get('/{author}/portfolio', 'Api\CommentsController@portfolio')->name('comments.portfolio')
-            ->where('author', '^(@[\w\.\d-]+)$');
-
-        Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show')
-            ->where('author', '^(\@[\w\d\.-]+)$')
-            ->where('permlink', '^([\w\d-]+)$');
-
-
-
-
-    });
+    Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show')
+        ->where('author', '^(\@[\w\d\.-]+)$')
+        ->where('permlink', '^([\w\d-]+)$');
 });
 
 
