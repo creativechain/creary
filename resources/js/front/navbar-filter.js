@@ -1,4 +1,4 @@
-import { cancelEventPropagation, getParameterByName, getPathPart, isUserFeed } from '../lib/util';
+import { cancelEventPropagation, clone, getParameterByName, getPathPart, isUserFeed } from '../lib/util';
 import { LICENSE } from '../lib/license';
 import * as mutexify from 'mutexify';
 import { CommentsApi, TagsApi } from '../lib/creary-api';
@@ -211,7 +211,7 @@ import { categorySlider } from './category-slider';
     function loadOldContent(cleanContent = false) {
         console.log('Received load old content');
         oldApiCallLock(function (release) {
-            let hasPrevQuery = navbarFilter.oldApiCall && navbarFilter.oldApiCall.next_page_url;
+            let hasPrevQuery = navbarFilter.oldApiCall;
             let commentsApi = new CommentsApi();
 
             let onResult = function (err, result) {
@@ -236,10 +236,17 @@ import { categorySlider } from './category-slider';
             };
 
             if (hasPrevQuery) {
-                navbarFilter.needResetContent = false;
-                commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
-                if (navbarFilter.category === 'search') {
-                    creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
+                if (navbarFilter.oldApiCall.next_page_url) {
+                    navbarFilter.needResetContent = false;
+                    commentsApi.get(navbarFilter.oldApiCall.next_page_url, onResult);
+                    if (navbarFilter.category === 'search') {
+                        creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
+                    }
+                } else {
+                    //No more pages
+                    let oldApiCall = clone(navbarFilter.oldApiCall);
+                    oldApiCall.data = [];
+                    onResult(null, oldApiCall);
                 }
             } else {
                 let adult = navbarFilter.account && navbarFilter.account.user.metadata.adult_content === 'hide' ? 0 : 1;
