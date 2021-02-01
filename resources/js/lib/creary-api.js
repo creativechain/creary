@@ -87,7 +87,7 @@ class CrearyApi extends EventEmitter {
     get(url, callback) {
         this.__initializeClient(url, false, false);
         this.__setCallback(callback);
-        this._http.get({});
+        this._http.get();
     }
 
     /**
@@ -98,7 +98,7 @@ class CrearyApi extends EventEmitter {
     post(url, callback) {
         this.__initializeClient(url, false, false);
         this.__setCallback(callback);
-        this._http.post({});
+        this._http.post();
     }
 }
 
