@@ -648,8 +648,8 @@ import { CommentsApi } from '../lib/creary-api';
     creaEvents.on('crea.session.update', function (s, a) {
         homePosts.session = session = s;
         homePosts.account = account = a;
-        --lastPage;
-        beforeInit(homePosts.urlFilter);
+        //--lastPage;
+        //beforeInit(homePosts.urlFilter);
     });
 
     creaEvents.on('crea.session.login', function (s, a) {
