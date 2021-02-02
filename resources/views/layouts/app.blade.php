@@ -218,7 +218,7 @@
     <form autocomplete="off">
         <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
-                <input v-model="search" v-on:input="performSearch" type="text" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                <input v-model="search" v-on:input="performSearch" type="search" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
 
@@ -500,7 +500,7 @@
                             <li v-pre class="hidden-xs">
                                 <div id="navbar-search" ref="searcher" class="dropdown dropdown-search">
                                     <span class="dropdown__trigger search icons-navbar"><i class="stack-search"></i>
-                                        <input v-model="search" v-on:input="performSearch" type="text" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                                        <input v-model="search" v-on:input="performSearch" type="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
                                     </span>
 
                                     <div class="dropdown__container">
