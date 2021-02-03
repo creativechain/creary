@@ -168,7 +168,7 @@ import HttpClient from '../lib/http';
     });
 
     creaEvents.on('crea.dom.ready', function () {
-        //console.log('DOM ready received');
+        console.log('DOM ready received');
         $.holdReady(false);
         $(window).scroll(function (event) {
             let scrollHeight = $(document).height();

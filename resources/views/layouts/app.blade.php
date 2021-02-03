@@ -218,7 +218,7 @@
     <form autocomplete="off">
         <div class="row justify-content-center row-input">
             <div class="col-lg-6 col-md-8">
-                <input v-model="search" v-on:input="performSearch" type="search" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
+                <input v-model="search" autocomplete="off" v-on:keydown="performSearch" type="search" name="search" placeholder="{{ __('lang.HOME.SEARCH_ACTIVE') }}"/>
             </div>
         </div>
 

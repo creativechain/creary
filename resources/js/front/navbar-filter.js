@@ -50,7 +50,7 @@ import { categorySlider } from './category-slider';
                     linkForTag: function (tag) {
                         let link = '';
                         if (tag) {
-                            /*if (this.isUserFeed()) {
+                            if (this.isUserFeed()) {
                                 link += `${window.location.pathname}?q=`;
                             } else if (this.category === 'search') {
                                 link += '/search?q=';
@@ -58,9 +58,8 @@ import { categorySlider } from './category-slider';
                                 link += `/${this.category}/`;
                             } else {
                                 link += '/popular/';
-                            }*/
+                            }
 
-                            link += '/popular/';
                             link += tag.name;
                         } else {
                             //All
@@ -110,13 +109,7 @@ import { categorySlider } from './category-slider';
                     onSelectDiscuss: function (event, discuss) {
                         cancelEventPropagation(event);
 
-                        if (discuss !== this.discuss) {
-                            this.category = 'popular';
-                            this.search = null;
-                            this.discuss = discuss;
-                            this.resetContentFilters();
-                        }
-                        /*if ((this.isUserFeed() || this.category === 'search') && discuss !== this.search) {
+                        if ((this.isUserFeed() || this.category === 'search') && discuss !== this.search) {
                             this.search = discuss;
                             this.discuss = this.isUserFeed() ? this.discuss : null;
                             this.resetContentFilters();
@@ -124,7 +117,7 @@ import { categorySlider } from './category-slider';
                             this.discuss = discuss;
                             this.search = null;
                             this.resetContentFilters();
-                        }*/
+                        }
                     },
                     onSelectLicense: function (event) {
                         //cancelEventPropagation(event);

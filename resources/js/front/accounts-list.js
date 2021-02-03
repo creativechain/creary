@@ -1,15 +1,15 @@
-import Avatar from "../components/Avatar";
-import ButtonFollow from "../components/ButtonFollow";
-import {getParameterByName, jsonify} from "../lib/util";
-import HttpClient from "../lib/http";
-import Username from "../components/Username";
-import {updateUserSession} from "../common/common";
-
+import Avatar from '../components/Avatar';
+import ButtonFollow from '../components/ButtonFollow';
+import { getParameterByName, jsonify } from '../lib/util';
+import HttpClient from '../lib/http';
+import Username from '../components/Username';
+import { updateUserSession } from '../common/common';
+import { AccountsApi } from '../lib/creary-api';
 
 (function () {
     const SEARCH_LIMIT = 20;
 
-    Vue.component('avatar', Avatar)
+    Vue.component('avatar', Avatar);
     Vue.component('btn-follow', ButtonFollow);
     Vue.component('username', Username);
 
@@ -27,23 +27,26 @@ import {updateUserSession} from "../common/common";
                     search: getParameterByName('q'),
                     limit: SEARCH_LIMIT,
                     items: [],
-                    http: null
+                    http: null,
                 },
                 methods: {
                     onFollow: function () {
                         updateUserSession();
-                    }
-                }
-            })
+                    },
+                },
+            });
 
             creaEvents.emit('crea.modal.ready');
         } else {
-            accountList.search = getParameterByName('q')
+            accountList.search = getParameterByName('q');
             accountList.session = session;
             accountList.account = account;
         }
 
         console.log('list updated!');
+        setTimeout(function () {
+            creaEvents.emit('crea.dom.ready');
+        }, 200);
     }
 
     function preSetup(session, account) {
@@ -62,40 +65,24 @@ import {updateUserSession} from "../common/common";
     }
 
     function getAllResults() {
+        let hasPrevQuery = accountList.http && accountList.http.next_page_url;
 
-        let url = apiOptions.apiCrea + '/accounts/search'
-        let params = {
-            search: accountList.search,
-            limit: SEARCH_LIMIT
-        }
-
-        if (accountList.http) {
-            url = accountList.http.next_page_url;
-            params = null;
-        }
-
-        if (url) {
-            let http = new HttpClient(url);
-            http.setHeaders({
-                accept: 'application/json'
-            })
-
-            http.on('done' + http.id, function (response) {
-                let data = jsonify(response);
-
-                accountList.http = data;
-                accountList.items.push(...data.data);
+        let accountApi = new AccountsApi();
+        let onResponse = function (err, response) {
+            onScrollCalling = false;
+            if (err) {
+                console.error('Error getting accounts', err);
+            } else {
+                accountList.http = response;
+                accountList.items.push(...response.data);
                 accountList.$forceUpdate();
-            })
-
-            http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR, textStatus, errorThrown);
-            });
-
-            http.get(params);
+            }
+        };
+        if (hasPrevQuery) {
+            accountApi.get(accountList.http.next_page_url, onResponse);
+        } else {
+            accountApi.search(accountList.search, SEARCH_LIMIT, onResponse);
         }
-
-
     }
 
     creaEvents.on('crea.session.login', function (s, a) {
@@ -110,11 +97,12 @@ import {updateUserSession} from "../common/common";
         setUp(session, account);
     });
 
-    let onScrollCalling;
+    let onScrollCalling = false;
     creaEvents.on('crea.scroll.bottom', function () {
+        console.log('On Scroll', onScrollCalling);
         if (!onScrollCalling) {
             onScrollCalling = true;
             getAllResults();
         }
-    })
-})()
+    });
+})();

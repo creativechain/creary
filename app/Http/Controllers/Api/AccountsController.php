@@ -35,7 +35,7 @@ class AccountsController extends Controller
         $search = strtolower($request->get('search'));
 
         $accounts = Accounts::query()
-            ->where('public_name', 'like', "%$search%")
+            ->where('public_name', 'like', "/.*$search.*/")
             ->orderBy('follower_count')
             ->paginate(intval($limit));
         $accounts->appends($request->except('page'));
