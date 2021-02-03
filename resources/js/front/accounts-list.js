@@ -36,7 +36,9 @@ import { AccountsApi } from '../lib/creary-api';
                 },
             });
 
-            creaEvents.emit('crea.modal.ready');
+            setTimeout(function () {
+                creaEvents.emit('crea.dom.ready');
+            }, 200);
         } else {
             accountList.search = getParameterByName('q');
             accountList.session = session;
@@ -44,9 +46,6 @@ import { AccountsApi } from '../lib/creary-api';
         }
 
         console.log('list updated!');
-        setTimeout(function () {
-            creaEvents.emit('crea.dom.ready');
-        }, 200);
     }
 
     function preSetup(session, account) {
@@ -78,8 +77,12 @@ import { AccountsApi } from '../lib/creary-api';
                 accountList.$forceUpdate();
             }
         };
-        if (hasPrevQuery) {
-            accountApi.get(accountList.http.next_page_url, onResponse);
+        if (accountList.http) {
+            if (hasPrevQuery) {
+                accountApi.get(accountList.http.next_page_url, onResponse);
+            }
+
+            //No query if not has prev query
         } else {
             accountApi.search(accountList.search, SEARCH_LIMIT, onResponse);
         }
