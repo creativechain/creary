@@ -28,6 +28,7 @@
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
         "salmanzafar/laravel-mqtt": "^1.0",
+        "spatie/laravel-sitemap": "^5.9",
         "telegram-bot/api": "^2.3",
         "twilio/sdk": "^6.3"
     },
