@@ -6,6 +6,8 @@ use App\Http\Crea\CrearyClient;
 use App\Jobs\SendNotificationJob;
 use App\Jobs\UpdateAccountJob;
 use App\Jobs\UpdateCommentJob;
+use App\Op;
+use App\Tx;
 use App\Utils\CreaOperationsUtils;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -54,8 +56,12 @@ class ScanBlockCommand extends Command
 
             foreach ($txs as $tx) {
 
+                Tx::register($tx, $timestamp);
+
                 $ops = $tx->operations;
                 foreach ($ops as $op) {
+                    Op::register($op, $timestamp);
+
                     try {
                         $op_name = $op[0];
                         $data = CreaOperationsUtils::{$op_name}($op);
