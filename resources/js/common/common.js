@@ -91,7 +91,6 @@ let CONSTANTS = {
     WITNESS: {
         DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10,
     },
-    BLOCKED_ACCOUNTS: ['rhsteele', 'yumekon'],
 };
 
 creaEvents.on('crea.session.login', function (session, account) {
@@ -303,7 +302,7 @@ function parseAccount(account) {
         account.buzz.level_name = CONSTANTS.BUZZ.LEVELS[account.buzz.level - 1];
         account.buzz.level_title = lang.BUZZ[account.buzz.level - 1];
         account.buzz.blocked = account.buzz.formatted <= CONSTANTS.BUZZ.USER_BLOCK_THRESHOLD;
-        account.profile_blocked = CONSTANTS.BLOCKED_ACCOUNTS.includes(account.name);
+        account.profile_blocked = BLOCKED_ACCOUNTS.includes(account.name);
 
         account.metadata = jsonify(account.json_metadata);
 
