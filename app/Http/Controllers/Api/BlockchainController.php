@@ -117,10 +117,12 @@ class BlockchainController extends Controller
         try {
             $client = new CrearyClient();
             $props = $client->getGlobalProperties();
+            $accountCount = $client->getAccountCount();
 
             $virtualSupply = str_replace(' CREA', '', $props->virtual_supply);
             $currentSupply = str_replace(' CREA', '', $props->current_supply);
             return response([
+                'total_accounts' => $accountCount,
                 'current_supply' => $currentSupply,
                 'total_supply' => $virtualSupply,
                 "txs_over_$period" => $txsOverPeriod,

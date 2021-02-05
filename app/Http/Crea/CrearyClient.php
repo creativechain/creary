@@ -248,4 +248,19 @@ class CrearyClient
         return array();
 
     }
+
+    /**
+     * @return int|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getAccountCount() {
+        $rpcData = $this->buildRpcData('condenser_api.get_account_count');
+
+        $response = $this->callRequest($rpcData);
+        if (array_key_exists('result', $response)) {
+            return $response['result'];
+        }
+
+        return null;
+    }
 }
