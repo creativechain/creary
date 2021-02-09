@@ -76,6 +76,7 @@
     @endif
 
     <script>
+        window.BLOCKED_ACCOUNTS = {!! json_encode(config('creary.blocked_accounts')) !!};
         window.isoLangs = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('isolangs.json') !!};
         window.lang = {!! \Illuminate\Support\Facades\Storage::disk('local')->get('translations/' . \Illuminate\Support\Facades\App::getLocale() . '/lang.json') !!};
         window.search_api = "{{ env('CREA_SEARCH_API_URL') }}"
