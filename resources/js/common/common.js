@@ -227,28 +227,27 @@ function createBlockchainAccount(username, password, callback) {
     let keys = crea.auth.getPrivateKeys(username, password, DEFAULT_ROLES);
     refreshAccessToken(function (accessToken) {
         let http = new HttpClient(apiOptions.apiUrl + '/createCrearyAccount');
-        http.when('done', function (data) {
-            data = jsonify(data);
-
-            if (callback) {
-                callback(null, data);
-            }
-        });
-        http.when('fail', function (jqXHR, textStatus, errorThrown) {
-            if (callback) {
-                callback(errorThrown);
-            }
-        });
-        http.headers = {
-            Authorization: 'Bearer ' + accessToken,
-        };
-        http.post({
-            username: username,
-            active: keys.activePubkey,
-            owner: keys.ownerPubkey,
-            posting: keys.postingPubkey,
-            memo: keys.memoPubkey,
-        });
+        http.withCredentials(false)
+            .setHeaders({
+                Authorization: 'Bearer ' + accessToken,
+            })
+            .when('done', function (data) {
+                if (callback) {
+                    callback(null, data);
+                }
+            })
+            .when('fail', function (response, textStatus, request) {
+                if (callback) {
+                    callback(response.error);
+                }
+            })
+            .post({
+                username: username,
+                active: keys.activePubkey,
+                owner: keys.ownerPubkey,
+                posting: keys.postingPubkey,
+                memo: keys.memoPubkey,
+            });
     });
 }
 
@@ -564,7 +563,7 @@ function makeComment(comment, post, parentPost, callback) {
             let metadata = {
                 tags: tags,
                 app: 'creary',
-                version: '1.0.0'
+                version: '1.0.0',
             };
             /*crea.broadcast.comment(postingKey, parentAuthor, parentPermlink, session.account.username, permlink, '', comment, '', jsonstring(metadata), function (err, result) {
                 globalLoading.show = false;
@@ -754,16 +753,16 @@ function refreshAccessToken(callback) {
             client_id: '1_2e5ws1sr915wk0o4kksc0swwoc8kc4wgkgcksscgkkko404g8c',
             client_secret: '3c2x9uf9uwg0ook0kksk8koccsk44w0gg4csos04ows444ko4k',
         };
-        http.when('done', function (data) {
-            data = JSON.parse(data);
-            localStorage.setItem(CREARY.ACCESS_TOKEN, data.access_token);
-            localStorage.setItem(CREARY.ACCESS_TOKEN_EXPIRATION, new Date().getTime() + data.expires_in * 1000);
+        http.withCredentials(false)
+            .when('done', function (data) {
+                localStorage.setItem(CREARY.ACCESS_TOKEN, data.access_token);
+                localStorage.setItem(CREARY.ACCESS_TOKEN_EXPIRATION, new Date().getTime() + data.expires_in * 1000);
 
-            if (callback) {
-                callback(data.access_token);
-            }
-        });
-        http.post(params);
+                if (callback) {
+                    callback(data.access_token);
+                }
+            })
+            .post(params);
     } else if (callback) {
         let accessToken = localStorage.getItem(CREARY.ACCESS_TOKEN);
         callback(accessToken);
@@ -881,28 +880,28 @@ function performSearch(search, page = 1, inHome = false, callback) {
             let http = new HttpClient(apiOptions.apiUrl + '/searchCreaContent');
             http.setHeaders({
                 Authorization: 'Bearer ' + accessToken,
-            });
-            http.when('done', function (response) {
-                let data = jsonify(response).data;
+            })
+                .when('done', function (response) {
+                    let data = jsonify(response).data;
 
-                for (let x = 0; x < data.length; x++) {
-                    data[x].tags = jsonify(data[x].tags);
-                }
+                    for (let x = 0; x < data.length; x++) {
+                        data[x].tags = jsonify(data[x].tags);
+                    }
 
-                creaEvents.emit('crea.search.content', data);
+                    creaEvents.emit('crea.search.content', data);
 
-                if (callback) {
-                    callback();
-                }
-            });
-            http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR, textStatus, errorThrown);
-                catchError(errorThrown);
-            });
-            http.get({
-                search: search,
-                page: page,
-            });
+                    if (callback) {
+                        callback();
+                    }
+                })
+                .when('fail', function (response, textStatus, request) {
+                    console.error(response, textStatus, request);
+                    catchError(response.error);
+                })
+                .get({
+                    search: search,
+                    page: page,
+                });
         });
     } else {
         goTo(path);

@@ -3,12 +3,11 @@
  */
 import HttpClient from '../lib/http';
 import { jsonify, copyToClipboard, validateEmail, getParameterByName } from '../lib/util';
-import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from "../common/common";
+import { catchError, refreshAccessToken, createBlockchainAccount, goTo } from '../common/common';
 
-import Autocomplete from "../components/Autocomplete";
+import Autocomplete from '../components/Autocomplete';
 
 (function () {
-
     Vue.component('autocomplete', Autocomplete);
 
     let welcomeVue;
@@ -16,8 +15,8 @@ import Autocomplete from "../components/Autocomplete";
     let usernameInputs = {
         last: {
             value: null,
-            date: 0
-        }
+            date: 0,
+        },
     };
 
     function setUp() {
@@ -38,7 +37,7 @@ import Autocomplete from "../components/Autocomplete";
                     password: null,
                     matchPassword: '',
                     terms: '',
-                    policy: ''
+                    policy: '',
                 },
                 validUsername: false,
                 validEmail: false,
@@ -50,7 +49,7 @@ import Autocomplete from "../components/Autocomplete";
                 suggestedPassword: '',
                 password: '',
                 lang: lang,
-                countryCodes: countryCodes
+                countryCodes: countryCodes,
             },
             methods: {
                 inputPassword: inputPassword,
@@ -67,7 +66,7 @@ import Autocomplete from "../components/Autocomplete";
                     }
                 },
                 changeSlide: function changeSlide(slide, error) {
-                    console.log("Change to slide", slide, error);
+                    console.log('Change to slide', slide, error);
 
                     let that = this;
 
@@ -78,7 +77,6 @@ import Autocomplete from "../components/Autocomplete";
 
                     //Validate username
                     if (this.slide === 2) {
-
                         this.checkUsername(function (err, result, username) {
                             if (err) {
                                 console.error(err);
@@ -104,7 +102,6 @@ import Autocomplete from "../components/Autocomplete";
                                         that.slide = slide;
                                     }
                                 });
-
                             }
                         });
                     } else {
@@ -120,8 +117,8 @@ import Autocomplete from "../components/Autocomplete";
                 checkUsername: checkUsername,
                 sendConfirmationMail: sendConfirmationMail,
                 createAccount: createAccount,
-                copyToClipboard: copyToClipboard
-            }
+                copyToClipboard: copyToClipboard,
+            },
         });
 
         creaEvents.emit('crea.dom.ready');
@@ -142,12 +139,14 @@ import Autocomplete from "../components/Autocomplete";
             let usernameCallback = function usernameCallback(err, result) {
                 let userTime = usernameInputs[username];
 
-                if (userTime > usernameInputs.last.date || userTime >= usernameInputs.last.date && username === usernameInputs.last.value) {
+                if (
+                    userTime > usernameInputs.last.date ||
+                    (userTime >= usernameInputs.last.date && username === usernameInputs.last.value)
+                ) {
                     if (callback) {
                         callback(err, result, username);
                     }
                 }
-
             };
 
             crea.api.lookupAccountNames(accounts, usernameCallback);
@@ -163,12 +162,14 @@ import Autocomplete from "../components/Autocomplete";
 
         let target = welcomeVue.$refs.regemail;
         let email = target.value;
-        console.log("Checking mail", email, validateEmail(email));
+        console.log('Checking mail', email, validateEmail(email));
 
         if (validateEmail(email)) {
             refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + '/validateAccount';
                 let http = new HttpClient(url);
+
+                console.log('AccessToken', accessToken);
 
                 emailCallback = function emailCallback(data) {
                     console.log('Validate', data, email);
@@ -177,24 +178,26 @@ import Autocomplete from "../components/Autocomplete";
                     callback(null, email);
                 };
 
-                http.setHeaders({
-                    Authorization: 'Bearer ' + accessToken
-                }).when('fail', function (data, status, error) {
-                    console.error('Request failed', data, status, error, email);
+                http.withCredentials(false)
+                    .setHeaders({
+                        authorization: 'Bearer ' + accessToken,
+                    })
+                    .when('fail', function (response, textStatus, request) {
+                        console.error('Request failed', response, textStatus, email);
 
-                    if (data.responseText) {
-                        let response = jsonify(data.responseText);
-
-                        if (response.error === 'REGISTERED_EMAIL') {
-                            callback(lang.ERROR.EMAIL_EXISTS, null);
+                        if (data.responseText) {
+                            if (response.error === 'REGISTERED_EMAIL') {
+                                callback(lang.ERROR.EMAIL_EXISTS, null);
+                            }
+                        } else {
+                            callback(lang.ERROR.UNKNOWN_ERROR, null);
                         }
-                    } else {
-                        callback(lang.ERROR.UNKNOWN_ERROR, null);
-                    }
-                }).when('done', emailCallback).post({
-                    username: welcomeVue.username,
-                    email: email
-                });
+                    })
+                    .when('done', emailCallback)
+                    .post({
+                        username: welcomeVue.username,
+                        email: email,
+                    });
             });
         } else {
             callback(lang.ERROR.INVALID_EMAIL, null);
@@ -212,23 +215,27 @@ import Autocomplete from "../components/Autocomplete";
             refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + `/validation-phone/${token}`;
                 let http = new HttpClient(url);
-                http.setHeaders({
-                    Authorization: 'Bearer ' + accessToken
-                }).post({
-                    phone: phone
-                }).when('done', function (data) {
-                    globalLoading.show = false;
-                    data = JSON.parse(data);
-                    console.log('Phone validation', data);
-                    welcomeVue.validPhone = true;
-                    welcomeVue.sentSMS = true;
-                    welcomeVue.error.phone = '';
-                }).when('fail', function (jqXHR, textStatus, errorThrown) {
-                    console.error(jqXHR, textStatus, errorThrown);
-                    let response = jsonify(jqXHR.responseText);
-                    welcomeVue.error.phone = lang.ERROR[response.error];
-                    globalLoading.show = false;
-                });
+                http.withCredentials(false)
+                    .setHeaders({
+                        Authorization: 'Bearer ' + accessToken,
+                    })
+                    .when('done', function (data) {
+                        globalLoading.show = false;
+
+                        console.log('Phone validation', data);
+                        welcomeVue.validPhone = true;
+                        welcomeVue.sentSMS = true;
+                        welcomeVue.error.phone = '';
+                    })
+                    .when('fail', function (response, textStatus, request) {
+                        console.error(response, textStatus, request);
+
+                        welcomeVue.error.phone = lang.ERROR[response.error];
+                        globalLoading.show = false;
+                    })
+                    .post({
+                        phone: phone,
+                    });
             });
         } else {
             welcomeVue.slide = 1;
@@ -241,25 +248,29 @@ import Autocomplete from "../components/Autocomplete";
         refreshAccessToken(function (accessToken) {
             let url = apiOptions.apiUrl + `/validate-phone/${token}`;
             let http = new HttpClient(url);
-            http.setHeaders({
-                Authorization: 'Bearer ' + accessToken
-            }).post({
-                phoneCode: welcomeVue.phone_code
-            }).when('done', function (data) {
-                globalLoading.show = false;
-                data = JSON.parse(data);
-                console.log('Phone verified', data);
-                welcomeVue.username = data.data.username;
-                welcomeVue.suggestPassword();
-                welcomeVue.slide = 7; //Set Password step
-                welcomeVue.error.phone_code = '';
-            }).when('fail', function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR, textStatus, errorThrown);
-                let response = jsonify(jqXHR.responseText);
-                welcomeVue.error.phone_code = lang.ERROR[response.error];
-                globalLoading.show = false;
-            });
-        })
+            http.withCredentials(false)
+                .setHeaders({
+                    Authorization: 'Bearer ' + accessToken,
+                })
+                .when('done', function (data) {
+                    globalLoading.show = false;
+
+                    console.log('Phone verified', data);
+                    welcomeVue.username = data.data.username;
+                    welcomeVue.suggestPassword();
+                    welcomeVue.slide = 7; //Set Password step
+                    welcomeVue.error.phone_code = '';
+                })
+                .when('fail', function (response, textStatus, request) {
+                    console.error(response, textStatus, request);
+
+                    welcomeVue.error.phone_code = lang.ERROR[response.error];
+                    globalLoading.show = false;
+                })
+                .post({
+                    phoneCode: welcomeVue.phone_code,
+                });
+        });
     }
 
     function inputCheckPassword(event) {
@@ -278,7 +289,7 @@ import Autocomplete from "../components/Autocomplete";
 
     function inputPassword(event) {
         let pass = event.target.value;
-        console.log("Input password", pass);
+        console.log('Input password', pass);
 
         if (pass && !pass.isEmpty()) {
             welcomeVue.password = event.target.value;
@@ -294,26 +305,30 @@ import Autocomplete from "../components/Autocomplete";
             refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + '/crearySignUp';
                 let http = new HttpClient(url);
-                http.setHeaders({
-                    Authorization: 'Bearer ' + accessToken
-                }).post({
-                    username: welcomeVue.username,
-                    email: $('#reg-email').val()
-                }).when('fail', function (jqXHR, textStatus, errorThrown) {
-                    globalLoading.show = false;
-                    let response = jsonify(jqXHR.responseText);
-                    if (callback) {
-                        callback(lang.ERROR[response.error], null);
-                    }
-                }).when('done', function (data) {
-                    console.log('SignUp', data);
-                    welcomeVue.slide = 4;
-                    globalLoading.show = false;
+                http.withCredentials(false)
+                    .setHeaders({
+                        Authorization: 'Bearer ' + accessToken,
+                    })
+                    .when('fail', function (response, textStatus, request) {
+                        globalLoading.show = false;
 
-                    if (callback) {
-                        callback(null, data);
-                    }
-                });
+                        if (callback) {
+                            callback(lang.ERROR[response.error], null);
+                        }
+                    })
+                    .when('done', function (data) {
+                        console.log('SignUp', data);
+                        welcomeVue.slide = 4;
+                        globalLoading.show = false;
+
+                        if (callback) {
+                            callback(null, data);
+                        }
+                    })
+                    .post({
+                        username: welcomeVue.username,
+                        email: $('#reg-email').val(),
+                    });
             });
         }
     }
@@ -332,7 +347,15 @@ import Autocomplete from "../components/Autocomplete";
                 }
             });
         } else {
-            console.error('Account could not be created', 'Match pass:', welcomeVue.passwordMatch, 'Terms:', welcomeVue.checkedTerms, 'Policy:', welcomeVue.checkedPolicy);
+            console.error(
+                'Account could not be created',
+                'Match pass:',
+                welcomeVue.passwordMatch,
+                'Terms:',
+                welcomeVue.checkedTerms,
+                'Policy:',
+                welcomeVue.checkedPolicy
+            );
         }
     }
 
@@ -347,25 +370,27 @@ import Autocomplete from "../components/Autocomplete";
             refreshAccessToken(function (accessToken) {
                 let url = apiOptions.apiUrl + `/validation/${token}`;
                 let http = new HttpClient(url);
-                http.setHeaders({
-                    Authorization: 'Bearer ' + accessToken
-                }).get().when('done', function (data) {
-                    globalLoading.show = false;
-                    data = JSON.parse(data);
-                    console.log('SignUp', data);
-                    welcomeVue.username = data.data.username;
-                    welcomeVue.slide = 5;
-                    welcomeVue.sentSMS = (data.data.phoneToken !== null && data.data.phoneToken !== undefined);
-                }).when('fail', function (jqXHR, textStatus, errorThrown) {
-                    console.error(jqXHR, textStatus, errorThrown);
-                    //TODO: SHOW ERROR
-                    goTo('/' + jqXHR.status);
-                });
+                http.withCredentials(false)
+                    .setHeaders({
+                        Authorization: 'Bearer ' + accessToken,
+                    })
+                    .when('done', function (data) {
+                        globalLoading.show = false;
+
+                        console.log('SignUp', data);
+                        welcomeVue.username = data.data.username;
+                        welcomeVue.slide = 5;
+                        welcomeVue.sentSMS = data.data.phoneToken !== null && data.data.phoneToken !== undefined;
+                    })
+                    .when('fail', function (response, textStatus, request) {
+                        console.error(response, textStatus, request);
+                        //TODO: SHOW ERROR
+                        //goTo('/' + jqXHR.status);
+                    })
+                    .get();
             });
         } else {
             welcomeVue.slide = 1;
         }
-
     });
-
 })();

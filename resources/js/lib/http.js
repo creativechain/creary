@@ -17,6 +17,7 @@ class HttpClient extends EventEmitter {
         this.mimeType = 'multipart/form-data';
         this.contentType = false;
         this.requestToken = null;
+        this.credentials = true;
     }
 
     __exec() {
@@ -27,8 +28,10 @@ class HttpClient extends EventEmitter {
             url: this.url,
             method: this.method,
             headers: this.headers,
-            withCredentials: true,
+            withCredentials: this.credentials,
         };
+
+        //console.log('AXIOS SETTINGS', settings);
 
         if (this.params) {
             if (this.method === 'GET') {
@@ -49,7 +52,8 @@ class HttpClient extends EventEmitter {
                 }
             })
             .catch((error) => {
-                that.emit('error' + that.id, error);
+                //console.error('Axios error', error, error.response);
+                that.emit('fail' + that.id, error.response.data, error.response.statusText, error.response.request);
             });
     }
 
@@ -71,6 +75,16 @@ class HttpClient extends EventEmitter {
      */
     setHeaders(headers) {
         this.headers = headers;
+        return this;
+    }
+
+    /**
+     *
+     * @param credentials
+     * @returns {HttpClient}
+     */
+    withCredentials(credentials = true) {
+        this.credentials = credentials;
         return this;
     }
 
