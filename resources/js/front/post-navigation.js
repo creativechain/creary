@@ -113,6 +113,7 @@ import { CommentsApi } from '../lib/creary-api';
                     lastPost: lastPost,
                     showPost: showPost,
                     humanFileSize: humanFileSize,
+                    isPostModalVisible: isPostModalVisible,
                     getBuzzClass: function getBuzzClass(account) {
                         let buzzClass = {};
                         let levelName = account.buzz.level_name;
@@ -427,8 +428,9 @@ import { CommentsApi } from '../lib/creary-api';
                         }
                     },
                     onVote: function onVote(err) {
+                        console.log('onVote, err:', err);
                         let that = this;
-                        if (!catchError(err)) {
+                        if (!catchError(err) && this.isPostModalVisible()) {
                             showPostData(
                                 that.state.post,
                                 that.state,
@@ -673,6 +675,10 @@ import { CommentsApi } from '../lib/creary-api';
                 reportCommentModal.state = state;
             }
         }
+    }
+
+    function isPostModalVisible() {
+        return $('#modal-post').hasClass('modal-active');
     }
 
     function fetchOtherProjects(author, permlink, state) {
