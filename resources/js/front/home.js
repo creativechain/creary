@@ -807,9 +807,9 @@ import { CommentsApi } from '../lib/creary-api';
                                         }
                                     });
                                 } else {
-                                    if (discuss) {
+                                    /*if (discuss) {
                                         creaEvents.emit('crea.content.old');
-                                    }
+                                    }*/
 
                                     onScrollCalling = false;
                                 }
