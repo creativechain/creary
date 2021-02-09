@@ -91,10 +91,6 @@ let CONSTANTS = {
     WITNESS: {
         DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10,
     },
-<<<<<<< HEAD
-    BLOCKED_ACCOUNTS: ['rhsteele', 'yumekon']
-=======
->>>>>>> sandbox
 };
 
 creaEvents.on('crea.session.login', function (session, account) {
