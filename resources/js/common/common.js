@@ -563,6 +563,8 @@ function makeComment(comment, post, parentPost, callback) {
             console.log(permlink.length, parentPermlink.length);
             let metadata = {
                 tags: tags,
+                app: 'creary',
+                version: '1.0.0'
             };
             /*crea.broadcast.comment(postingKey, parentAuthor, parentPermlink, session.account.username, permlink, '', comment, '', jsonstring(metadata), function (err, result) {
                 globalLoading.show = false;
