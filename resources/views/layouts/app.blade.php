@@ -379,7 +379,7 @@
                 <div class="col-2 col-md-2 col-lg-2 hidden-xs">
                     <div class="bar__module">
                         <a href="/">
-                            <img class="logo" alt="logo" v-lazy="'{{ asset('img/logo_creary.svg') }}'"/>
+                            <img class="logo" alt="logo" v-lazy="'{{ asset('img/logo_creary.svg') }}'" />
                         </a>
                     </div>
                 </div>
