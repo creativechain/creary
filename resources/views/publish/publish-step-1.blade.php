@@ -73,42 +73,55 @@
                 </div>
             </div>
 
-            <div>
+            <div class="mt-4">
                 <div class="row">
-                    <div class="col-md-6 offset-md-3 col-sm-12">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
                         <div class="row row-options-steps-1">
                             <template v-if="session">
-                                <div class="col-6 text-center">
+                                <div class="col-4 text-center">
                                     <div v-bind:class="{ 'img-disabled-file': editor.show }" class="button-add-file" v-on:click="loadFile"></div>
                                     <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.FILE') }}</p>
                                     <p class="disabled">{{ __('lang.PUBLISH.FILE_TYPE_INFO') }}</p>
                                     <input ref="publishInputFile" type="file" accept="image/*|audio/*|video/*" class="hidden" v-on:change="onLoadFile" />
                                 </div>
-                                <div class="col-6 text-center">
+
+                                <div class="col-4 text-center">
+                                    <div class="button-add-video" v-on:click="addVideo"></div>
+                                    <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
+                                </div>
+
+                                <div class="col-4 text-center">
                                     <div v-bind:class="{ 'img-disabled-text': editor.show }" class="button-add-text" v-on:click="toggleEditor"></div>
                                     <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.TEXT') }}</p>
                                 </div>
                             </template>
                             <template v-else>
-                                <div class="col-6 text-center">
+                                <div class="col-4 text-center">
                                     <div v-bind:class="{ 'img-disabled-file': editor.show }" class="button-add-file modal-trigger" data-modal-id="modal-login-d"></div>
                                     <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.FILE') }}</p>
                                     <p class="disabled">{{ __('lang.PUBLISH.FILE_TYPE_INFO') }}</p>
                                 </div>
-                                <div class="col-6 text-center">
+                                <div class="col-4 text-center">
+                                    <div class="button-add-video" v-bind:class="{ 'img-disabled-text': editor.show }"></div>
+                                    <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.ADD_VIDEO') }}</p>
+                                    <p class="disabled">{{ __('lang.PUBLISH.VIDEO_SUPPORT') }}</p>
+                                </div>
+                                <div class="col-4 text-center">
                                     <div v-bind:class="{ 'img-disabled-text': editor.show }" class="button-add-text modal-trigger" data-modal-id="modal-login-d"></div>
                                     <p v-bind:class="{ disabled: editor.show }" class="title">{{ __('lang.PUBLISH.TEXT') }}</p>
                                 </div>
                             </template>
 
+
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="mt-4">
                 <div class="col-md-12">
                     <p class="disabled mb-0">
-                        @{{ String.format(lang.PUBLISH.IMAGE_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.IMAGE)) }},
+                        @{{ String.format(lang.PUBLISH.IMAGE_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.IMAGE), humanFileSize(10 * 1024 * 1024)) }},
                         @{{ String.format(lang.PUBLISH.AUDIO_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.AUDIO)) }},
                         @{{ String.format(lang.PUBLISH.VIDEO_MAX_FILE_SIZE, humanFileSize(CONSTANTS.FILE_MAX_SIZE.POST_BODY.VIDEO)) }}
                     </p>

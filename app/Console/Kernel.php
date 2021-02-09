@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Jobs\CashoutCommentJob;
+use App\Jobs\UpdateActiveTagsJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +28,12 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->job(new CashoutCommentJob())->everyMinute()
+            ->withoutOverlapping();
+
+        /*$schedule->job(new UpdateActiveTagsJob())
+            ->everyMinute()
+            ->withoutOverlapping();*/
     }
 
     /**

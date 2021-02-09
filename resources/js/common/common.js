@@ -1,17 +1,29 @@
-
 import HttpClient from '../lib/http';
-import Session from "../lib/session";
-import * as CREARY from "../common/ls";
+import * as Ipfs from 'ipfs-http-client';
+import Session from '../lib/session';
+import * as CREARY from '../common/ls';
 import { Asset } from '../lib/amount';
-import { clone, jsonify, jsonstring, isJSON, cleanArray, isUserFeed, randomNumber, toPermalink,
-    getNavigatorLanguage, uniqueId, cancelEventPropagation } from "../lib/util";
-import Errors from "../lib/error";
-import { DEFAULT_ROLES } from "../lib/account";
+import {
+    clone,
+    jsonify,
+    jsonstring,
+    isJSON,
+    cleanArray,
+    isUserFeed,
+    randomNumber,
+    toPermalink,
+    getNavigatorLanguage,
+    uniqueId,
+    cancelEventPropagation,
+    getPathPart,
+} from '../lib/util';
+import Errors from '../lib/error';
+import { DEFAULT_ROLES } from '../lib/account';
 
 /**
  * Created by ander on 25/09/18.
  */
-class IpfsFile  {
+class IpfsFile {
     constructor(hash, name, type, size) {
         this.hash = hash;
         this.name = name;
@@ -23,7 +35,7 @@ class IpfsFile  {
 
 let CONSTANTS = {
     ACCOUNT: {
-        UPDATE_THRESHOLD: 1000 * 60 * 60
+        UPDATE_THRESHOLD: 1000 * 60 * 60,
     },
     TRANSFER: {
         TRANSFER_CREA: 'transfer_crea',
@@ -32,11 +44,11 @@ let CONSTANTS = {
         TRANSFER_TO_SAVINGS_CBD: 'transfer_to_savings_cbd',
         TRANSFER_FROM_SAVINGS_CREA: 'transfer_from_savings_crea',
         TRANSFER_FROM_SAVINGS_CBD: 'transfer_from_savings_cbd',
-        TRANSFER_TO_VESTS: 'transfer_to_vests'
+        TRANSFER_TO_VESTS: 'transfer_to_vests',
     },
     FILE_MAX_SIZE: {
         PROFILE: {
-            IMAGE: 1024 * 500
+            IMAGE: 1024 * 500,
         },
         POST_BODY: {
             AUDIO: 100 * 1024 * 1024,
@@ -46,40 +58,43 @@ let CONSTANTS = {
             IMAGE: 5 * 1024 * 1024,
             GIF: 10 * 1024 * 1024,
             WEBP: 10 * 1024 * 1024,
-            DOWNLOAD: 200 * 1024 * 1024 //200 MB
+            DOWNLOAD: 200 * 1024 * 1024, //200 MB
         },
         POST_PREVIEW: {
-            IMAGE: 1024 * 500
-        }
+            IMAGE: 1024 * 500,
+        },
     },
     TEXT_MAX_SIZE: {
         PROFILE: {
             PUBLIC_NAME: 21,
             ABOUT: 144,
             CONTACT: 55,
-            WEB: 55
+            WEB: 55,
         },
         TITLE: 55,
         DESCRIPTION: 233,
         COMMENT: 233,
         TAG: 21,
-        PERMLINK: 255
+        PERMLINK: 255,
     },
     MAX_TAGS: 8,
     BUZZ: {
         USER_BLOCK_THRESHOLD: -30,
         MAX_LOG_NUM: 20,
-        LEVELS: ['novice', 'trainee', 'advanced', 'expert', 'influencer', 'master', 'guru', 'genius']
+        LEVELS: ['novice', 'trainee', 'advanced', 'expert', 'influencer', 'master', 'guru', 'genius'],
     },
     POST: {
         MAX_OTHER_PROJECTS: 12,
         MAX_COMMENT_SHOWN: 10,
-        COMMENT_SHOW_INTERVAL: 10
+        COMMENT_SHOW_INTERVAL: 10,
     },
     WITNESS: {
-        DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10
+        DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10,
     },
+<<<<<<< HEAD
     BLOCKED_ACCOUNTS: ['rhsteele', 'yumekon']
+=======
+>>>>>>> sandbox
 };
 
 creaEvents.on('crea.session.login', function (session, account) {
@@ -112,8 +127,8 @@ function showProfile(username) {
 }
 
 function updateUrl(url, title, data, isModal = false) {
-    title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE ;
-    console.log('Title:', title);
+    title = title ? title : lang.METADATA[url] ? lang.METADATA[url].TITLE : lang.METADATA['/'].TITLE;
+    //console.log('Title:', title);
     $('title').html(title);
 
     let currentLocation = window.location.pathname;
@@ -123,7 +138,7 @@ function updateUrl(url, title, data, isModal = false) {
         currentPage.homeTitle = currentPage.title;
     }
 
-/*    if (currentLocation !== url || !isModal) {
+    /*    if (currentLocation !== url || !isModal) {
         //If is different location, not change
         currentPage.parentUrl = currentLocation;
         currentPage.parentTitle = currentPage.title;
@@ -172,7 +187,21 @@ function resolveFilter(filter) {
  * @returns {boolean}
  */
 function isInHome() {
-    let filters = ['/skyrockets', '/popular', '/now', '/popular30', '/created', '/promoted', '/votes', '/actives', '/cashout', '/responses', '/payout', '/payout_comments']; //Check if path is user feed
+    let filters = [
+        '/skyrockets',
+        '/popular',
+        '/now',
+        '/popular30',
+        '/created',
+        '/promoted',
+        '/votes',
+        '/actives',
+        '/cashout',
+        '/responses',
+        '/payout',
+        '/payout_comments',
+        '/search',
+    ]; //Check if path is user feed
 
     let s = Session.getAlive();
 
@@ -180,7 +209,8 @@ function isInHome() {
         return true;
     }
 
-    return filters.includes(window.location.pathname);
+    let pathPart = '/' + getPathPart();
+    return filters.includes(pathPart);
 }
 
 function showModal(id) {
@@ -214,14 +244,14 @@ function createBlockchainAccount(username, password, callback) {
             }
         });
         http.headers = {
-            Authorization: 'Bearer ' + accessToken
+            Authorization: 'Bearer ' + accessToken,
         };
         http.post({
             username: username,
             active: keys.activePubkey,
             owner: keys.ownerPubkey,
             posting: keys.postingPubkey,
-            memo: keys.memoPubkey
+            memo: keys.memoPubkey,
         });
     });
 }
@@ -236,7 +266,6 @@ function removeBlockedContents(state, accountState, discussion_idx) {
             let allowedContents = [];
             cKeys.forEach(function (ck) {
                 let c = state.content[ck];
-
 
                 //If author is blocked, post must be blocked
                 if (accountState.user.blockeds.indexOf(c.author) < 0) {
@@ -260,25 +289,28 @@ function removeBlockedContents(state, accountState, discussion_idx) {
     }
 
     return null;
-
 }
 
 function parseAccount(account) {
     if (account) {
         account = clone(account);
-        account.buzz = crea.formatter.reputation(account.reputation, CONSTANTS.BUZZ.LEVELS.length, CONSTANTS.BUZZ.MAX_LOG_NUM);
+        account.buzz = crea.formatter.reputation(
+            account.reputation,
+            CONSTANTS.BUZZ.LEVELS.length,
+            CONSTANTS.BUZZ.MAX_LOG_NUM
+        );
         //Level 1 for bad users
         if (account.buzz.level <= 0) {
-            account.buzz.level = 1
+            account.buzz.level = 1;
         }
-        account.buzz.level_name = CONSTANTS.BUZZ.LEVELS[account.buzz.level -1];
-        account.buzz.level_title = lang.BUZZ[account.buzz.level -1];
+        account.buzz.level_name = CONSTANTS.BUZZ.LEVELS[account.buzz.level - 1];
+        account.buzz.level_title = lang.BUZZ[account.buzz.level - 1];
         account.buzz.blocked = account.buzz.formatted <= CONSTANTS.BUZZ.USER_BLOCK_THRESHOLD;
-        account.profile_blocked = CONSTANTS.BLOCKED_ACCOUNTS.includes(account.name);
+        account.profile_blocked = BLOCKED_ACCOUNTS.includes(account.name);
 
         account.metadata = jsonify(account.json_metadata);
 
-        if (account.buzz.blocked || account.profile_blocked ) {
+        if (account.buzz.blocked || account.profile_blocked) {
             account.metadata.avatar = {};
         } else {
             account.metadata.avatar = account.metadata.avatar || {};
@@ -288,7 +320,6 @@ function parseAccount(account) {
         account.metadata.post_rewards = account.metadata.post_rewards || '100';
         account.metadata.comment_rewards = account.metadata.comment_rewards || '50';
         account.metadata.lang = account.metadata.lang || getNavigatorLanguage();
-
 
         //remove https:// or http:// on web metadata
         if (account.metadata.web) {
@@ -302,13 +333,12 @@ function parseAccount(account) {
     return account;
 }
 
-function parsePost(post, reblogged_by ) {
+function parsePost(post, reblogged_by) {
     if (!reblogged_by || !Array.isArray(reblogged_by)) {
-        reblogged_by = []
+        reblogged_by = [];
     }
 
     if (post) {
-
         post = clone(post);
         post.metadata = jsonify(post.json_metadata);
         post.metadata.tags = post.metadata.tags || [];
@@ -317,12 +347,31 @@ function parsePost(post, reblogged_by ) {
         post.body = isJSON(post.body) ? jsonify(post.body) : post.body;
         post.body = cleanArray(post.body);
 
+        //Beneficiaries
+        let contributors = [];
+        let bAuthor = {
+            account: post.author,
+            weight: 100,
+        };
+
+        post.beneficiaries.forEach((b) => {
+            let c = clone(b);
+            c.weight /= 100;
+            bAuthor.weight -= c.weight;
+            contributors.push(c);
+        });
+
+        contributors.unshift(bAuthor);
+        post.contributors = contributors;
+
         //Has adult content
-        post.adult_content = post.metadata.adult || (post.metadata.tags &&
-            (post.metadata.tags.includes('nsfw') ||
-                post.metadata.tags.includes('adult') ||
-                post.metadata.tags.includes('nude') ||
-                post.metadata.tags.includes('porn')));
+        post.adult_content =
+            post.metadata.adult ||
+            (post.metadata.tags &&
+                (post.metadata.tags.includes('nsfw') ||
+                    post.metadata.tags.includes('adult') ||
+                    post.metadata.tags.includes('nude') ||
+                    post.metadata.tags.includes('porn')));
 
         post.down_votes = [];
         post.up_votes = [];
@@ -391,7 +440,6 @@ function getAccounts(accounts, callback) {
 }
 
 function getDiscussion(author, permlink, callback) {
-
     if (typeof permlink === 'function') {
         callback = permlink;
         let all;
@@ -422,25 +470,30 @@ function recommendPost(author, permlink, reblog, callback) {
         let recommendedJson = {
             account: s.account.username,
             author: author,
-            permlink: permlink
+            permlink: permlink,
         };
 
         recommendedJson = [reblog ? 'reblog' : 'unreblog', recommendedJson];
 
         requireRoleKey(s.account.username, 'posting', function (postingKey) {
-            crea.broadcast.customJson(postingKey, [], [s.account.username], 'follow', jsonstring(recommendedJson), function (err, result) {
-
-                if (callback) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, result);
+            crea.broadcast.customJson(
+                postingKey,
+                [],
+                [s.account.username],
+                'follow',
+                jsonstring(recommendedJson),
+                function (err, result) {
+                    if (callback) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, result);
+                        }
                     }
                 }
-            });
+            );
         });
     }
-
 }
 
 function ignoreUser(following, ignore, callback) {
@@ -450,22 +503,29 @@ function ignoreUser(following, ignore, callback) {
         let followJson = {
             follower: s.account.username,
             following: following,
-            what: ignore ? ['ignore'] : []
+            what: ignore ? ['ignore'] : [],
         };
         followJson = ['follow', followJson];
         requireRoleKey(s.account.username, 'posting', function (postingKey) {
             globalLoading.show = true;
-            crea.broadcast.customJson(postingKey, [], [s.account.username], 'follow', jsonstring(followJson), function (err, result) {
-                globalLoading.show = false;
+            crea.broadcast.customJson(
+                postingKey,
+                [],
+                [s.account.username],
+                'follow',
+                jsonstring(followJson),
+                function (err, result) {
+                    globalLoading.show = false;
 
-                if (callback) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, result);
+                    if (callback) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, result);
+                        }
                     }
                 }
-            });
+            );
         });
     } else if (callback) {
         callback(Errors.USER_NOT_LOGGED);
@@ -486,7 +546,7 @@ function makeComment(comment, post, parentPost, callback) {
             if (post) {
                 //Reply edit case;
                 permlink = post.permlink;
-                tags.push(post.metadata.tags[0])
+                tags.push(post.metadata.tags[0]);
             } else {
                 //New Reply case
                 if (parentPost.parent_author) {
@@ -497,9 +557,8 @@ function makeComment(comment, post, parentPost, callback) {
                     permlink = toPermalink(crea.formatter.commentPermlink(parentAuthor, parentPermlink));
                 }
 
-                tags.push(parentPost.metadata.tags[0])
+                tags.push(parentPost.metadata.tags[0]);
             }
-
 
             if (permlink.length > CONSTANTS.TEXT_MAX_SIZE.PERMLINK) {
                 permlink = permlink.substring(0, CONSTANTS.TEXT_MAX_SIZE.PERMLINK);
@@ -507,7 +566,7 @@ function makeComment(comment, post, parentPost, callback) {
 
             console.log(permlink.length, parentPermlink.length);
             let metadata = {
-                tags: tags
+                tags: tags,
             };
             /*crea.broadcast.comment(postingKey, parentAuthor, parentPermlink, session.account.username, permlink, '', comment, '', jsonstring(metadata), function (err, result) {
                 globalLoading.show = false;
@@ -517,18 +576,28 @@ function makeComment(comment, post, parentPost, callback) {
                     fetchContent();
                 }
             });*/
-            crea.broadcast.comment(postingKey, parentAuthor, parentPermlink, session.account.username, permlink, '', comment, '', jsonstring(metadata), callback);
+            crea.broadcast.comment(
+                postingKey,
+                parentAuthor,
+                parentPermlink,
+                session.account.username,
+                permlink,
+                '',
+                comment,
+                '',
+                jsonstring(metadata),
+                callback
+            );
         });
     }
 }
 
 function deleteComment(post, session, callback) {
-
     if (session && post && post.author === session.account.username) {
         requireRoleKey(session.account.username, 'posting', function (postingKey) {
             globalLoading.show = true;
             crea.broadcast.deleteComment(postingKey, post.author, post.permlink, callback);
-        })
+        });
     }
 }
 
@@ -536,8 +605,18 @@ function editComment(comment, post, session, callback) {
     if (session && post) {
         requireRoleKey(session.account.username, 'posting', function (postingKey) {
             globalLoading.show = true;
-            crea.broadcast.comment(postingKey, post.parent_author, post.parent_permlink, post.author, post.permlink, post.title, comment, post.json_metadata, callback)
-        })
+            crea.broadcast.comment(
+                postingKey,
+                post.parent_author,
+                post.parent_permlink,
+                post.author,
+                post.permlink,
+                post.title,
+                comment,
+                post.json_metadata,
+                callback
+            );
+        });
     }
 }
 
@@ -555,45 +634,58 @@ function makeDownload(event, session, user, post, callback) {
                     let buff = Buffer.concat([authorBuff, permlinkBuff]);
                     let signature = crea.utils.Signature.signBuffer(buff, activeKey);
                     let s64 = signature.toBuffer().toString('base64');
-                    crea.api.getDownload(session.account.username, post.author, post.permlink, s64, function (err, result) {
-                        globalLoading.show = false;
+                    crea.api.getDownload(
+                        session.account.username,
+                        post.author,
+                        post.permlink,
+                        s64,
+                        function (err, result) {
+                            globalLoading.show = false;
 
-                        if (!catchError(err)) {
-                            let re = /Qm[a-zA-Z0-9]+/;
-                            let hash = re.exec(result.resource)[0];
-                            console.log(hash); //For .rar, .zip or unrecognized MIME type
+                            if (!catchError(err)) {
+                                let re = /Qm[a-zA-Z0-9]+/;
+                                let hash = re.exec(result.resource)[0];
+                                console.log(hash); //For .rar, .zip or unrecognized MIME type
 
-                            if (!post.download.type) {
-                                post.download.type = 'application/octet-stream';
+                                if (!post.download.type) {
+                                    post.download.type = 'application/octet-stream';
+                                }
+
+                                let _url =
+                                    apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + post.download.name;
+
+                                _url += '?stream=false';
+
+                                hideModal('#modal-download');
+                                if (callback) {
+                                    console.log('Callback is present');
+                                    callback();
+                                } else {
+                                    console.log('Callback null?', callback);
+                                }
+                                //Close modal download
+                                downloadFile(_url, post.download.name);
                             }
-
-                            let _url = apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + post.download.name;
-
-                            _url += '?stream=false';
-
-                            hideModal('#modal-download');
-                            if (callback) {
-                                console.log('Callback is present');
-                                callback();
-                            } else {
-                                console.log('Callback null?', callback)
-                            }
-                            //Close modal download
-                            downloadFile(_url, post.download.name);
                         }
-                    });
+                    );
                 }, 3000);
             };
 
             let payDownload = function payDownload() {
-                crea.broadcast.commentDownload(activeKey, session.account.username, post.author, post.permlink, function (err, result) {
-                    if (!catchError(err)) {
-                        downloadResource();
-                        //fetchContent();
-                    } else {
-                        globalLoading.show = false;
+                crea.broadcast.commentDownload(
+                    activeKey,
+                    session.account.username,
+                    post.author,
+                    post.permlink,
+                    function (err, result) {
+                        if (!catchError(err)) {
+                            downloadResource();
+                            //fetchContent();
+                        } else {
+                            globalLoading.show = false;
+                        }
                     }
-                });
+                );
             };
 
             if (post.download.downloaders.includes(user.name)) {
@@ -603,7 +695,6 @@ function makeDownload(event, session, user, post, callback) {
                 payDownload();
             }
         });
-
     } else {
         console.log('NO session', session);
     }
@@ -663,7 +754,7 @@ function refreshAccessToken(callback) {
         let params = {
             grant_type: 'client_credentials',
             client_id: '1_2e5ws1sr915wk0o4kksc0swwoc8kc4wgkgcksscgkkko404g8c',
-            client_secret: '3c2x9uf9uwg0ook0kksk8koccsk44w0gg4csos04ows444ko4k'
+            client_secret: '3c2x9uf9uwg0ook0kksk8koccsk44w0gg4csos04ows444ko4k',
         };
         http.when('done', function (data) {
             data = JSON.parse(data);
@@ -689,7 +780,6 @@ function resizeImage(file, callback) {
 
         let reader = new FileReader();
         reader.onload = function (event) {
-
             let tmpImage = new Image();
 
             tmpImage.onload = function () {
@@ -697,13 +787,13 @@ function resizeImage(file, callback) {
                 if (tmpImage.width <= tmpImage.height && tmpImage.width > MAX_PIXEL_SIZE) {
                     options = {
                         maxWidth: MAX_PIXEL_SIZE,
-                        maxHeight: Infinity
-                    }
+                        maxHeight: Infinity,
+                    };
                 } else if (tmpImage.height <= tmpImage.width && tmpImage.height > MAX_PIXEL_SIZE) {
                     options = {
                         maxWidth: Infinity,
-                        maxHeight: MAX_PIXEL_SIZE
-                    }
+                        maxHeight: MAX_PIXEL_SIZE,
+                    };
                 }
 
                 if (options) {
@@ -732,7 +822,6 @@ function resizeImage(file, callback) {
 }
 
 function uploadToIpfs(file, maxSize, callback) {
-
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         if (!maxSize) {
             //If maxSize is undefined means that file format is not allowed
@@ -740,37 +829,19 @@ function uploadToIpfs(file, maxSize, callback) {
                 callback(lang.PUBLISH.FILE_FORMAT_NOT_ALLOWED);
             }
         } else if (file.size <= maxSize) {
-
-            let options = {
-                pin: true,
-                progress: function (progress, progress2) {
-                    console.log(progress, progress2);
-                }
-            };
-
-            let onResponse = function (err, data) {
-                console.log(err, data);
-                if (data) {
-                    let f = new IpfsFile(data.Hash, file.name, file.type, data.Size);
+            let ipfs = Ipfs('https://ipfs.creary.net:5002');
+            ipfs.add(file, { pin: true, 'stream-channels': true })
+                .then((response) => {
+                    let f = new IpfsFile(response.path, file.name, file.type, response.size);
                     callback(null, f);
-                } else if (callback) {
+                })
+                .catch((err) => {
                     if (!err) {
-                        return callback(Errors.UPLOAD_FAIL);
+                        callback(Errors.UPLOAD_FAIL);
+                    } else {
+                        callback(err);
                     }
-                    return callback(err);
-                }
-            };
-
-            let http = new HttpClient('https://ipfs.creary.net:5002/api/v0/add?pin=true&stream-channels=true');
-            http.post({
-                file: file
-            }).when('done', function (data) {
-                onResponse(null, jsonify(data));
-            });
-            http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                onResponse(errorThrown, null);
-            });
-
+                });
         } else {
             globalLoading.show = false;
             console.error('File', file.name, 'too large. Size:', file.size, 'MAX:', maxSize);
@@ -803,10 +874,7 @@ function downloadFile(url, filename) {
     document.body.removeChild(element);
 }
 
-function performSearch(search) {
-    let page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-    let inHome = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    let callback = arguments.length > 3 ? arguments[3] : undefined;
+function performSearch(search, page = 1, inHome = false, callback) {
     let path = '/search?query=' + encodeURIComponent(search) + '&page=' + page;
 
     if (inHome) {
@@ -814,7 +882,7 @@ function performSearch(search) {
         refreshAccessToken(function (accessToken) {
             let http = new HttpClient(apiOptions.apiUrl + '/searchCreaContent');
             http.setHeaders({
-                Authorization: 'Bearer ' + accessToken
+                Authorization: 'Bearer ' + accessToken,
             });
             http.when('done', function (response) {
                 let data = jsonify(response).data;
@@ -835,7 +903,7 @@ function performSearch(search) {
             });
             http.get({
                 search: search,
-                page: page
+                page: page,
             });
         });
     } else {
@@ -878,11 +946,13 @@ function catchError(err, show = true) {
                 console.error(message);
 
                 //RC Special case
-                if (message === ' Account does not have enough flow to vote.' ||
-                    message.includes('RC. Please wait to transact, or energize CREA.')) {
+                if (
+                    message === ' Account does not have enough flow to vote.' ||
+                    message.includes('RC. Please wait to transact, or energize CREA.')
+                ) {
                     title = lang.ERROR.INSUFFICIENT_RC.TITLE;
                     body = lang.ERROR.INSUFFICIENT_RC.BODY;
-                    console.log(body)
+                    console.log(body);
                 } else {
                     body.push(message);
                 }
@@ -911,7 +981,7 @@ function catchError(err, show = true) {
 function showAlert(title, body) {
     let config = {
         title: title,
-        body: typeof body === 'string' ? [body] : body
+        body: typeof body === 'string' ? [body] : body,
     };
 
     console.log(config);
@@ -953,8 +1023,36 @@ function requireRoleKey(username, role, login, callback) {
 }
 
 export {
-    CONSTANTS, showBanner, goTo, showPost, showProfile, updateUrl, toHome, resolveFilter, isInHome, showModal, hideModal,
-    createBlockchainAccount, removeBlockedContents, parseAccount, parsePost, getAccounts, getDiscussion, recommendPost,
-    ignoreUser, makeComment, deleteComment, editComment, makeDownload, updateUserSession, refreshAccessToken, resizeImage,
-    uploadToIpfs, downloadFile, performSearch, catchError, showAlert, requireRoleKey
-}
+    CONSTANTS,
+    showBanner,
+    goTo,
+    showPost,
+    showProfile,
+    updateUrl,
+    toHome,
+    resolveFilter,
+    isInHome,
+    showModal,
+    hideModal,
+    createBlockchainAccount,
+    removeBlockedContents,
+    parseAccount,
+    parsePost,
+    getAccounts,
+    getDiscussion,
+    recommendPost,
+    ignoreUser,
+    makeComment,
+    deleteComment,
+    editComment,
+    makeDownload,
+    updateUserSession,
+    refreshAccessToken,
+    resizeImage,
+    uploadToIpfs,
+    downloadFile,
+    performSearch,
+    catchError,
+    showAlert,
+    requireRoleKey,
+};

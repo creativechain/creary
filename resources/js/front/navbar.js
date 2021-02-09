@@ -3,61 +3,39 @@
  */
 
 import R from '../lib/resources';
-import Session from "../lib/session";
+import Session from '../lib/session';
 import mqtt from 'mqtt';
 import HttpClient from '../lib/http';
 import { jsonify, getPathPart, isUserFeed, isSmallScreen, cancelEventPropagation } from '../lib/util';
 import { login, logout } from '../common/login';
-import { catchError, performSearch, isInHome, hideModal, goTo, resolveFilter, updateUrl, parsePost,
-    refreshAccessToken} from "../common/common";
+import {
+    catchError,
+    performSearch,
+    isInHome,
+    hideModal,
+    goTo,
+    resolveFilter,
+    updateUrl,
+    parsePost,
+    refreshAccessToken,
+} from '../common/common';
 
-import Errors from "../lib/error";
+import Errors from '../lib/error';
 
-import Avatar from "../components/Avatar";
+import Avatar from '../components/Avatar';
+import { CommentsApi } from '../lib/creary-api';
 
 (function () {
-
     Vue.component('avatar', Avatar);
 
     let navbarContainer;
-
-    let navbarSearch = new Vue({
-        el: '#navbar-search',
-        data: {
-            lang: lang,
-            search: null,
-            page: 1
-        },
-        methods: {
-            reset: function reset() {
-                this.search = null;
-                this.page = 1;
-            },
-            performSearch: function (_performSearch) {
-                function performSearch(_x) {
-                    return _performSearch.apply(this, arguments);
-                }
-
-                performSearch.toString = function () {
-                    return _performSearch.toString();
-                };
-
-                return performSearch;
-            }(function (event) {
-                cancelEventPropagation(event);
-
-                if (this.search) {
-                    performSearch(this.search, this.page, isInHome());
-                }
-            })
-        }
-    });
+    let canLoadBootstrapScripts = false;
 
     let navbarRightMenu = new Vue({
         el: '#navbar-right-menu',
         data: {
-            lang: lang
-        }
+            lang: lang,
+        },
     });
 
     /**
@@ -69,6 +47,7 @@ import Avatar from "../components/Avatar";
         if (!navbarContainer) {
             navbarContainer = new Vue({
                 el: '#navbar-container',
+                name: 'navbar-container',
                 data: {
                     lang: lang,
                     session: session,
@@ -78,18 +57,19 @@ import Avatar from "../components/Avatar";
                         xs: isSmallScreen(),
                         username: {
                             error: null,
-                            value: ''
+                            value: '',
                         },
                         password: {
                             error: null,
-                            value: ''
-                        }
+                            value: '',
+                        },
                     },
-                    unreadNotifications: 0
+                    unreadNotifications: 0,
                 },
                 mounted: function mounted() {
                     //this.applyRightMenuEvents($);
                     $('#modal-login').parent().removeAttr('modal-attached');
+                    mr.notifications.documentReady($);
                 },
                 methods: {
                     applyRightMenuEvents: function applyRightMenuEvents($) {
@@ -103,17 +83,7 @@ import Avatar from "../components/Avatar";
                         hideModal('#modal-login-d');
                     },
                     logout: logout,
-                    login: function (_login) {
-                        function login(_x2) {
-                            return _login.apply(this, arguments);
-                        }
-
-                        login.toString = function () {
-                            return _login.toString();
-                        };
-
-                        return login;
-                    }(function (event) {
+                    login: function (event) {
                         cancelEventPropagation(event);
                         let that = this;
 
@@ -135,7 +105,7 @@ import Avatar from "../components/Avatar";
                                 }
                             });
                         }
-                    }),
+                    },
                     isUserFeed: isUserFeed,
                     checkUsername: checkUsername,
                     goTo: goTo,
@@ -143,8 +113,8 @@ import Avatar from "../components/Avatar";
                     retrieveNowContent: retrieveNewContent,
                     retrieveTrendingContent: retrieveTrendingContent,
                     retrieveHotContent: retrieveHotContent,
-                    retrievePromotedContent: retrievePromotedContent
-                }
+                    retrievePromotedContent: retrievePromotedContent,
+                },
             });
         } else {
             navbarContainer.session = session;
@@ -159,7 +129,7 @@ import Avatar from "../components/Avatar";
 
         if (!crea.utils.validateAccountName(username)) {
             let accounts = [username];
-            console.log("Checking", accounts);
+            //console.log("Checking", accounts);
             crea.api.lookupAccountNames(accounts, function (err, result) {
                 if (err) {
                     console.error(err);
@@ -186,72 +156,42 @@ import Avatar from "../components/Avatar";
         crea.api.getState(filter, function (err, urlState) {
             if (!catchError(err)) {
                 if (isUserFeed()) {
-                    let http = new HttpClient(apiOptions.apiUrl + '/creary/feed');
-
                     let noFeedContent = function noFeedContent() {
                         //User not follows anything, load empty content
                         urlState.content = {};
                         creaEvents.emit('crea.posts', urlFilter, filter, urlState);
                     };
 
-                    http.when('done', function (response) {
-                        let data = jsonify(response).data;
-
-                        if (data.length) {
-                            let count = data.length;
-
-                            let onContentFetched = function onContentFetched() {
-                                count--;
-
-                                if (count <= 0) {
-                                    creaEvents.emit('crea.posts', urlFilter, filter, urlState);
-                                }
-                            };
-
-                            urlState.content = {};
-                            data.forEach(function (d) {
-                                let permlink = d.author + '/' + d.permlink;
-
-                                if (!urlState.content[permlink]) {
-                                    crea.api.getContent(d.author, d.permlink, function (err, result) {
-                                        if (err) {
-                                            console.error('Error getting', permlink, err);
-                                        } else {
-                                            let p = parsePost(result);
-                                            p.reblogged_by = d.reblogged_by;
-                                            urlState.content[permlink] = p;
-                                        }
-
-                                        onContentFetched();
-                                    });
-                                }
-                            });
-                        } else {
-                            noFeedContent();
-                        }
-                    });
-                    http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                        catchError(textStatus);
-                    });
-                    let username = getPathPart().replace('/', '').replace('@', '');
-                    crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
+                    let commentsApi = new CommentsApi();
+                    let adult = navbarContainer.user.metadata.adult_content === 'hide' ? 0 : 1;
+                    commentsApi.feed(null, adult, 20, function (err, result) {
                         if (!catchError(err)) {
-                            let followings = [];
-                            result.following.forEach(function (f) {
-                                followings.push(f.following);
-                            });
+                            if (result.to) {
+                                let count = result.to;
 
-                            if (followings.length) {
-                                followings = followings.join(',');
-                                refreshAccessToken(function (accessToken) {
-                                    http.headers = {
-                                        Authorization: 'Bearer ' + accessToken
-                                    };
-                                    http.post({
-                                        following: followings,
-                                        reblogs: true,
-                                        adult: navbarContainer.user.metadata.adult_content
-                                    });
+                                let onContentFetched = function onContentFetched() {
+                                    count--;
+
+                                    if (count <= 0) {
+                                        creaEvents.emit('crea.posts', urlFilter, filter, urlState);
+                                    }
+                                };
+
+                                urlState.content = {};
+                                result.data.forEach(function (d) {
+                                    let permlink = d.author + '/' + d.permlink;
+
+                                    if (!urlState.content[permlink]) {
+                                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                                            if (err) {
+                                                console.error('Error getting', permlink, err);
+                                            } else {
+                                                urlState.content[permlink] = parsePost(result, d.reblogged_by);
+                                            }
+
+                                            onContentFetched();
+                                        });
+                                    }
                                 });
                             } else {
                                 noFeedContent();
@@ -266,19 +206,19 @@ import Avatar from "../components/Avatar";
     }
 
     function retrieveNewContent(event) {
-        retrieveContent(event, "/now");
+        retrieveContent(event, '/now');
     }
 
     function retrieveTrendingContent(event) {
-        retrieveContent(event, "/popular");
+        retrieveContent(event, '/popular');
     }
 
     function retrieveHotContent(event) {
-        retrieveContent(event, "/skyrockets");
+        retrieveContent(event, '/skyrockets');
     }
 
     function retrievePromotedContent(event) {
-        retrieveContent(event, "/promoted");
+        retrieveContent(event, '/promoted');
     }
 
     /**
@@ -294,16 +234,17 @@ import Avatar from "../components/Avatar";
             let username = session.account.username;
 
             let options = {
-                host, port,
+                host,
+                port,
                 clientId: username,
                 username: username,
                 password: account.getSignature(),
                 clean: true,
-                protocol: 'wss'
+                protocol: 'wss',
                 //protocolId: 'MQTT',
             };
 
-            console.log('MQTT options', options)
+            console.log('MQTT options', options);
             const mqttClient = mqtt.connect(options);
             mqttClient.on('connect', function (connack) {
                 console.log('MQTT connected!');
@@ -311,15 +252,32 @@ import Avatar from "../components/Avatar";
                 //Subcribe to notifications messages
                 mqttClient.subscribe(`${username}/notification`, function (err, granted) {
                     console.log('Subscription topic', err, granted);
-                })
+                });
             });
 
             mqttClient.on('message', function (topic, message, packet) {
                 console.log('Message received', topic, message.toString('utf8'), packet);
                 creaEvents.emit('crea.notifications.update', session);
-            })
+            });
         }
+    }
 
+    function enableRightMenu() {
+        if (canLoadBootstrapScripts) {
+            setTimeout(function () {
+                //console.log('Activating right menu...');
+                mr.notifications.documentReady($);
+            }, 1e3);
+        }
+    }
+
+    function enableProfileMenu() {
+        if (canLoadBootstrapScripts) {
+            setTimeout(function () {
+                //console.log('Activating profile menu...');
+                mr.toggleClass.documentReady($);
+            }, 1e3);
+        }
     }
 
     creaEvents.on('crea.notifications.unread', function (unreadNotifications) {
@@ -341,18 +299,20 @@ import Avatar from "../components/Avatar";
             prepareNotifClient(session);
         }
 
-        //Enable toggle button
-/*        setTimeout(function () {
-            console.log('Activating right menu...');
-            mr.toggleClass.documentReady($);
-            mr.toggleClass.documentReady($);
-        }, 1e3);*/
+        enableRightMenu();
+        enableProfileMenu();
     });
 
     creaEvents.on('crea.session.logout', function () {
         updateNavbarSession(false, false);
-        console.log('Emitting', 'crea.modal.ready', 'event');
+        //console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready', true);
+
+        enableRightMenu();
+    });
+
+    creaEvents.on('crea.dom.ready', function () {
+        canLoadBootstrapScripts = true;
     });
 
     creaEvents.on('crea.content.filter', function (filter) {
@@ -362,5 +322,4 @@ import Avatar from "../components/Avatar";
 
         retrieveContent(null, filter);
     });
-
 })();

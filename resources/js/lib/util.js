@@ -44,8 +44,25 @@ function jsonify(obj) {
  * @returns {string}
  */
 function jsonstring(obj) {
-    if (obj && typeof obj== 'object') {
+    if (obj && typeof obj == 'object') {
         return JSON.stringify(obj);
+    }
+
+    return obj;
+}
+
+/**
+ *
+ * @param obj
+ * @returns {*}
+ */
+function clean(obj) {
+    if (obj) {
+        for (let prop in obj) {
+            if (obj[prop] === null || obj[prop] === undefined) {
+                delete obj[prop];
+            }
+        }
     }
 
     return obj;
@@ -91,13 +108,12 @@ function createAuth(key) {
     return {
         weight_threshold: 1,
         account_auths: [],
-        key_auths: [[key, 1]]
+        key_auths: [[key, 1]],
     };
 }
 
 function copyToClipboard(element) {
     if (element) {
-
         if (typeof element == 'string') {
             element = document.getElementById(element);
         }
@@ -146,16 +162,16 @@ function humanFileSize(size) {
 
 /**
  *
- * @param {string} username
+ * @param {string|null} username
  * @returns {boolean}
  */
-function isUserFeed(username) {
+function isUserFeed(username = null) {
     let path = currentPage ? currentPage.pathname : window.location.pathname;
-    let regexp = '(\/@[a-zA-Z0-9]+\/feed)';
+    let regexp = '(/@[a-zA-Z0-9]+/feed)';
 
     if (username) {
         username = username.replace('@', '');
-        regexp = '(\/@' + username + '\/feed)';
+        regexp = '(/@' + username + '/feed)';
     }
 
     return new RegExp(regexp).exec(path) !== null;
@@ -180,16 +196,15 @@ function toUrl(web) {
 
 /**
  *
- * @param {string} path
+ * @param {string|null} path
  * @param {number} index
  * @returns {string}
  */
-function getPathPart(path, index) {
-    index = index !== undefined ? index : 0;
+function getPathPart(path = null, index = 0) {
     path = path || (currentPage ? currentPage.pathname : null) || window.location.pathname;
     let parts = path.split('/');
     parts.splice(0, 1);
-    return parts[index] || '';
+    return (parts[index] || '').replace(/\?.*/g, '');
 }
 
 function getNavigatorLanguage() {
@@ -230,7 +245,10 @@ function isSmallScreen() {
  */
 function removeEmojis(text) {
     if (text && typeof text === 'string') {
-        return text.replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+        return text.replace(
+            /([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+            ''
+        );
     }
 
     return '';
@@ -294,11 +312,14 @@ function normalizeTag(tag) {
 
 function linkfy(str, target) {
     if (!target) {
-        target = '_blank'
+        target = '_blank';
     }
-    let newStr = str.replace(/(<a href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi, function () {
-        return '<a href="' + arguments[2] + '" target="' + target + '">' + (arguments[7] || arguments[2]) + '</a>';
-    });
+    let newStr = str.replace(
+        /(<a href=")?((https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)))(">(.*)<\/a>)?/gi,
+        function () {
+            return '<a href="' + arguments[2] + '" target="' + target + '">' + (arguments[7] || arguments[2]) + '</a>';
+        }
+    );
 
     return newStr;
 }
@@ -308,7 +329,17 @@ function linkfy(str, target) {
  * @returns {string}
  */
 function uniqueId() {
-    return Math.random().toString(36).substr(2, 9)
+    return Math.random().toString(36).substr(2, 9);
+}
+
+/**
+ *
+ * @param topLevel
+ * @returns {string}
+ */
+function domain(topLevel = 2) {
+    let parts = location.hostname.split('.');
+    return parts.slice(topLevel * -1).join('.');
 }
 
 function makeMentions(comment, state) {
@@ -323,7 +354,7 @@ function makeMentions(comment, state) {
             let httpId = uniqueId();
             httpLinks[httpId] = m;
             body = body.replace(m, httpId);
-        })
+        });
     }
 
     //console.log(httpMatches, httpLinks)
@@ -333,7 +364,6 @@ function makeMentions(comment, state) {
     if (userMatches) {
         userMatches = Array.trim(userMatches);
         userMatches.forEach(function (m) {
-
             let mention = m.replace('@', '').toLowerCase();
             let user = state.accounts[mention];
             user = user ? user.metadata.publicName || user.name : m;
@@ -352,7 +382,6 @@ function makeMentions(comment, state) {
     if (tagMatches) {
         tagMatches = Array.trim(tagMatches);
         tagMatches.forEach(function (m) {
-
             let tag = m.replace('#', '').toLowerCase();
             let link = '<a href="/popular/' + tag + '">#' + tag + '</a>';
             //console.log(m, link)
@@ -365,15 +394,40 @@ function makeMentions(comment, state) {
     //Fourth, restore links
     let httpKeys = Object.keys(httpLinks);
     httpKeys.forEach(function (k) {
-        body = body.replace(k, httpLinks[k])
+        body = body.replace(k, httpLinks[k]);
     });
 
     return body;
 }
 
 export {
-    cancelEventPropagation, isJSON, jsonify, jsonstring, validateEmail, getParameterByName, toPermalink, createAuth,
-    copyToClipboard, randomNumber, toLocaleDate, clone, humanFileSize, isUserFeed, toUrl, getPathPart,
-    getNavigatorLanguage, cleanArray, isSmallScreen, removeEmojis, NaNOr, isEqual, mixToArray, normalizeTag, linkfy,
-    uniqueId, makeMentions
+    cancelEventPropagation,
+    isJSON,
+    jsonify,
+    jsonstring,
+    clean,
+    validateEmail,
+    getParameterByName,
+    toPermalink,
+    createAuth,
+    copyToClipboard,
+    randomNumber,
+    toLocaleDate,
+    clone,
+    humanFileSize,
+    isUserFeed,
+    toUrl,
+    getPathPart,
+    getNavigatorLanguage,
+    cleanArray,
+    isSmallScreen,
+    removeEmojis,
+    NaNOr,
+    isEqual,
+    mixToArray,
+    normalizeTag,
+    linkfy,
+    uniqueId,
+    makeMentions,
+    domain,
 };

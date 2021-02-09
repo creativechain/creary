@@ -117,7 +117,7 @@
                                 </div>
                                 <div v-else-if="el.type.indexOf('video/') > -1" class="upload-img">
                                     <p>
-                                        <video controls >
+                                        <video controls loop>
                                             <source v-bind:src="'https://ipfs.creary.net/ipfs/' + el.hash" v-bind:type="el.type">
                                         </video>
                                     </p>
@@ -445,9 +445,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
                 <div class="col-md-5">
                     <div v-if="state.post.download.resource && !state.author.buzz.blocked" class="boxed boxed--border box-comment  mt--2 mt-3">
@@ -508,9 +505,20 @@
                     <div class="boxed boxed--border box-comment  mt--2">
                         <div class="row row-publish-description">
                             <div class="col-md-12">
-                                <p class="title">@{{ state.post.title }}</p>
+                                <p class="title mb-1">@{{ state.post.title }}</p>
                                 <span class="description">@{{ state.post.metadata.description }}</span>
                                 <p class="date-publish description mt-4">@{{ formatDate(state.post.created) }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="boxed boxed--border box-comment  mt--2">
+                        <div class="row row-publish-description">
+                            <div class="col-md-12">
+                                <p class="title mb-1">{{ __('lang.PUBLICATION.BENEFICIARIES') }}</p>
+                                <span v-for="(b, index) in state.post.contributors" class="description">
+                                    @{{ b.account }} (@{{ b.weight }}%)@{{ index+1 < state.post.contributors.length ? ',':'' }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -525,7 +533,7 @@
                                         <hr>
                                         <p>Blockchain: <a v-bind:href="'https://creascan.net' + state.post.url + '/data'" target="_blank">Project Data</a> </p>
                                         <p>Timestamp: @{{ new Date(state.post.created + "Z").toLocaleString() }}</p>
-                                        <p>License: <a v-bind:href="getLicense().getLink()" target="_blank">@{{ getLicense().getTags() }}</a></p>
+                                        <p>{{ __('lang.PUBLICATION.LICENSE') }}: <a v-bind:href="getLicense().getLink()" target="_blank">@{{ getLicense().getTags() }}</a></p>
                                         <ul class="float-left mt-3">
                                             <li class="li-blockchain-certificate">
                                                 <template v-for="i in getLicense().getIcons('white')">

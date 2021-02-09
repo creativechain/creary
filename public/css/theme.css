@@ -8053,11 +8053,6 @@ input[type="image"] {
 .imagebg:not(.image--light) .slider.slider--inline-arrows .flickity-prev-next-button:before {
   color: #fff;
 }
-@media all and (max-width: 990px) {
-  .flickity-prev-next-button {
-    display: none;
-  }
-}
 @media all and (min-width: 768px) {
   h2 + .slider,
   .h2 + .slider {

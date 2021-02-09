@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::get('/blockchain/supply', 'Api\BlockchainController@getSupply')->name('crea.supply');
-Route::get('/blockchain/currentSupply', 'Api\BlockchainController@getCurrentSupply')->name('crea.supply.current');
-Route::get('/blockchain/totalSupply', 'Api\BlockchainController@getTotalSupply')->name('crea.supply.total');
-Route::get('/blockchain/test', 'Api\BlockchainController@markRead');
+Route::group(['prefix' => 'blockchain'], function () {
+    Route::get('/supply', 'Api\BlockchainController@getSupply')->name('crea.supply');
+    Route::get('/currentSupply', 'Api\BlockchainController@getCurrentSupply')->name('crea.supply.current');
+    Route::get('/totalSupply', 'Api\BlockchainController@getTotalSupply')->name('crea.supply.total');
+    Route::get('/statistics', 'Api\BlockchainController@statistics')->name('crea.statistics');
+});
 
 Route::group(['prefix' => 'notification'], function () {
    Route::get('/{creaUser}', 'Api\NotificationController@index')
@@ -33,6 +35,34 @@ Route::group(['prefix' => 'notification'], function () {
    Route::get('/{creaUser}/markRead', 'Api\NotificationController@markRead')
         ->where('creaUser', '^(@[\w\.\d-]+)$')->name('api.notification.markRead');
 });
+
+Route::group(['prefix' => 'accounts'], function () {
+
+    Route::middleware(['throttle:search'])->get('/search', 'Api\AccountsController@search')->name('accounts.search');
+});
+
+Route::group(['prefix' => 'tags'], function () {
+
+    Route::get('/', 'Api\TagsController@index')->name('tags.index');
+    Route::get('/active', 'Api\TagsController@mostActiveTags')->name('tags.active');
+    Route::middleware(['throttle:search'])->get('/search', 'Api\TagsController@search')->name('tags.search');
+});
+
+Route::group(['prefix' => 'comments'], function () {
+
+    //Route::get('/', 'Api\TagsController@index')->name('tags.index');
+    Route::middleware(['throttle:search'])->get('/feed', 'Api\CommentsController@feed')->name('comments.feed');
+    Route::middleware(['throttle:search'])->get('/searchByReward', 'Api\CommentsController@searchByReward')->name('comments.searchByReward');
+    Route::get('/multiple', 'Api\CommentsController@showMultiple')->name('comments.show.multiple');
+
+    Route::get('/{author}/portfolio', 'Api\CommentsController@portfolio')->name('comments.portfolio')
+        ->where('author', '^(@[\w\.\d-]+)$');
+
+    Route::get('/{author}/{permlink}', 'Api\CommentsController@show')->name('comments.show')
+        ->where('author', '^(\@[\w\d\.-]+)$')
+        ->where('permlink', '^([\w\d-]+)$');
+});
+
 
 /*Route::get('/votes/{creaUser}', 'CrearyController@testVotes')
     ->where('creaUser', '^([\w\.\d-]+)$');*/

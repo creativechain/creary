@@ -68,6 +68,12 @@
     }
 
     .row-options-steps-1 {
+      .button-add-text, .button-add-text:hover, .button-add-file, .button-add-file:hover, .button-add-video, .button-add-video:hover {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        cursor: pointer;
+      }
       .col-6 {
         padding-top: 2.75rem;
         padding-bottom: 2.75rem;
@@ -75,16 +81,10 @@
       }
       .button-add-text {
         background-image: url("/img/crea-web/publish/b-text.png");
-        width: 60px;
-        height: 60px;
-        margin: 0 auto;
-        cursor: pointer;
+
       }
-      .button-add-text:hover {
+      .button-add-text:hover, .button-add-file:hover, .button-add-video:hover {
         background-image: url("/img/crea-web/publish/more-img-hover.png");
-        width: 60px;
-        height: 60px;
-        margin: 0 auto;
       }
       .img-disabled-file {
         background-image: url("/img/crea-web/publish/b-img-disabled.png") !important;
@@ -94,18 +94,15 @@
         background-image: url("/img/crea-web/publish/b-text-disabled.png") !important;
         cursor: auto !important;
       }
+      .img-disabled-video {
+        background-image: url("/img/crea-web/publish/b-video-disabled.png") !important;
+        cursor: auto !important;
+      }
       .button-add-file {
         background-image: url("/img/crea-web/publish/b-img.png");
-        width: 60px;
-        height: 60px;
-        margin: 0 auto;
-        cursor: pointer;
       }
-      .button-add-file:hover {
-        background-image: url("/img/crea-web/publish/more-img-hover.png");
-        width: 60px;
-        height: 60px;
-        margin: 0 auto;
+      .button-add-video {
+        background-image: url("/img/crea-web/publish/play.png");
       }
       p {
         margin-bottom: 0;
@@ -191,6 +188,25 @@
           margin-left:5px;
         }
       }
+    }
+    .material-icons.email {
+      top: 10px;
+      left: 10px;
+      font-size: 16px;
+    }
+    a.close {
+      color: #555555;
+      cursor: pointer;
+    }
+    a.close:hover {
+      color: $color-blue-primary;
+      cursor: pointer;
+    }
+    input[type], textarea, select {
+      background: white;
+    }
+    .disabled {
+      background: #ececec !important;
     }
   }
   .step-4 {

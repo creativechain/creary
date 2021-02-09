@@ -165,7 +165,8 @@
         "RECOMMEND_MORE": "and %s more",
         "BLOCKED_USER_ALERT_TITLE": "Attention!",
         "BLOCKED_USER_ALERT_MESSAGE": "This user has been reported by many well reputed users of our community. There are different reasons to report users:\n                                Identity supplantation, copyright infringement, spam, fraud or other behaviors considered malicious or negatives for the community.",
-        "BLOCKED_PROFILE_ALERT_MESSAGE": "This profile has received report Identity Theft or copyright infringement. To activate the visualization of the projects, contact legal@creary.net."
+        "BLOCKED_PROFILE_ALERT_MESSAGE": "This profile has received report Identity Theft or copyright infringement. To activate the visualization of the projects, contact legal@creary.net.",
+        "BENEFICIARIES": "BENEFICIARIES"
     },
     "PROFILE_MENU": {
         "LOGOUT": "Logout",
@@ -317,7 +318,7 @@
         "INFO_TITLE": "Cover",
         "SECONDARY_MENU_INFO": "Information",
         "FILE_TYPE_INFO": "(image, audio, video)",
-        "IMAGE_MAX_FILE_SIZE": "Image Max: %s",
+        "IMAGE_MAX_FILE_SIZE": "Image Max: %s. GIF, WebP Max: %s",
         "AUDIO_MAX_FILE_SIZE": "Audio Max: %s",
         "VIDEO_MAX_FILE_SIZE": "Video only format .MP4 y .WebM Max: %s",
         "PROJECT_INFO": "Project information",
@@ -346,8 +347,16 @@
         "NO_TITLE_TAG_OR_IMAGE": "You must add a featured image, a title and at least one tag",
         "RELOAD_DOWNLOAD_FILE": "It's necessary to reload the download file: %s",
         "PUBLISH_NOT_AVAILABLE_TITLE": "Maintenance Publications",
-        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "The publications are currently under maintenance. You will can publish your works again very soon."
-
+        "PUBLISH_NOT_AVAILABLE_SUBTITLE": "The publications are currently under maintenance. You will can publish your works again very soon.",
+        "ADD_VIDEO": "Add video",
+        "VIDEO_SUPPORT": "(Youtube, Vimeo)",
+        "MAIN_CATEGORY": "MAIN CATEGORY",
+        "SELECT_A_CATEGORY": "Select a category from the list",
+        "BENEFICIARIES": "BENEFICIARIES",
+        "ADD_BENEFICIARY": "Add beneficiary",
+        "NO_BENEFICIARY_FILLED": "Please, fill correctly all added beneficiaries",
+        "MAX_BENEFICIARIES_REACHED": "You can only add up to a maximum of %s beneficiaries",
+        "BENEFICIARY_WEIGHT_OVERFLOW": "The sum of the percentage of all beneficiaries cannot exceed 100"
     },
     "WITNESS": {
         "WITNESSES": "WITNESSES",
@@ -503,27 +512,45 @@
     },
     "FAQS": {"FAQ_TITLE": "Frequently Asked Questions"},
     "HOME": {
+        "MENU_FEED": "Following",
+        "MENU_POPULAR": "Popular",
+        "MENU_NOW": "Now",
+        "MENU_PROMOTED": "Promoted",
+        "MENU_SKYROCKETS": "Skyrockets",
+        "MENU_FILTER_ALL": "All",
         "DROPDOWN_USER_PROFILE_PROJECTS": "Projects",
         "DROPDOWN_USER_PROFILE_POSTS": "Posts",
         "DROPDOWN_USER_PROFILE_LIKES": "Likes",
         "DROPDOWN_USER_PROFILE_FOLLOWERS": "Followers",
-        "MENU_POPULAR": "Popular",
         "SECONDARY_TOP_MENU_ALL_LICENSES": "All licenses",
-        "MENU_FOLLOWING": "Following",
         "DROPDOWN_USER_PROFILE_FOLLOWING": "Following",
         "SEARCH_ACTIVE": "Search",
-        "MENU_NOW": "Now",
-        "MENU_PROMOTED": "Promoted",
         "DROPDOWN_PENDING_PAYOUT": "Pending Payouts",
         "DROPDOWN_PAST_PAYOUT": "Past Payouts",
         "DROPDOWN_REFUSED_PAYOUT": "Refused Payouts",
-        "MENU_SKYROCKETS": "Skyrockets",
         "MENU_LOGIN": "Login",
         "EMPTY_TITLE": "Welcome to your new tab of users that you follow.",
         "EMPTY_SUBTITLE": "Follow people with tastes like yours to see what new and original ideas they discover.",
         "PROMOTION_COST": "Promotion Cost",
         "NO_SEARCH_RESULTS_1": "Your search returned no results.",
-        "NO_SEARCH_RESULTS_2": "Make sure you spell all keywords correctly or try different search terms."
+        "NO_SEARCH_RESULTS_2": "Make sure you spell all keywords correctly or try different search terms.",
+        "POPULAR_PROJECTS": "Popular Projects"
+    },
+    "FILTER": {
+        "FILTER": "Filter",
+        "ALL": "All",
+        "FEED": "Following",
+        "POPULAR": "Popular",
+        "NOW": "Now",
+        "PROMOTED": "Promoted",
+        "SKYROCKETS": "Skyrockets",
+        "LICENSES": "Licenses",
+        "SELECT_LICENSES": "Select License",
+        "DOWNLOADS": "Downloads",
+        "SELECT_DOWNLOADS": "Select downloads",
+        "FREE_DOWNLOADS": "Free downloads",
+        "PAYMENT_DOWNLOADS": "Payment downloads",
+        "SEARCH": "Search: %s"
     },
     "NOTIFICATIONS": {
         "TITLE" : "NOTIFICATIONS",
@@ -654,6 +681,12 @@
             "DESCRIPTION": "Creativechain FDN Terms and Conditions for Creary.net services"
         },
         "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+    },
+    "NAVBAR": {
+        "SEE_ALL_RESULTS": "See all members"
+    },
+    "ACCOUNT_SEARCH": {
+        "RESULTS_TITLE": "Resultados de"
     }
 
 }

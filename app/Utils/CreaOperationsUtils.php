@@ -41,14 +41,13 @@ class CreaOperationsUtils
 
     public static function comment($op) {
         $data = self::mention($op);
-
         if ($data->parent_author) {
             //Only return notification data for comments in publications
             $data->to = $data->parent_author;
             return $data;
         }
 
-        return null;
+        return $data;
     }
 
     public static function comment_download($op) {
@@ -86,6 +85,26 @@ class CreaOperationsUtils
                 }
                 break;
         }
+
+        return $data;
+    }
+
+    /**
+     * @param $op
+     * @return mixed
+     */
+    public static function account_create($op) {
+        $data = self::parse($op);
+
+        return $data;
+    }
+
+    /**
+     * @param $op
+     * @return mixed
+     */
+    public static function account_update($op) {
+        $data = self::parse($op);
 
         return $data;
     }

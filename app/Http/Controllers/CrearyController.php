@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 
 
 use App\Utils\CreaUtils;
-use App\Utils\Lang;
-use Creary\URLUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -218,6 +216,10 @@ class CrearyController extends Controller
 
     public function search(Request $request) {
         return $this->buildViewResponse($request, 'home');
+    }
+
+    public function accountsSearch(Request $request) {
+        return $this->buildViewResponse($request, 'account-search');
     }
 
     public function welcome(Request $request) {

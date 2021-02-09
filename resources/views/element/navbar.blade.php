@@ -196,7 +196,7 @@
             <div class="row">
                 <div class="col-3 col-md-2">
                     <a href="/">
-                        <img class="logo" alt="logo" src="/img/logo_creary_beta.svg"/>
+                        <img class="logo" alt="logo" src="/img/logo_creary.svg"/>
                     </a>
                 </div>
 
@@ -317,7 +317,7 @@
                 <div class="col-2 col-md-2 col-lg-2 hidden-xs">
                     <div class="bar__module">
                         <a href="/">
-                            <img class="logo" alt="logo" src="/img/logo_creary_beta.svg"/>
+                            <img class="logo" alt="logo" src="/img/logo_creary.svg"/>
                         </a>
                     </div>
                 </div>
@@ -325,7 +325,7 @@
                     <div class="bar__module">
                         <ul class="menu-horizontal text-left">
                             <li v-if="session" class="d-none d-md-inline-block" v-bind:class="{'active': isUserFeed()}">
-                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FOLLOWING') }}</a>
+                                <a v-bind:href="'/@' + session.account.username + '/feed'">{{ __('lang.HOME.MENU_FEED') }}</a>
                             </li>
                             <li class="d-none d-md-inline-block" v-bind:class="{'active': nav === 'popular'}">
                                 <a  href="/popular" v-on:click="retrieveTrendingContent">{{ __('lang.HOME.MENU_POPULAR') }}</a>
@@ -348,7 +348,7 @@
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/passwords'">{{ __('lang.PROFILE_MENU.CHANGE_PASSWORD') }}</a></li>
                             <li class="d-block d-sm-block d-md-none" v-if="session"><a v-bind:href="'/@' + session.account.username + '/settings'">{{ __('lang.PROFILE_MENU.SETTINGS') }}</a></li>
                             <li class="dropdown d-block d-sm-block d-md-none" v-if="session">
-                                <span class="dropdown__trigger text-capitalize">More</span>
+                                <span class="dropdown__trigger text-capitalize">{{ __('lang.COMMON.MORE') }}</span>
                                 <div class="dropdown__container">
                                     <div class="container">
                                         <div class="row">

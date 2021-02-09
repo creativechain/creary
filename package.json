@@ -11,7 +11,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "bootstrap": "^4.5.2",
         "cross-env": "^5.1",
         "jquery": "^3.5.1",
@@ -24,17 +24,19 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "@creativechain-fdn/crea-js": "^0.4.0",
+        "@creativechain-fdn/crea-js": "^0.4.1",
         "aedes": "^0.41.0",
         "compressorjs": "^1.0.6",
         "dotenv": "^8.2.0",
         "event-emitter": "^0.3.5",
         "flickity": "^2.2.1",
         "granim": "^1.1.1",
+        "ipfs-http-client": "^49.0.0",
         "isotope-layout": "^3.0.6",
         "js-cookie": "^2.2.1",
         "moment": "^2.29.0",
         "mqtt": "^3.0.0",
+        "mutexify": "^1.3.1",
         "pickadate": "^5.0.0-alpha.3",
         "vue": "^2.6.12",
         "vue-lazyload": "^1.3.3",

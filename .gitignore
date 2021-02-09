@@ -3,7 +3,9 @@
 /public/hot
 /public/storage
 /public/robots.txt
+/public/sitemap.xml
 /storage/*.key
+/public/mix-manifest.json
 /vendor
 .env
 .env.backup

@@ -4,25 +4,35 @@
 import R from '../lib/resources';
 import { Asset } from '../lib/amount';
 import { License } from '../lib/license';
-import HttpClient from '../lib/http';
 import {
-    jsonify,
+    cancelEventPropagation,
+    getParameterByName,
     getPathPart,
     isUserFeed,
-    getParameterByName,
-    toLocaleDate,
+    jsonify,
     NaNOr,
-    cancelEventPropagation
+    toLocaleDate,
 } from '../lib/util';
-import { catchError, parseAccount, parsePost, resolveFilter, removeBlockedContents, updateUserSession, showModal,
-    getDiscussion, refreshAccessToken, showProfile, performSearch, getAccounts } from "../common/common";
+import {
+    catchError,
+    getAccounts,
+    getDiscussion,
+    parseAccount,
+    parsePost,
+    removeBlockedContents,
+    showModal,
+    showProfile,
+    updateUrl,
+    updateUserSession,
+} from '../common/common';
 
 //Components import
-import Avatar from "../components/Avatar";
-import Recommend from "../components/Recommend";
-import NewLike from "../components/NewLike";
-import LinkName from "../components/LinkName";
-import ButtonFollow from "../components/ButtonFollow";
+import Avatar from '../components/Avatar';
+import Recommend from '../components/Recommend';
+import NewLike from '../components/NewLike';
+import LinkName from '../components/LinkName';
+import ButtonFollow from '../components/ButtonFollow';
+import { CommentsApi } from '../lib/creary-api';
 
 (function () {
     //Load Vue components
@@ -70,8 +80,8 @@ import ButtonFollow from "../components/ButtonFollow";
             filter = filter.substring(1);
         }
 
-        let category = resolveFilter('/' + getPathPart()).replace('/', '');
-        let discuss = getPathPart(null, 1) || '';
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1) || '';
 
         if (isUserFeed(getPathPart()) && !state.discussion_idx[discuss]) {
             cKeys = newKeys;
@@ -90,11 +100,16 @@ import ButtonFollow from "../components/ButtonFollow";
             lastPage = state.content[contentArray[contentArray.length - 1]];
         }
 
-        state.discussion_idx[discuss][category] = removeBlockedContents(state, account, state.discussion_idx[discuss][category]);
+        state.discussion_idx[discuss][category] = removeBlockedContents(
+            state,
+            account,
+            state.discussion_idx[discuss][category]
+        );
 
         if (!homePosts) {
             homePosts = new Vue({
                 el: '#home-posts',
+                name: 'home-posts',
                 data: {
                     session: session,
                     account: account,
@@ -103,9 +118,12 @@ import ButtonFollow from "../components/ButtonFollow";
                     discuss: discuss,
                     urlFilter: urlFilter,
                     state: state,
+                    cleaningContent: false,
                     search: getParameterByName('query'),
+                    loading: false,
+                    moreLoading: false,
                     simpleView: false,
-                    lang: lang
+                    lang: lang,
                 },
                 updated: function updated() {
                     if (mr.masonry) {
@@ -120,7 +138,7 @@ import ButtonFollow from "../components/ButtonFollow";
                     getDefaultAvatar: R.getAvatar,
                     toggleSimpleView: function () {
                         this.simpleView = !this.simpleView;
-                        console.log('SimpleView', this.simpleView)
+                        console.log('SimpleView', this.simpleView);
                     },
                     onFollow: function onFollow(err, result) {
                         //creaEvents.emit('crea.content.filter', this.urlFilter);
@@ -128,6 +146,8 @@ import ButtonFollow from "../components/ButtonFollow";
                     },
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
+                        let state = this.state;
+                        state.postsData = state.content;
                         creaEvents.emit('navigation.post.data', post, this.state, this.discuss, this.category);
                         showModal('#modal-post');
                     },
@@ -143,17 +163,20 @@ import ButtonFollow from "../components/ButtonFollow";
                     },
                     getFeaturedImage: function getFeaturedImage(post) {
                         let featuredImage;
-                        if (!this.account && post.adult_content || this.account && this.account.user.metadata.adult_content === 'warn' && post.adult_content) {
+                        if (
+                            (!this.account && post.adult_content) ||
+                            (this.account && this.account.user.metadata.adult_content === 'warn' && post.adult_content)
+                        ) {
                             featuredImage = {
-                                url: R.IMG.POST.NSFW
-                            }
+                                url: R.IMG.POST.NSFW,
+                            };
                         } else {
                             featuredImage = post.metadata.featuredImage;
                         }
 
                         if (featuredImage && featuredImage.hash) {
                             return {
-                                url: apiOptions.ipfs + featuredImage.hash
+                                url: apiOptions.ipfs + featuredImage.hash,
                             };
                         } else if (featuredImage && featuredImage.url) {
                             return featuredImage;
@@ -204,15 +227,16 @@ import ButtonFollow from "../components/ButtonFollow";
                             amount = amount.add(Asset.parseString(post.curator_payout_value));
                         } //amount.amount = parseInt(amount.amount / 1000000000);
 
-
                         return '$ ' + amount.toPlainString();
                     },
                     getPendingPayouts: function getPendingPayouts(post, asset) {
                         asset = asset ? asset.toLowerCase() : '';
 
                         let PRICE_PER_CREA = Asset.parse({
-                            amount: Asset.parseString(this.state.feed_price.base).toFloat() / Asset.parseString(this.state.feed_price.quote).toFloat(),
-                            nai: 'cbd'
+                            amount:
+                                Asset.parseString(this.state.feed_price.base).toFloat() /
+                                Asset.parseString(this.state.feed_price.quote).toFloat(),
+                            nai: 'cbd',
                         });
                         let CBD_PRINT_RATE = this.state.props.cbd_print_rate;
                         let CBD_PRINT_RATE_MAX = 10000;
@@ -222,19 +246,26 @@ import ButtonFollow from "../components/ButtonFollow";
                         let PERCENT_CREA_DOLLARS = post.percent_crea_dollars / 20000;
                         let PENDING_PAYOUT_CBD = Asset.parse({
                             amount: PENDING_PAYOUT.toFloat() * PERCENT_CREA_DOLLARS,
-                            nai: 'cbd'
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_CGY = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'cgy'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT.toFloat() - PENDING_PAYOUT_CBD.toFloat()) / PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'cgy',
                         });
                         let PENDING_PAYOUT_PRINTED_CBD = Asset.parse({
-                            amount: NaNOr((PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX)), 0),
-                            nai: 'cbd'
+                            amount: NaNOr(PENDING_PAYOUT_CBD.toFloat() * (CBD_PRINT_RATE / CBD_PRINT_RATE_MAX), 0),
+                            nai: 'cbd',
                         });
                         let PENDING_PAYOUT_PRINTED_CREA = Asset.parse({
-                            amount: NaNOr(((PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) / PRICE_PER_CREA.toFloat()), 0),
-                            nai: 'crea'
+                            amount: NaNOr(
+                                (PENDING_PAYOUT_CBD.toFloat() - PENDING_PAYOUT_PRINTED_CBD.toFloat()) /
+                                    PRICE_PER_CREA.toFloat(),
+                                0
+                            ),
+                            nai: 'crea',
                         });
 
                         switch (asset) {
@@ -245,9 +276,16 @@ import ButtonFollow from "../components/ButtonFollow";
                             case 'crea':
                                 return PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false);
                             default:
-                                return '(' + PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) + ', ' + PENDING_PAYOUT_CGY.toFriendlyString(null, false) + ')';
+                                return (
+                                    '(' +
+                                    PENDING_PAYOUT_PRINTED_CBD.toFriendlyString(null, false) +
+                                    ', ' +
+                                    PENDING_PAYOUT_PRINTED_CREA.toFriendlyString(null, false) +
+                                    ', ' +
+                                    PENDING_PAYOUT_CGY.toFriendlyString(null, false) +
+                                    ')'
+                                );
                         }
-
                     },
                     parseJSON: function parseJSON(strJson) {
                         if (strJson && strJson.length > 0) {
@@ -270,7 +308,7 @@ import ButtonFollow from "../components/ButtonFollow";
                                 that.state.content[updatedPost.link] = updatedPost;
                                 that.$forceUpdate();
                             }
-                        })
+                        });
                     },
                     getLicense: function getLicense(flag) {
                         if (flag) {
@@ -278,8 +316,8 @@ import ButtonFollow from "../components/ButtonFollow";
                         }
 
                         return new License(LICENSE.FREE_CONTENT);
-                    }
-                }
+                    },
+                },
             });
 
             setTimeout(function () {
@@ -293,30 +331,39 @@ import ButtonFollow from "../components/ButtonFollow";
             homePosts.discuss = discuss;
             homePosts.state = state;
             homePosts.urlFilter = urlFilter;
+            homePosts.cleaningContent = false;
             homePosts.search = getParameterByName('query');
         }
 
         homePosts.$forceUpdate();
-
+        creaEvents.emit('crea.content.path', category, discuss);
+        console.log('cat', category, 'discuss', discuss);
     }
 
-    creaEvents.on('crea.posts', function (urlFilter, filter, state) {
+    creaEvents.on('crea.posts', function (urlFilter, filter, state, hasContent, needCleanContent) {
         let authors = [];
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1) || '';
+        console.log('crea.posts', urlFilter, filter, hasContent, needCleanContent, category, discuss);
 
         for (let c in state.content) {
             let author = state.content[c].author;
 
             if (!authors.includes(author)) {
                 authors.push(author);
-            } //separate votes
-
+            }
 
             state.content[c] = parsePost(state.content[c]);
         }
 
-        if (isUserFeed(getPathPart())) {
+        if (isUserFeed()) {
             //Retrieve another accounts
             getAccounts(authors, function (err, result) {
+                if (homePosts) {
+                    //Hide more loading
+                    homePosts.moreLoading = false;
+                }
+
                 if (!catchError(err)) {
                     let accounts = {};
                     result.forEach(function (a) {
@@ -324,15 +371,21 @@ import ButtonFollow from "../components/ButtonFollow";
                     });
 
                     if (homePosts) {
-                        //On Session update
+                        if (needCleanContent) {
+                            cleanHomeContent(urlFilter);
+                        }
+
                         //Accounts
                         for (let a in accounts) {
                             homePosts.state.accounts[a] = accounts[a];
-                        } //Posts
+                        }
 
-
+                        //Posts
                         for (let _c in state.content) {
-                            homePosts.state.content[_c] = parsePost(state.content[_c]);
+                            homePosts.state.content[_c] = state.content[_c];
+                            if (!homePosts.state.discussion_idx['feed'][getPathPart()].includes(_c)) {
+                                homePosts.state.discussion_idx['feed'][getPathPart()].push(_c);
+                            }
                         }
 
                         state = homePosts.state;
@@ -340,132 +393,263 @@ import ButtonFollow from "../components/ButtonFollow";
                         state.accounts = accounts;
                     }
 
+                    if (!hasContent) {
+                        if (homePosts) {
+                            homePosts.state.discussion_idx['feed'][getPathPart()] = [];
+                        }
+                        state.content = {};
+                    }
+
+                    //Result is for applied filters and no has accounts
                     showPosts(urlFilter, filter, state);
                 }
             });
-        } else if (homePosts && homePosts.urlFilter === urlFilter && urlFilter === '/search') {
-            let query = getParameterByName('query');
+        } else {
+            if (homePosts) {
+                if (needCleanContent) {
+                    cleanHomeContent(urlFilter);
 
-            if (query === homePosts.search && query !== null) {
-                //Accounts
-                for (let a in state.accounts) {
-                    homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
-                } //Posts
+                    homePosts.state.category = category;
+                    homePosts.state.discuss = discuss;
+                }
 
-
-                for (let _c2 in state.content) {
-                    homePosts.state.content[_c2] = parsePost(state.content[_c2]);
-                } //Order
-
-
-                let newPosts = state.discussion_idx[""].search;
-
-                for (let x = 0; x < newPosts.length; x++) {
-                    if (!homePosts.state.discussion_idx[''].search.includes(newPosts[x])) {
-                        homePosts.state.discussion_idx[''].search.push(newPosts[x]);
+                if (homePosts.urlFilter === urlFilter) {
+                    for (let a in state.accounts) {
+                        homePosts.state.accounts[a] = parseAccount(state.accounts[a]);
                     }
                 }
-
-                homePosts.state.discussion_idx[''].search = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[''].search);
-
-            } else {
-                showPosts(urlFilter, filter, state);
-            }
-        } else {
-            if (homePosts && homePosts.urlFilter === urlFilter) {
-                //On Session update
-                //Accounts
-                for (let _a in state.accounts) {
-                    homePosts.state.accounts[_a] = parseAccount(state.accounts[_a]);
-                }
-
-                state = homePosts.state;
             }
 
+            console.log('State', state);
             let ck = Object.keys(state.content);
             let reblogsFetched = 0;
             let onAllReblogs = function () {
                 reblogsFetched++;
 
+                //console.log('onAllReblogs', reblogsFetched, ck.length);
                 if (reblogsFetched >= ck.length) {
                     showPosts(urlFilter, filter, state);
                 }
             };
 
-            let onReblogs = function (k, d, reblogs) {
-                state.content[k] = parsePost(d, reblogs);
+            let onReblogs = function (d) {
+                let pl = `${d.author}/${d.permlink}`;
+                state.content[pl] = parsePost(state.content[pl], d.reblogged_by);
             };
 
-            refreshAccessToken(function (accessToken) {
+            let commentsApi = new CommentsApi();
+            commentsApi.multipleComments(ck, function (err, result) {
+                if (homePosts) {
+                    //Hide more loading
+                    homePosts.moreLoading = false;
+                }
 
-                for (let x = 0; x < ck.length; x++) {
-                    let d = state.content[ck[x]];
-
-                    (function (x, ck, d) {
-                        let http = new HttpClient(apiOptions.apiUrl + String.format('/creary/%s/%s', d.author, d.permlink));
-
-                        http.when('done', function (response) {
-                            let data = jsonify(response).data;
-                            onReblogs(ck[x], d, data.reblogged_by);
-                            onAllReblogs();
-                        });
-
-                        http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                            console.error(textStatus, errorThrown);
-                            onReblogs(ck[x], d);
-                            onAllReblogs();
-                        });
-
-                        http.headers = {
-                            Authorization: 'Bearer ' + accessToken
-                        };
-
-                        http.get({});
-                    })(x, ck, d)
-
+                if (!catchError(err)) {
+                    result.forEach((d) => {
+                        onReblogs(d);
+                        onAllReblogs();
+                    });
                 }
             });
         }
     });
 
-    function beforeInit(urlFilter) {
+    function beforeInit(urlFilter = null) {
         let path = currentPage ? currentPage.pathname : window.location.pathname;
+        let category = getPathPart();
+        let discuss = getPathPart(null, 1);
+        console.log('beforeInit', path, urlFilter, category, discuss);
 
         if (path === '/') {
             if (session) {
                 urlFilter = urlFilter ? urlFilter : '/@' + session.account.username + '/feed';
-                creaEvents.emit('crea.content.filter', urlFilter);
+                updateUrl(urlFilter);
+                creaEvents.emit('crea.content.path', '@' + session.account.username, 'feed');
+                //creaEvents.emit('crea.content.filter', urlFilter);
             } else {
-                creaEvents.emit('crea.content.filter', '/popular');
+                updateUrl('/popular');
+                creaEvents.emit('crea.content.path', 'popular');
+                //creaEvents.emit('crea.content.filter', '/popular');
             }
+
+            creaEvents.emit('crea.content.load');
+        } else if (category === 'search') {
+            creaEvents.emit('crea.content.path', category, discuss);
+            creaEvents.emit('crea.content.load');
         } else {
-            if (isUserFeed(getPathPart())) {
+            if (isUserFeed(category)) {
                 if (session) {
-                    if (getPathPart() !== ('@' + session.account.username)) {
-                        showProfile(getPathPart());
+                    if (category !== '@' + session.account.username) {
+                        showProfile(category);
                     } else {
                         //Show user feed
-                        creaEvents.emit('crea.content.filter', path);
+                        creaEvents.emit('crea.content.path', '@' + session.account.username, 'feed');
+                        creaEvents.emit('crea.content.load');
                     }
                 } else {
                     //Avoid show feed if current user is not logged
-                    showProfile(getPathPart());
+                    showProfile(category);
                 }
-            } else if (path.startsWith('/search')) {
-                let search = getParameterByName('query');
-                let page = getParameterByName('page') || 1;
-                performSearch(search, page, true);
+            } else if (category) {
+                creaEvents.emit('crea.content.path', category);
+                creaEvents.emit('crea.content.load');
             } else {
-                creaEvents.emit('crea.content.filter', path);
+                creaEvents.emit('crea.content.path', category, discuss);
+                creaEvents.emit('crea.content.load');
             }
+        }
+    }
+
+    function initEmptyHome(urlFilter = null, callback) {
+        urlFilter = urlFilter || window.location.pathname;
+
+        console.log('Initiating homePosts with', urlFilter);
+        crea.api.getState(urlFilter, function (err, urlState) {
+            if (!catchError(err)) {
+                let category = getPathPart(urlFilter);
+                let discuss = getPathPart(urlFilter, 1) || '';
+                urlState.content = {};
+                urlState.accounts = {};
+                urlState.discussion_idx = {};
+                urlState.discussion_idx[discuss] = {};
+                urlState.discussion_idx[discuss][category] = [];
+
+                showPosts(urlFilter, urlFilter, urlState);
+                if (callback) {
+                    callback();
+                }
+            }
+        });
+    }
+
+    function cleanHomeContent(urlFilter = null) {
+        console.log('cleaning home content', urlFilter);
+        let category = getPathPart(urlFilter);
+        let discuss = getPathPart(urlFilter, 1);
+
+        if (homePosts) {
+            homePosts.cleaningContent = true;
+
+            if (!homePosts.state.discussion_idx[discuss]) {
+                homePosts.state.discussion_idx[discuss] = {};
+            }
+
+            let lastDiscuss = homePosts.discuss;
+            let lastCategory = homePosts.category;
+
+            homePosts.state.discussion_idx[discuss][category] = [];
+            homePosts.discuss = discuss;
+            homePosts.category = category;
+            homePosts.state.discussion_idx[lastDiscuss][lastCategory] = [];
+            homePosts.state.content = {};
+            homePosts.$forceUpdate();
+        }
+    }
+
+    function addApiContent(apiContents, accountNames, discussion_idx, cleanContent, callback) {
+        console.log('Adding content', apiContents.length, apiContents);
+        let discussions = [];
+        let count = apiContents.length;
+
+        let onHomeInit = function () {
+            let hideSearchLoading = function () {
+                //Hide more loading
+                homePosts.moreLoading = false;
+
+                if (homePosts.category === 'search') {
+                    homePosts.loading = false;
+                }
+            };
+
+            let onContentFetched = function onContentFetched() {
+                count--;
+
+                //console.log('Fetched. Remain', count);
+                if (count <= 0) {
+                    getAccounts(accountNames, function (err, newAccounts) {
+                        if (!catchError(err)) {
+                            //Update accounts
+                            newAccounts.forEach(function (a) {
+                                homePosts.state.accounts[a.name] = parseAccount(a);
+                            });
+
+                            //Sort
+                            /*discussions.sort(function (k1, k2) {
+                                let d1 = toLocaleDate(k1.created);
+                                let d2 = toLocaleDate(k2.created);
+                                return d2.valueOf() - d1.valueOf();
+                            });*/
+                            let discuss = homePosts.discuss;
+                            let category = homePosts.category;
+
+                            //Update Posts
+                            discussions.forEach(function (d) {
+                                let permlink = `${d.author}/${d.permlink}`;
+                                homePosts.state.content[permlink] = d;
+                                homePosts.state.discussion_idx[discuss][category].push(permlink);
+                            });
+
+                            homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(
+                                homePosts.state,
+                                account,
+                                homePosts.state.discussion_idx[discuss][category]
+                            );
+                            homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
+                            homePosts.cleaningContent = false;
+                            homePosts.$forceUpdate();
+                            creaEvents.emit('navigation.state.update', homePosts.state);
+                        }
+
+                        hideSearchLoading();
+
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                }
+            };
+
+            if (apiContents.length === 0) {
+                hideSearchLoading();
+            } else {
+                apiContents.forEach(function (d) {
+                    let permlink = d.author + '/' + d.permlink;
+
+                    if (!homePosts.state.content[permlink]) {
+                        crea.api.getContent(d.author, d.permlink, function (err, result) {
+                            if (err) {
+                                console.error('Error getting', permlink, err);
+                            } else {
+                                let p = parsePost(result);
+                                p.reblogged_by = d.reblogged_by;
+                                discussions.push(p);
+
+                                onContentFetched();
+                            }
+                        });
+                    } else {
+                        homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
+                        onContentFetched();
+                    }
+                });
+            }
+        };
+        if (!homePosts) {
+            initEmptyHome(null, onHomeInit);
+        } else {
+            onHomeInit();
+        }
+
+        if (cleanContent) {
+            cleanHomeContent();
         }
     }
 
     creaEvents.on('crea.session.update', function (s, a) {
         homePosts.session = session = s;
         homePosts.account = account = a;
-        --lastPage;
-        beforeInit(homePosts.urlFilter);
+        //--lastPage;
+        //beforeInit(homePosts.urlFilter);
     });
 
     creaEvents.on('crea.session.login', function (s, a) {
@@ -475,155 +659,61 @@ import ButtonFollow from "../components/ButtonFollow";
         beforeInit();
     });
 
-    let onScrollCalling;
+    creaEvents.on('crea.content.add', function (apiContents, accountNames, discussion_idx, cleanContent) {
+        addApiContent(apiContents, accountNames, discussion_idx, cleanContent);
+    });
+
+    let onScrollCalling = false;
+    let feedResult;
     creaEvents.on('crea.scroll.bottom', function () {
         if (!onScrollCalling) {
             onScrollCalling = true;
+            homePosts.moreLoading = true;
 
+            let category = getPathPart();
             if (isUserFeed()) {
-                let http = new HttpClient(apiOptions.apiUrl + '/creary/feed');
-                http.when('done', function (response) {
-                    let data = jsonify(response).data;
-
-                    if (data.length) {
-                        let count = data.length;
-                        let discussions = [];
-                        let accounts = [];
-
-                        let onContentFetched = function onContentFetched() {
-                            count--;
-
-                            if (count <= 0) {
-                                getAccounts(accounts, function (err, newAccounts) {
-                                    if (!catchError(err)) {
-                                        //Update accounts
-                                        newAccounts.forEach(function (a) {
-                                            homePosts.state.accounts[a.name] = parseAccount(a);
-                                        }); //Sort
-
-                                        discussions.sort(function (k1, k2) {
-                                            let d1 = toLocaleDate(k1.created);
-                                            let d2 = toLocaleDate(k2.created);
-                                            return d2.valueOf() - d1.valueOf();
-                                        });
-                                        let discuss = homePosts.discuss;
-                                        let category = homePosts.category; //Update Posts
-
-                                        discussions.forEach(function (d) {
-                                            let permlink = d.author + '/' + d.permlink;
-                                            homePosts.state.content[permlink] = d;
-                                            homePosts.state.discussion_idx[discuss][category].push(permlink);
-                                        });
-
-                                        homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
-                                        homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                                        homePosts.$forceUpdate();
-                                        creaEvents.emit('navigation.state.update', homePosts.state);
-                                    }
-
-                                    onScrollCalling = false;
-                                });
-                            } else {
-                                onScrollCalling = false;
-                            }
-                        };
-
-                        data.forEach(function (d) {
-                            let permlink = d.author + '/' + d.permlink;
-
-                            if (!homePosts.state.content[permlink]) {
-                                crea.api.getContent(d.author, d.permlink, function (err, result) {
-                                    if (err) {
-                                        console.error('Error getting', permlink, err);
-                                    } else {
-                                        let p = parsePost(result);
-                                        p.reblogged_by = d.reblogged_by;
-                                        discussions.push(p);
-
-                                        if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                                            accounts.push(d.author);
-                                        }
-                                    }
-
-                                    onContentFetched();
-                                });
-                            } else {
-                                homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
-                            }
-                        });
-                    } else {
-                        onScrollCalling = false;
-                        --lastPage;
-                    }
-                });
-                http.when('fail', function (jqXHR, textStatus, errorThrown) {
+                creaEvents.emit('crea.content.load');
+                setTimeout(function () {
                     onScrollCalling = false;
-                    catchError(textStatus);
-                });
-                let username = getPathPart().replace('/', '').replace('@', '');
-                crea.api.getFollowing(username, '', 'blog', 1000, function (err, result) {
-                    if (!catchError(err)) {
-                        let followings = [];
-                        result.following.forEach(function (f) {
-                            followings.push(f.following);
-                        });
-
-                        if (followings.length) {
-                            followings = followings.join(',');
-                            refreshAccessToken(function (accessToken) {
-                                http.headers = {
-                                    Authorization: 'Bearer ' + accessToken
-                                };
-                                lastPage++;
-                                http.post({
-                                    following: followings,
-                                    page: lastPage,
-                                    reblogs: true,
-                                    adult: account.user.metadata.adult_content
-                                });
-                            });
-                        }
-                    }
-                });
-            } else if (window.location.pathname === '/search') {
-                let query = getParameterByName('query');
-                let postCount = Object.keys(homePosts.state.content).length;
-
-                if (postCount > 0 && postCount % 20 === 0) {
-                    globalLoading.show = true;
-                    performSearch(query, ++lastPage, true, function () {
-                        onScrollCalling = false;
-                        globalLoading.show = false;
-                    });
-                }
+                }, 1e3);
+            } else if (category === 'search') {
+                creaEvents.emit('crea.content.old');
+                setTimeout(function () {
+                    onScrollCalling = false;
+                }, 1e3);
             } else {
+                feedResult = null;
                 let apiCall;
                 let category = homePosts.category;
+                let discuss = homePosts.discuss ? homePosts.discuss : '';
 
-                switch (category) {
-                    case 'now':
-                        apiCall = crea.api.getDiscussionsByNow;
-                        break;
+                if (lastPage) {
+                    switch (category) {
+                        case 'now':
+                            apiCall = crea.api.getDiscussionsByNow;
+                            break;
 
-                    case 'skyrockets':
-                        apiCall = crea.api.getDiscussionsBySkyrockets;
-                        break;
+                        case 'skyrockets':
+                            apiCall = crea.api.getDiscussionsBySkyrockets;
+                            break;
 
-                    case 'promoted':
-                        apiCall = crea.api.getDiscussionsByPromoted;
-                        break;
+                        case 'promoted':
+                            apiCall = crea.api.getDiscussionsByPromoted;
+                            break;
 
-                    case 'popular':
-                        apiCall = crea.api.getDiscussionsByPopular;
-                        break;
-                    default:
-                        apiCall = crea.api['getDiscussionsBy' + category.capitalize()];
-                        break;
-                }
+                        case 'popular':
+                            apiCall = crea.api.getDiscussionsByPopular;
+                            break;
+                        default:
+                            apiCall = crea.api['getDiscussionsBy' + category.capitalize()];
+                            break;
+                    }
 
-                if (apiCall) {
-                    refreshAccessToken(function (accessToken) {
-                        apiCall(lastPage.author, lastPage.permlink, 21, function (err, result) {
+                    if (apiCall) {
+                        apiCall(lastPage.author, lastPage.permlink, discuss, 21, function (err, result) {
+                            //Hide more loading
+                            homePosts.moreLoading = false;
+
                             if (err) {
                                 console.error(err);
                             } else {
@@ -635,94 +725,118 @@ import ButtonFollow from "../components/ButtonFollow";
                                 let topDiscussions = [];
                                 let accounts = [];
 
-                                let reblogsFetched = 0;
                                 let onAllReblogs = function () {
-                                    reblogsFetched++;
-                                    if (reblogsFetched >= topDiscussions.length) {
-                                        //Get new accounts
-                                        getAccounts(accounts, function (err, newAccounts) {
-                                            if (!catchError(err)) {
-                                                //Update accounts
-                                                newAccounts.forEach(function (a) {
-                                                    homePosts.state.accounts[a.name] = a;
-                                                }); //Update Posts
+                                    getAccounts(accounts, function (err, newAccounts) {
+                                        if (!catchError(err)) {
+                                            //Update accounts
+                                            newAccounts.forEach(function (a) {
+                                                homePosts.state.accounts[a.name] = a;
+                                            });
 
-                                                let discuss = homePosts.discuss;
-                                                topDiscussions.forEach(function (d) {
-                                                    let permlink = d.author + '/' + d.permlink;
-                                                    homePosts.state.content[permlink] = d;
+                                            //Update Posts
+                                            let discuss = homePosts.discuss;
+                                            topDiscussions.forEach(function (d) {
+                                                let permlink = d.author + '/' + d.permlink;
+                                                homePosts.state.content[permlink] = d;
 
-                                                    homePosts.state.discussion_idx[discuss][category].push(permlink);
-                                                });
+                                                homePosts.state.discussion_idx[discuss][category].push(permlink);
+                                            });
 
-                                                homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(homePosts.state, account, homePosts.state.discussion_idx[discuss][category]);
-                                                homePosts.state.discussions = homePosts.state.discussion_idx[discuss][category];
-                                                lastPage = topDiscussions[topDiscussions.length - 1];
-                                                homePosts.$forceUpdate();
-                                                creaEvents.emit('navigation.state.update', homePosts.state);
-                                            }
+                                            homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(
+                                                homePosts.state,
+                                                account,
+                                                homePosts.state.discussion_idx[discuss][category]
+                                            );
+                                            homePosts.state.discussions =
+                                                homePosts.state.discussion_idx[discuss][category];
+                                            lastPage = topDiscussions[topDiscussions.length - 1];
+                                            homePosts.$forceUpdate();
+                                            creaEvents.emit('navigation.state.update', homePosts.state);
+                                        }
 
-                                            onScrollCalling = false;
-                                        });
-                                    }
-
+                                        onScrollCalling = false;
+                                    });
                                 };
 
-                                for (let x = 0; x < discussions.length; x++) {
-                                    let d = discussions[x];
-                                    //For /now discussions, check post active date
-                                    if (category === 'now') {
-                                        let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
-                                        let postPayoutDate = moment(d.last_payout, 'YYYY-MM-DDTHH:mm:ss');
-                                        if (postCreatedDate.isAfter(postPayoutDate)) {
-                                            //Post is active
-                                            topDiscussions.push(d);
-                                        } else {
-                                            continue;
+                                if (discussions.length) {
+                                    let discussionLinks = [];
+                                    let discussionsObj = {};
+
+                                    for (let x = 0; x < discussions.length; x++) {
+                                        let d = discussions[x];
+                                        d.index = x;
+
+                                        //Add account
+                                        if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
+                                            accounts.push(d.author);
                                         }
-                                    } else {
-                                        topDiscussions.push(d);
+
+                                        //For /now discussions, check post active date
+                                        if (category === 'now') {
+                                            let postCreatedDate = moment(d.created, 'YYYY-MM-DDTHH:mm:ss');
+                                            let postPayoutDate = moment(d.last_payout, 'YYYY-MM-DDTHH:mm:ss');
+                                            if (postCreatedDate.isAfter(postPayoutDate)) {
+                                                //Post is active
+                                                topDiscussions.push(d);
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            topDiscussions.push(d);
+                                        }
+
+                                        let pl = `${d.author}/${d.permlink}`;
+                                        discussionLinks.push(pl);
+                                        discussionsObj[pl] = d;
                                     }
 
-                                    (function (x, d) {
-                                        let http = new HttpClient(apiOptions.apiUrl + String.format('/creary/%s/%s', d.author, d.permlink));
+                                    let onReblogs = function (dr) {
+                                        let pl = `${dr.author}/${dr.permlink}`;
+                                        let d = discussionsObj[pl];
+                                        topDiscussions[d.index] = parsePost(d, dr.reblogged_by);
+                                    };
 
-                                        let onReblogs = function (reblogs) {
+                                    let commentsApi = new CommentsApi();
+                                    commentsApi.multipleComments(discussionLinks, function (err, result) {
+                                        if (!catchError(err)) {
+                                            result.forEach((dr) => {
+                                                onReblogs(dr);
+                                            });
 
-                                            topDiscussions[x] = parsePost(d, reblogs);
-
-                                            if (!homePosts.state.accounts[d.author] && !accounts.includes(d.author)) {
-                                                accounts.push(d.author);
-                                            }
-                                        };
-
-                                        http.when('done', function (response) {
-                                            let data = jsonify(response).data;
-                                            onReblogs(data.reblogged_by);
                                             onAllReblogs();
-                                        });
+                                        }
+                                    });
+                                } else {
+                                    /*if (discuss) {
+                                        creaEvents.emit('crea.content.old');
+                                    }*/
 
-                                        http.when('fail', function (jqXHR, textStatus, errorThrown) {
-                                            console.error(textStatus, errorThrown);
-                                            onReblogs();
-                                            onAllReblogs();
-                                        });
-
-                                        http.headers = {
-                                            Authorization: 'Bearer ' + accessToken
-                                        };
-
-                                        http.get({});
-                                    })(topDiscussions.length-1, d)
+                                    onScrollCalling = false;
                                 }
-
                             }
                         });
-                    })
+                    }
+                } else {
+                    if (discuss) {
+                        creaEvents.emit('crea.content.old');
+                    }
 
+                    setTimeout(() => {
+                        onScrollCalling = false;
+                    }, 300);
                 }
-
             }
+        }
+    });
+
+    creaEvents.on('crea.search.start', function (category, search, hasPrevQuery) {
+        console.log(category, search, hasPrevQuery);
+        if (!hasPrevQuery) {
+            initEmptyHome(`/${category}?q=${search}`, function () {
+                homePosts.loading = !hasPrevQuery;
+            });
+        } else {
+            homePosts.loading = !hasPrevQuery;
         }
     });
 
@@ -730,7 +844,7 @@ import ButtonFollow from "../components/ButtonFollow";
         let searchState = {
             content: {},
             accounts: {},
-            discussion: []
+            discussion: [],
         };
         let count = 0;
 
@@ -745,8 +859,8 @@ import ButtonFollow from "../components/ButtonFollow";
                 searchState.discussion.sort(function (c1, c2) {
                     return state.content[c2].active_votes.length - state.content[c1].active_votes.length;
                 });
-                state.discussion_idx[""] = {};
-                state.discussion_idx[""].search = searchState.discussion;
+                state.discussion_idx[''] = {};
+                state.discussion_idx[''].search = searchState.discussion;
                 creaEvents.emit('crea.posts', '/search', 'search', state);
             }
         };
@@ -785,8 +899,8 @@ import ButtonFollow from "../components/ButtonFollow";
     });
 
     creaEvents.on('crea.dom.ready', function () {
-        $("#view-changer").click(function () {
+        $('#view-changer').click(function () {
             homePosts.toggleSimpleView();
         });
-    })
+    });
 })();

@@ -1,21 +1,20 @@
 /**
  * Created by ander on 11/10/18.
  */
-import Errors from "../lib/error";
-import Session from "../lib/session";
-import { cancelEventPropagation } from '../lib/util';
-import { catchError } from "../common/common";
-import HttpClient from "../lib/http";
+import Errors from '../lib/error';
+import Session from '../lib/session';
+import { cancelEventPropagation, domain } from '../lib/util';
+import { catchError } from '../common/common';
+import HttpClient from '../lib/http';
 
 (function () {
-
     window.addEventListener('load', function (ev) {
-        console.log("Resources loaded");
+        //console.log("Resources loaded");
         window.creaEvents.emit('crea.content.loaded');
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("DOM loaded");
+        //console.log("DOM loaded");
         window.creaEvents.emit('crea.content.prepare');
 
         let session = Session.getAlive();
@@ -36,7 +35,7 @@ import HttpClient from "../lib/http";
                         --count;
 
                         if (count === 0) {
-                            console.log('Emitting session')
+                            //console.log('Emitting session')
                             creaEvents.emit('crea.session.login', session, account);
                         }
                     };
@@ -70,11 +69,12 @@ import HttpClient from "../lib/http";
     });
 
     function updateCookies(session, account) {
-        console.log('Cookie session', session, account);
+        //console.log('Cookie session', session, account);
+        let allSubdomains = '.' + domain();
         if (session) {
-            CreaCookies.set('creary.username', session.account.username, { expires: 365 });
+            CreaCookies.set('creary.username', session.account.username, { expires: 365, domain: allSubdomains });
         } else {
-            CreaCookies.remove('creary.username')
+            CreaCookies.remove('creary.username', { domain: allSubdomains });
         }
 
         let lang = navigator.language.toLowerCase().split('-')[0];
@@ -96,8 +96,8 @@ import HttpClient from "../lib/http";
             let url = `/~api/notification/@${session.account.username}/unread`;
             let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
-                unreadNotifications =  JSON.parse(data);
-                console.log('Notifications', unreadNotifications);
+                unreadNotifications = data;
+                //console.log('Notifications', unreadNotifications);
 
                 //creaEvents.emit('crea.notifications.all', notifications);
                 creaEvents.emit('crea.notifications.unread', unreadNotifications);
@@ -120,8 +120,8 @@ import HttpClient from "../lib/http";
             }
             let httpClient = new HttpClient(url);
             httpClient.on('done' + httpClient.id, function (data) {
-                allNotifications =  JSON.parse(data);
-                console.log('Notifications', allNotifications);
+                allNotifications = data;
+                //console.log('Notifications', allNotifications);
 
                 creaEvents.emit('crea.notifications.all', allNotifications);
                 //creaEvents.emit('crea.notifications.unread', unread);
@@ -157,7 +157,6 @@ import HttpClient from "../lib/http";
 
     creaEvents.on('crea.modal.ready', function (remove) {
         setTimeout(function () {
-
             if (remove) {
                 //Remove login modals to prevent id conflicts
                 $('.all-page-modals #modal-login').remove();
@@ -166,7 +165,6 @@ import HttpClient from "../lib/http";
 
             mr.modals.documentReady($);
         }, 500);
-
     });
 
     creaEvents.on('crea.dom.ready', function () {
@@ -199,6 +197,4 @@ import HttpClient from "../lib/http";
         console.log('Emitting', 'crea.modal.ready', 'event');
         creaEvents.emit('crea.modal.ready');
     });
-
-
 })();

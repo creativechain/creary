@@ -10,7 +10,7 @@
 }
 
 #home-banner {
-  margin: 50px 0 -50px;
+  margin: 48px 0 -50px;
   .imagebg:not(.image--light) .btn:not([class*='primary']):hover {
     border-color: transparent;
   }
@@ -23,7 +23,9 @@
   -webkit-transform: translate3d(0, 0, 0);
 }
 .icons-navbar {
-  font-size: 20px !important;
+  i {
+    font-size: 20px !important;
+  }
 }
 .search.icons-navbar {
   color: #AAAAAA;
@@ -63,10 +65,7 @@
   border-color: transparent;
   font-weight: normal;
 }
-.btn-publish-navbar{
-  position: relative;
-  top: -4px;
-}
+
 .btn {
   border-radius: 25px;
   padding-top: 0;
@@ -81,6 +80,9 @@
   max-height: 25px;
   font-weight: normal;
 
+}
+.button-publish-desk {
+  height: 25px;
 }
 .btn:not([class*='primary']):hover {
   border-color: #333333;
