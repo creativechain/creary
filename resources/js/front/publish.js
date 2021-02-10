@@ -613,7 +613,9 @@ import {SELECTABLE_CATEGORIES} from "../lib/categories";
                 adult: publishContainer.adult,
                 featuredImage: publishContainer.featuredImage,
                 sharedImage: publishContainer.sharedImage,
-                license: publishContainer.getLicense().getFlag()
+                license: publishContainer.getLicense().getFlag(),
+                app: 'creary',
+                version: '1.0.0'
             };
             let download = publishContainer.downloadFile;
 
