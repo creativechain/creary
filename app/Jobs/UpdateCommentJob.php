@@ -36,21 +36,26 @@ class UpdateCommentJob implements ShouldQueue
     public function handle()
     {
         //
-        if ($this->data->type === 'comment' && $this->data->parent_author === '' || $this->data->type === 'reblog') {
-            $comment = Comments::query()
-                ->where('permlink', $this->data->permlink)
-                ->where('author', $this->data->author)
-                ->first();
-
-            if (!$comment) {
-                $comment = new Comments();
-            }
+        if (($this->data->type === 'comment' && $this->data->parent_author === '') || $this->data->type === 'reblog') {
 
             $content = (new CrearyClient())
                 ->getPost($this->data->author, $this->data->permlink);
 
-            $comment->applyData($content)
-                ->save();
+            //Check if is comment or publication
+            if ($content && $content->parent_author === '') {
+                $comment = Comments::query()
+                    ->where('permlink', $this->data->permlink)
+                    ->where('author', $this->data->author)
+                    ->first();
+
+                if (!$comment) {
+                    $comment = new Comments();
+                }
+
+                $comment->applyData($content)
+                    ->save();
+            }
+
         }
     }
 }
