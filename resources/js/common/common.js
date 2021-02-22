@@ -844,7 +844,7 @@ function uploadToIpfs(file, maxSize, callback) {
             console.error('File', file.name, 'too large. Size:', file.size, 'MAX:', maxSize);
 
             if (callback) {
-                callback(lang.PUBLISH.FILE_TOO_LARGE);
+                callback(Errors.FILE_TOO_LARGE);
             }
         }
     } else {
@@ -911,6 +911,7 @@ function performSearch(search, page = 1, inHome = false, callback) {
 /**
  *
  * @param err
+ * @param show
  */
 function catchError(err, show = true) {
     if (err) {
@@ -920,12 +921,10 @@ function catchError(err, show = true) {
         if (err.stack) {
             console.trace(err.stack);
         } else {
-            console.error(err);
-            if (lang.ERROR[err]) {
-                err = lang.ERROR[err];
-            }
+            console.error('Error', err);
+            err = lang.ERROR[err] || err;
 
-            console.log(err);
+            console.log('Error text', err);
         }
 
         if (typeof err === 'string') {
@@ -960,11 +959,17 @@ function catchError(err, show = true) {
             }
         }
 
+        console.log('Show error', show);
         if (show) {
+            console.log('Showing alert', title, body);
             showAlert(title, body);
         }
 
-        return String.join(', ', ...body);
+        if (body.length) {
+            return body.join(', ');
+        } else {
+            return title;
+        }
     }
 
     return false;

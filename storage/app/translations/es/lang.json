@@ -23,6 +23,7 @@
             "TITLE": "Error inesperado",
             "BODY": ["Ha ocurrido un error inesperado. Por favor, inténtalo mas tarde."]
         },
+        "5": "El archivo es demasiado grande",
         "USERNAME_NOT_EXISTS": "Este nombre de usuario no existe",
         "INVALID_USERNAME": "Este nombre de usuario no es válido",
         "INVALID_EMAIL": "Este Email no es válido",
@@ -342,7 +343,6 @@
         "LICENSE_TEXT_PUBLISH": "Estás a punto de publicar tu proyecto. ¡Vamos!",
         "LICENSE_TEXT_INMUTABLE": "El contenido de tu proyecto es inmutable. Se puede volver a editar pero no eliminar de la blockchain!",
         "NO_ELEMENTS_ERROR": "Debes añadir al menos un elemento (imagen, audio, video o texto)",
-        "FILE_TOO_LARGE": "El archivo es demasiado grande",
         "FILE_FORMAT_NOT_ALLOWED": "Este formato de archivo no está permitido",
         "NO_TITLE_TAG_OR_IMAGE": "Debes añadir una imagen destacada, un título y una etiqueta como mínimo",
         "RELOAD_DOWNLOAD_FILE": "Es necesario volver a cargar el archivo de descarga:",
