@@ -185,7 +185,7 @@ import Autocomplete from '../components/Autocomplete';
                     .when('fail', function (response, textStatus, request) {
                         console.error('Request failed', response, textStatus, email);
 
-                        if (data.responseText) {
+                        if (response.error) {
                             if (response.error === 'REGISTERED_EMAIL') {
                                 callback(lang.ERROR.EMAIL_EXISTS, null);
                             }
