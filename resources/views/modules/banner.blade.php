@@ -1,4 +1,4 @@
-<section v-cloak v-if="showBanner" class="imagebg image--dark cover cover-blocks" id="slide-home" style="background-color: #D1DFCE;">
+<section v-cloak v-if="showBanner" class="imagebg image--dark cover cover-blocks" id="slide-home" style="background-color: #f066c8;">
     <div class="row-close" v-on:click="showBanner = false">
         <a class="cursor"><i class="fas fa-times"></i></a>
     </div>
@@ -14,9 +14,9 @@
                 </a>
             </div>
             <div class="col-12 col-md-4 text-center text-md-left">
-                <img alt="background" src="{{ asset('img/crea-web/banner-crea-art-by-samson.png') }}"/>
+                <img alt="background" src="{{ asset('img/crea-web/banner-creary-CHRIS-DAVIS.png') }}"/>
                 <div class="firma-banner">
-                    <a href="https://creary.net/@samson.img"><span>Art by Samson</span></a>
+                    <a href="https://creary.net/@illworks"><span>Art by CHRIS DAVIS</span></a>
                 </div>
             </div>
         </div>
