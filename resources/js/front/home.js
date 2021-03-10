@@ -490,11 +490,11 @@ import { CommentsApi } from '../lib/creary-api';
                     //Avoid show feed if current user is not logged
                     showProfile(category);
                 }
-            } else if (category) {
-                creaEvents.emit('crea.content.path', category);
+            } else if (discuss) {
+                creaEvents.emit('crea.content.path', category, discuss);
                 creaEvents.emit('crea.content.load');
             } else {
-                creaEvents.emit('crea.content.path', category, discuss);
+                creaEvents.emit('crea.content.path', category);
                 creaEvents.emit('crea.content.load');
             }
         }

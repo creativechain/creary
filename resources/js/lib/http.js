@@ -53,6 +53,7 @@ class HttpClient extends EventEmitter {
             })
             .catch((error) => {
                 //console.error('Axios error', error, error.response);
+                //console.error(error);
                 that.emit('fail' + that.id, error.response.data, error.response.statusText, error.response.request);
             });
     }
