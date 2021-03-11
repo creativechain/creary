@@ -126,12 +126,13 @@ class CommentsApi extends CrearyApi {
      * @param search
      * @param download
      * @param license
+     * @param isPaid
      * @param limit
      * @param callback
      */
-    searchByReward(search, download = null, license = null, limit = 20, callback) {
+    searchByReward(search, download = null, license = null, isPaid = null, limit = 20, callback) {
         this.__initializeClient('/searchByReward', callback);
-        this.__get({ search, download, license, limit });
+        this.__get({ search, download, license, limit, isPaid });
     }
 
     /**

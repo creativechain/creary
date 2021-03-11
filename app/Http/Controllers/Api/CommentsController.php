@@ -113,6 +113,7 @@ class CommentsController extends Controller
             'download' => 'sometimes|string',
             'license' => 'sometimes|numeric',
             'limit' => 'sometimes|numeric',
+            'isPaid' => 'sometimes|boolean'
         );
 
         $validatedData = Validator::make($request->all(), $validations);
@@ -138,8 +139,12 @@ class CommentsController extends Controller
             $query->where('license', $license);
         }
 
+        if ($request->has('isPaid')) {
+            $isPaid = boolval($request->get('isPaid'));
+            $query->where('is_paid', $isPaid);
+        }
+
         $comments = $query
-            ->where('is_paid', true)
             ->where(function (Builder $query) use ($search) {
                 return $query->orWhere('title', 'like', "%$search%")
                     ->orWhereHas('tags', function ($query) use ($search) {
