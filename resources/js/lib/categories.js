@@ -65,6 +65,7 @@ const CATEGORIES = [
     'Retouching images',
     'Scenography',
     'Sculpture',
+    'Skynet',
     'Sound design',
     'Street art',
     'Styling',
