@@ -23,3 +23,5 @@ webconfig.json
 /public/js/control
 /public/js/faq
 /public/css/custom
+*.log
+nohup.out
