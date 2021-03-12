@@ -189,6 +189,7 @@
 </div>
 
 
+
 <!--end of notification-->
 <div v-cloak id="navbar-container" class="nav-container background-navbar-dark">
     <div class="bar bar--sm visible-xs">
