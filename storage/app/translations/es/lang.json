@@ -683,7 +683,8 @@
         "IMAGE": "https://creary.net/img/creary-social-media.jpg"
     },
     "NAVBAR": {
-        "SEE_ALL_RESULTS": "Mostrar todos los miembros"
+        "SEE_ALL_RESULTS": "Mostrar todos los miembros",
+        "JOIN_NOW": "Participa"
     },
     "ACCOUNT_SEARCH": {
         "RESULTS_TITLE": "Resultados de"

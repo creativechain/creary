@@ -232,9 +232,19 @@
 <!--end of notification-->
 <div v-cloak id="navbar-container" class="nav-container background-navbar-dark">
     <!-- NAVBAR PUBLICIDAD MOBILE -->
-    <div v-cloak class="background-publi mobile d-md-none">
-        @include('element.navbar-publicidad')
+<!--    <div v-pre class="background-publi mobile d-md-none">
+        <div id="navbar-alert-mobile">
+            @include('element.navbar-publicidad')
+        </div>
+    </div>-->
+    <div v-pre>
+        <div id="navbar-alert-mobile">
+            <div v-cloak class="background-publi mobile d-md-none" v-bind:class="{ 'd-none': closed }">
+                @include('element.navbar-publicidad')
+            </div>
+        </div>
     </div>
+
     <div class="visible-xs">
         <div class="bar bar--sm">
             <div class="container">
@@ -378,11 +388,16 @@
     </div>
 
     <nav id="menu1" class="bar bar--sm bar-1 bar--absolute pos-fixed bg-dark hidden-xs" v-bind:class="{ 'hidden-xs': session }" data-scroll-class="90vh:pos-fixed">
-    
+
         <!-- NAVBAR PUBLICIDAD DESKTOP -->
-        <div v-cloak class="background-publi d-none d-md-block">
-            @include('element.navbar-publicidad')
+        <div v-pre>
+            <div id="navbar-alert-desktop">
+                <div v-cloak class="background-publi d-none" v-bind:class="{ 'd-md-block': !closed }">
+                    @include('element.navbar-publicidad')
+                </div>
+            </div>
         </div>
+
         <div class="container">
             <div class="row">
                 <div class="col-2 col-md-2 col-lg-2 hidden-xs">
@@ -679,6 +694,7 @@
         </div>
     </nav>
 </div>
+<script src="{{ asset('js/control/navbar-alert.js') }}"></script>
 <script src="{{ asset('js/control/navbar-searcher.js') }}"></script>
 <script src="{{ asset('js/control/navbar.js') }}"></script>
 

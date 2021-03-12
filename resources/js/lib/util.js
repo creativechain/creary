@@ -400,6 +400,16 @@ function makeMentions(comment, state) {
     return body;
 }
 
+/**
+ *
+ * @param number
+ * @param leadingZeros
+ * @returns {string}
+ */
+function leadZeros(number, leadingZeros) {
+    return ('0'.repeat(leadingZeros) + number).slice(-leadingZeros);
+}
+
 export {
     cancelEventPropagation,
     isJSON,
@@ -430,4 +440,5 @@ export {
     uniqueId,
     makeMentions,
     domain,
+    leadZeros,
 };

@@ -3,15 +3,17 @@ body.navbar-publi {
         top: 50px;
     }
     .background-publi {
-        background-color:#0073ff;
-        height:40px;
+        background-color: #0073ff;
+        height: 40px;
         margin-bottom: 12px;
         p {
             font-size: 16px;
             padding: 7px;
         }
         a.close {
-            position: absolute;top: 10px;right: 37px;
+            position: absolute;
+            top: 10px;
+            right: 37px;
         }
     }
     .background-publi.mobile {
@@ -33,9 +35,6 @@ body.navbar-publi {
     }
 }
 
-
-
-
 @media (max-width: 767px) and (min-width: 320px) {
     body.navbar-publi {
         .main-container {
@@ -51,14 +50,14 @@ body.navbar-publi {
         }
         .background-publi.mobile {
             p {
-                font-size: 12px;
+                font-size: 11px;
                 padding: 10px;
             }
         }
     }
 }
 @media (min-width: 320px) and (max-width: 767.98px) {
-    body.navbar-publi { 
+    body.navbar-publi {
         #home-banner {
             margin: 0px 0 -30px !important;
         }
@@ -85,7 +84,7 @@ body.navbar-publi {
     }
 }
 @media (max-width: 991.98px) and (min-width: 768px) {
-    body.navbar-publi { 
+    body.navbar-publi {
         .navbar-filter {
             padding-top: 105px !important;
         }
