@@ -24,10 +24,7 @@ import { cancelEventPropagation } from '../lib/util';
                         console.log('Navbar alert mounted');
                     },
                     methods: {
-                        closeAlert: function (event) {
-                            cancelEventPropagation(event);
-                            this.closed = true;
-                        },
+                        closeAlert: closeAlert,
                     },
                 });
                 console.log('Alert initialized!', navbarAlert);
@@ -35,6 +32,13 @@ import { cancelEventPropagation } from '../lib/util';
         } catch (e) {
             console.error(e);
         }
+    }
+
+    function closeAlert(event) {
+        cancelEventPropagation(event);
+        navbarAlert.closed = true;
+        $('body').removeClass('navbar-publi');
+        navbarAlert.$forceUpdate();
     }
 
     creaEvents.on('crea.modal.ready', function () {
