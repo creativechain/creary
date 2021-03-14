@@ -208,7 +208,7 @@ import { categorySlider } from './category-slider';
         }
     }
 
-    function loadOldContent(cleanContent = false, isPaid = true) {
+    function loadOldContent(cleanContent = false, isPaid = 1) {
         console.log('Received load old content');
         oldApiCallLock(function (release) {
             let hasPrevQuery = navbarFilter.oldApiCall;
