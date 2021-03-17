@@ -114,7 +114,7 @@
     <script src="{{ asset('js/ui/tagsinput.js') }}"></script>
 </head>
 
-<body id="body" class=" navbar-publi" >
+<body id="body">
 <a id="start"></a>
 
 <div v-cloak id="navbar-right-menu" class="notification pos-right pos-top side-menu bg--white" data-notification-link="side-menu" data-animation="from-right">
@@ -232,11 +232,6 @@
 <!--end of notification-->
 <div v-cloak id="navbar-container" class="nav-container background-navbar-dark">
     <!-- NAVBAR PUBLICIDAD MOBILE -->
-<!--    <div v-pre class="background-publi mobile d-md-none">
-        <div id="navbar-alert-mobile">
-            @include('element.navbar-publicidad')
-        </div>
-    </div>-->
     <div v-pre class="hidden">
         <div id="navbar-alert-mobile">
             <div v-cloak class="background-publi mobile d-md-none" v-bind:class="{ 'd-none': closed }">
@@ -694,7 +689,7 @@
         </div>
     </nav>
 </div>
-<script src="{{ asset('js/control/navbar-alert.js') }}"></script>
+<!--<script src="{{ asset('js/control/navbar-alert.js') }}"></script>-->
 <script src="{{ asset('js/control/navbar-searcher.js') }}"></script>
 <script src="{{ asset('js/control/navbar.js') }}"></script>
 

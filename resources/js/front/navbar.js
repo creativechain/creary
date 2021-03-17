@@ -45,6 +45,7 @@ import { CommentsApi } from '../lib/creary-api';
      */
     function updateNavbarSession(session, userData) {
         if (!navbarContainer) {
+            console.log('Creating navbar...');
             navbarContainer = new Vue({
                 el: '#navbar-container',
                 name: 'navbar-container',
@@ -70,6 +71,7 @@ import { CommentsApi } from '../lib/creary-api';
                     //this.applyRightMenuEvents($);
                     $('#modal-login').parent().removeAttr('modal-attached');
                     mr.notifications.documentReady($);
+                    console.log('Navbar cmounted!');
                 },
                 methods: {
                     applyRightMenuEvents: function applyRightMenuEvents($) {
