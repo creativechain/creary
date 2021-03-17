@@ -7,7 +7,7 @@
                     {{ __('lang.NAVBAR.JOIN_NOW') }}
                 </a>
                 -
-                <countdown v-bind:eventtime="{{ 1616007600000 }}"></countdown>
+<!--                <countdown v-bind:eventtime="{{ 1616007600000 }}"></countdown>-->
             </p>
         </div>
     </div>

@@ -237,7 +237,7 @@
             @include('element.navbar-publicidad')
         </div>
     </div>-->
-    <div v-pre>
+    <div v-pre class="hidden">
         <div id="navbar-alert-mobile">
             <div v-cloak class="background-publi mobile d-md-none" v-bind:class="{ 'd-none': closed }">
                 @include('element.navbar-publicidad')
@@ -390,7 +390,7 @@
     <nav id="menu1" class="bar bar--sm bar-1 bar--absolute pos-fixed bg-dark hidden-xs" v-bind:class="{ 'hidden-xs': session }" data-scroll-class="90vh:pos-fixed">
 
         <!-- NAVBAR PUBLICIDAD DESKTOP -->
-        <div v-pre>
+        <div v-pre class="hidden">
             <div id="navbar-alert-desktop">
                 <div v-cloak class="background-publi d-none" v-bind:class="{ 'd-md-block': !closed }">
                     @include('element.navbar-publicidad')
