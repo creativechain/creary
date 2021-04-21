@@ -1,0 +1,97 @@
+body.navbar-publi {
+    .main-container {
+        top: 50px;
+    }
+    .background-publi {
+        background-color: #0073ff;
+        height: 40px;
+        margin-bottom: 12px;
+        p {
+            font-size: 16px;
+            padding: 7px;
+        }
+        a.close {
+            position: absolute;
+            top: 10px;
+            right: 37px;
+        }
+    }
+    .background-publi.mobile {
+        margin-bottom: 0;
+    }
+    .notification.side-menu {
+        .side-menu__module:nth-child(1) {
+            margin-top: 80px;
+        }
+    }
+    #navbar-right-menu {
+        .notification-close {
+            margin-top: 107px;
+        }
+    }
+
+    #menu1 {
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 767px) and (min-width: 320px) {
+    body.navbar-publi {
+        .main-container {
+            top: 80px;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    body.navbar-publi {
+        .navbar-filter {
+            padding-top: 65px !important;
+        }
+        .background-publi.mobile {
+            p {
+                font-size: 11px;
+                padding: 10px;
+            }
+        }
+    }
+}
+@media (min-width: 320px) and (max-width: 767.98px) {
+    body.navbar-publi {
+        #home-banner {
+            margin: 0px 0 -30px !important;
+        }
+        .navbar-filter {
+            padding-top: 65px !important;
+        }
+        .main-container.view-profile {
+            top: 50px;
+        }
+    }
+}
+@media (max-width: 991px) {
+    body.navbar-publi {
+        .notification.side-menu {
+            .side-menu__module:nth-child(1) {
+                margin-top: 0;
+            }
+        }
+        #navbar-right-menu {
+            .notification-close {
+                margin-top: 40px;
+            }
+        }
+    }
+}
+@media (max-width: 991.98px) and (min-width: 768px) {
+    body.navbar-publi {
+        .navbar-filter {
+            padding-top: 105px !important;
+        }
+        #profile-container {
+            .navbar-filter {
+                padding-top: 65px !important;
+            }
+        }
+    }
+}

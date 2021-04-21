@@ -208,7 +208,7 @@ import { categorySlider } from './category-slider';
         }
     }
 
-    function loadOldContent(cleanContent = false) {
+    function loadOldContent(cleanContent = false, isPaid = 1) {
         console.log('Received load old content');
         oldApiCallLock(function (release) {
             let hasPrevQuery = navbarFilter.oldApiCall;
@@ -262,7 +262,7 @@ import { categorySlider } from './category-slider';
                         onResult(null, { data: [] });
                     }
                 } else {
-                    commentsApi.searchByReward(search, download, license, 20, onResult);
+                    commentsApi.searchByReward(search, download, license, isPaid, 20, onResult);
                     creaEvents.emit('crea.search.start', 'search', navbarFilter.search, hasPrevQuery);
                 }
             }
@@ -379,7 +379,13 @@ import { categorySlider } from './category-slider';
                         );
                     } else {
                         //Load old content from creary api
-                        loadOldContent(true);
+                        if (navbarFilter.discuss) {
+                            navbarFilter.search = navbarFilter.discuss;
+                            navbarFilter.discuss = null;
+                            loadOldContent(true, null);
+                        } else {
+                            loadOldContent(true);
+                        }
                     }
                 }
             }

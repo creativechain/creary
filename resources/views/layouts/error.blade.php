@@ -657,6 +657,7 @@
         </div>
     </nav>
 </div>
+<script src="{{ asset('js/control/navbar-alert.js') }}"></script>
 <script src="{{ asset('js/control/navbar-searcher.js') }}"></script>
 <script src="{{ asset('js/control/navbar.js') }}"></script>
 
