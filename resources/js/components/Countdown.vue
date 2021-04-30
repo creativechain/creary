@@ -18,18 +18,21 @@ export default {
     },
     mounted: function () {
         console.log('eventDate', this.eventtime, moment(this.eventtime))
-        let currentTime = moment().valueOf();
-        let diffTime = this.eventtime - currentTime;
-        let duration = moment.duration(diffTime, 'milliseconds');
         let interval = 1000;
 
         this.interval = setInterval(_ => {
-            duration = moment.duration(duration - interval, 'milliseconds')
-            this.timer = duration.days() + 'd · ' +
+            let currentTime = moment().valueOf();
+            let diff = this.eventtime - currentTime;
+            let duration = moment.duration(diff, 'milliseconds')
+            this.timer = '';
+            if (duration.months() > 0) {
+                this.timer = duration.months() + 'm · ';
+            }
+            this.timer += duration.days() + 'd · ' +
                 leadZeros(duration.hours(), 2) + ':' +
                 leadZeros(duration.minutes(), 2) + ':' +
                 leadZeros(duration.seconds(), 2);
-            //console.log('Countdown', this.timer);
+            //console.log('Countdown', diff, this.timer, moment(currentTime + diff).format(), duration);
         }, interval)
     }
 }

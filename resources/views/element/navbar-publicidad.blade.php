@@ -2,12 +2,12 @@
     <div class="row">
         <div class="col-12 text-center">
             <p class="text-white ">
-                Creative Challenge - $750 rewards -
-                <a href="/skynet/@creary/skynet-creative-challenge" class="text-white">
+                <img src="{{ asset('img/onecommet_banner.svg') }}" class="inline" style="height: 20px; margin-bottom: 5px"> - 100€ + 30k CGY -
+                <a href="/specialoffer/@onecomet/bonus-of-30k-crea-energy" class="text-white">
                     {{ __('lang.NAVBAR.JOIN_NOW') }}
                 </a>
                 -
-<!--                <countdown v-bind:eventtime="{{ 1616007600000 }}"></countdown>-->
+                <countdown v-bind:eventtime="{{ 1622498399000 }}"></countdown>
             </p>
         </div>
     </div>
