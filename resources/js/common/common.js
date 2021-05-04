@@ -19,6 +19,7 @@ import {
 } from '../lib/util';
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
+import pica from 'pica';
 
 /**
  * Created by ander on 25/09/18.
