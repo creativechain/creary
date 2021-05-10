@@ -27,7 +27,7 @@
     },
     "dependencies": {
         "@creativechain-fdn/crea-js": "^0.4.1",
-        "aedes": "^0.41.0",
+        "aedes": "^0.42.1",
         "compressorjs": "^1.0.6",
         "dotenv": "^8.2.0",
         "event-emitter": "^0.3.5",
