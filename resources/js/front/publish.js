@@ -403,6 +403,7 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                             let maximumSize =
                                 CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
                             resizeImage(loadedFile, function (resizedFile) {
+                                console.log(resizedFile)
                                 uploadToIpfs(resizedFile, maximumSize, function (err, file) {
                                     globalLoading.show = false;
 

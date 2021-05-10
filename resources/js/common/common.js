@@ -19,7 +19,7 @@ import {
 } from '../lib/util';
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
-import pica from 'pica';
+import Pica from 'pica';
 
 /**
  * Created by ander on 25/09/18.
@@ -778,23 +778,49 @@ function resizeImage(file, callback) {
 
         let reader = new FileReader();
         reader.onload = function (event) {
+            let resizer = new Pica();
             let tmpImage = new Image();
 
             tmpImage.onload = function () {
+                let destCanvas = document.createElement('canvas');
                 let options;
                 if (tmpImage.width <= tmpImage.height && tmpImage.width > MAX_PIXEL_SIZE) {
                     options = {
                         maxWidth: MAX_PIXEL_SIZE,
                         maxHeight: Infinity,
                     };
+
+                    //destCanvas = resizer.createCanvas(MAX_PIXEL_SIZE, Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width));
+                    destCanvas.width = MAX_PIXEL_SIZE;
+                    destCanvas.height = Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width);
                 } else if (tmpImage.height <= tmpImage.width && tmpImage.height > MAX_PIXEL_SIZE) {
                     options = {
                         maxWidth: Infinity,
                         maxHeight: MAX_PIXEL_SIZE,
                     };
+
+                    //destCanvas = resizer.createCanvas(Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height), MAX_PIXEL_SIZE);
+                    destCanvas.height = MAX_PIXEL_SIZE;
+                    destCanvas.width = Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height);
+                } else if (callback) {
+                    //Nothing to do
+                    callback(file);
+                    return;
                 }
 
-                if (options) {
+                resizer.resize(tmpImage, destCanvas)
+                    .then( (result) => {
+                        console.log('resize resulted!', result)
+                        return resizer.toBlob(result, 'image/jpeg', 0.90)
+                    })
+                    .then(blob => {
+                        console.log('Blob created', blob)
+                        if (callback) {
+                            callback(blob);
+                        }
+                    });
+
+                /*if (options) {
                     options.quality = 0.8;
                     options.success = function (result) {
                         console.log(result);
@@ -807,7 +833,7 @@ function resizeImage(file, callback) {
                 } else if (callback) {
                     //Nothing to do
                     callback(file);
-                }
+                }*/
             };
 
             tmpImage.src = event.target.result;

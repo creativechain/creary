@@ -1,6 +1,6 @@
 /*
  * bootstrap-tagsinput v0.8.0
- * 
+ *
  */
 (function ($) {
   "use strict";
@@ -468,12 +468,13 @@
       self.$container.bind('paste', function (e) {
         if (self.options.alphanumeric) {
           var text = e.originalEvent.clipboardData.getData('text');
+          text = text.replace(', ', ' ')
 
-          var matched = text.match(/^[a-z0-9-]+$/i);
+          var matched = text.match(/[a-z0-9-]+/ig);
           console.log('paste', text, matched);
-          if (!matched) {
-            e.preventDefault();
-          }
+          e.preventDefault();
+          self.$input.val(matched.join(" "));
+          //self.refresh();
         }
       });
 

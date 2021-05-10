@@ -62,7 +62,7 @@ import Autocomplete from '../components/Autocomplete';
                     if (typeof item === 'string') {
                         this.country_code = item;
                     } else {
-                        this.country_code = item.callingCodes[0];
+                        this.country_code = item.prefix;
                     }
                 },
                 changeSlide: function changeSlide(slide, error) {

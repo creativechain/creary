@@ -1,10 +1,9 @@
 import Avatar from '../components/Avatar';
 import ButtonFollow from '../components/ButtonFollow';
-import { getParameterByName, jsonify } from '../lib/util';
-import HttpClient from '../lib/http';
+import {getParameterByName} from '../lib/util';
 import Username from '../components/Username';
-import { updateUserSession } from '../common/common';
-import { AccountsApi } from '../lib/creary-api';
+import {updateUserSession} from '../common/common';
+import {AccountsApi} from '../lib/creary-api';
 
 (function () {
     const SEARCH_LIMIT = 20;

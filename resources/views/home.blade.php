@@ -61,7 +61,7 @@
                 </div>
             </section>
 
-            <div v-else-if="category === 'search'" class="view-empty">
+            <div v-else-if="category !== 'feed' && state.discussion_idx[discuss][category].length === 0" class="view-empty">
                 <section class="height-60 bg--light text-center">
                     <div class="container pos-vertical-center">
                         <div class="row align-items-center">

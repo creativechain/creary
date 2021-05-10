@@ -5,11 +5,12 @@
             <template v-for="i in matchedItems" >
                 <div v-on:click="selectItem(i)">
                     <p v-if="i.textMatched">
-                        <strong >{{ i.textMatched }}</strong>{{ i.textUnmatched }} (+{{ i.callingCodes[0] }})
+                        <strong >{{ i.textMatched }}</strong>{{ i.textUnmatched }} (+{{ i.prefix }})
                     </p>
                     <p v-else>
-                        {{ i.name }} (+{{ i.callingCodes[0] }})
+                        {{ i.name }} (+{{ i.prefix }})
                     </p>
+
                 </div>
             </template>
         </div>
@@ -27,11 +28,25 @@
                 value: '',
                 selectedItem: null,
                 matchedItems: [],
+                sItems: []
             }
+        },
+        mounted() {
+            let prefixCodes = [];
+            for (const i of this.items) {
+                for (const c of i.callingCodes) {
+                    prefixCodes.push({
+                        name: i.name,
+                        prefix: c
+                    })
+                }
+            }
+
+            this.sItems = prefixCodes;
         },
         methods: {
             onFocus: function() {
-                this.matchedItems = this.items;
+                this.matchedItems = this.sItems;
             },
             onBlur: function () {
                 //this.matchedItems = [];
@@ -46,8 +61,8 @@
             onInput: function (event) {
                 let search = event.target.value.toLowerCase();
                 let filteredItems = [];
-                for (let x = 0; x < this.items.length; x++) {
-                    let i = this.items[x];
+                for (let x = 0; x < this.sItems.length; x++) {
+                    let i = this.sItems[x];
                     if (i.name.toLowerCase().startsWith(search)) {
                         i.textMatched = i.name.substr(0, search.length);
                         i.textUnmatched = i.name.substr(search.length, i.name.length);
@@ -60,7 +75,7 @@
             },
             selectItem: function (item) {
                 this.selectedItem = item;
-                this.$refs.countryInput.value = `${item.name} (+${item.callingCodes[0]})`;
+                this.$refs.countryInput.value = `${item.name} (+${item.prefix})`;
                 this.matchedItems = [];
                 this.$emit('item', item);
             }
