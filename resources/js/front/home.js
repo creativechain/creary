@@ -548,7 +548,7 @@ import { CommentsApi } from '../lib/creary-api';
 
     function addApiContent(apiContents, accountNames, discussion_idx, cleanContent, callback) {
         console.log('Adding content', apiContents.length, apiContents);
-        let discussions = [];
+        let discussions = {};
         let count = apiContents.length;
 
         let onHomeInit = function () {
@@ -583,11 +583,12 @@ import { CommentsApi } from '../lib/creary-api';
                             let category = homePosts.category;
 
                             //Update Posts
-                            discussions.forEach(function (d) {
+                            for (let c of discussion_idx) {
+                                let d = discussions[c];
                                 let permlink = `${d.author}/${d.permlink}`;
                                 homePosts.state.content[permlink] = d;
                                 homePosts.state.discussion_idx[discuss][category].push(permlink);
-                            });
+                            }
 
                             homePosts.state.discussion_idx[discuss][category] = removeBlockedContents(
                                 homePosts.state,
@@ -612,7 +613,7 @@ import { CommentsApi } from '../lib/creary-api';
             if (apiContents.length === 0) {
                 hideSearchLoading();
             } else {
-                apiContents.forEach(function (d) {
+                for (let d of apiContents) {
                     let permlink = d.author + '/' + d.permlink;
 
                     if (!homePosts.state.content[permlink]) {
@@ -622,7 +623,7 @@ import { CommentsApi } from '../lib/creary-api';
                             } else {
                                 let p = parsePost(result);
                                 p.reblogged_by = d.reblogged_by;
-                                discussions.push(p);
+                                discussions[`${p.author}/${p.permlink}`] = p;
 
                                 onContentFetched();
                             }
@@ -631,7 +632,7 @@ import { CommentsApi } from '../lib/creary-api';
                         homePosts.state.content[permlink].reblogged_by = d.reblogged_by;
                         onContentFetched();
                     }
-                });
+                }
             }
         };
         if (!homePosts) {

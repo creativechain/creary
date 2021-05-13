@@ -1,4 +1,12 @@
-import { cancelEventPropagation, clone, getParameterByName, getPathPart, isUserFeed } from '../lib/util';
+import {
+    cancelEventPropagation,
+    clone,
+    getParameterByName,
+    getPathPart,
+    isUserFeed,
+    jsonify,
+    jsonstring
+} from '../lib/util';
 import { LICENSE } from '../lib/license';
 import * as mutexify from 'mutexify';
 import { CommentsApi, TagsApi } from '../lib/creary-api';
@@ -221,13 +229,15 @@ import { categorySlider } from './category-slider';
                     let accountNames = [];
                     let discussion_idx = [];
 
-                    result.data.forEach((c) => {
+                    for (let c of result.data) {
                         if (!accountNames.includes(c.author)) {
                             accountNames.push(c.author);
                         }
 
                         discussion_idx.push(`${c.author}/${c.permlink}`);
-                    });
+                    }
+
+                    console.log('DiscussionIndex:', jsonify(jsonstring(discussion_idx)));
 
                     creaEvents.emit('crea.content.add', result.data, accountNames, discussion_idx, cleanContent);
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Comments;
 use App\Contents;
 use App\Http\Crea\CrearyClient;
 use Illuminate\Console\Command;
@@ -48,13 +49,13 @@ class AddContent extends Command
         $client = new CrearyClient();
         $post = $client->getPost($author, $permlink);
 
-        $storedContent = Contents::query()
+        $storedContent = Comments::query()
             ->where('author', $author)
             ->where('permlink', $permlink)
             ->first();
 
         if (!$storedContent) {
-            $storedContent = new Contents();
+            $storedContent = new Comments();
         }
 
         $storedContent->applyData($post);
