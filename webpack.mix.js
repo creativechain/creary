@@ -9,6 +9,7 @@ const MIX_WP_OPTIONS = {
             http: require.resolve('stream-http'),
             https: require.resolve('https-browserify'),
             zlib: require.resolve('browserify-zlib'),
+            path: require.resolve('path-browserify'),
         }
     }
 }

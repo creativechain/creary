@@ -20,6 +20,8 @@ import {
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
 import Pica from 'pica';
+import gifFrames from 'gif-frames';
+import gifShot from 'gifshot';
 
 /**
  * Created by ander on 25/09/18.
@@ -34,7 +36,7 @@ class IpfsFile {
     }
 }
 
-let CONSTANTS = {
+const CONSTANTS = {
     ACCOUNT: {
         UPDATE_THRESHOLD: 1000 * 60 * 60,
     },
@@ -773,70 +775,89 @@ function refreshAccessToken(callback) {
 function resizeImage(file, callback) {
     let MAX_PIXEL_SIZE = 500;
     console.log(file);
-    if (file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/jpeg') {
-        //Only PNG, JPG, JPEG
+    const FILE_TYPE_TO_COMPRESS = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif']
+    if (FILE_TYPE_TO_COMPRESS.includes(file.type.toLowerCase())) {
+        //Only PNG, JPG, JPEG, GIF
 
+        let isGif = file.type.toLowerCase().includes('gif');
         let reader = new FileReader();
         reader.onload = function (event) {
-            let resizer = new Pica();
-            let tmpImage = new Image();
+            console.info('Image loaded');
+            let compressImage = function (rawImage, compressCallback) {
+                console.log('Compressing image')
+                let resizer = new Pica();
+                let tmpImage = new Image();
 
-            tmpImage.onload = function () {
-                let destCanvas = document.createElement('canvas');
-                let options;
-                if (tmpImage.width <= tmpImage.height && tmpImage.width > MAX_PIXEL_SIZE) {
-                    options = {
-                        maxWidth: MAX_PIXEL_SIZE,
-                        maxHeight: Infinity,
-                    };
+                tmpImage.onload = function () {
+                    let destCanvas = document.createElement('canvas');
+                    if (tmpImage.width <= tmpImage.height && tmpImage.width > MAX_PIXEL_SIZE) {
+                        //destCanvas = resizer.createCanvas(MAX_PIXEL_SIZE, Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width));
+                        destCanvas.width = MAX_PIXEL_SIZE;
+                        destCanvas.height = Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width);
+                    } else if (tmpImage.height <= tmpImage.width && tmpImage.height > MAX_PIXEL_SIZE) {
+                        //destCanvas = resizer.createCanvas(Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height), MAX_PIXEL_SIZE);
+                        destCanvas.height = MAX_PIXEL_SIZE;
+                        destCanvas.width = Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height);
+                    } else if (compressCallback) {
+                        //Nothing to do
+                        compressCallback(file);
+                        return;
+                    }
 
-                    //destCanvas = resizer.createCanvas(MAX_PIXEL_SIZE, Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width));
-                    destCanvas.width = MAX_PIXEL_SIZE;
-                    destCanvas.height = Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width);
-                } else if (tmpImage.height <= tmpImage.width && tmpImage.height > MAX_PIXEL_SIZE) {
-                    options = {
-                        maxWidth: Infinity,
-                        maxHeight: MAX_PIXEL_SIZE,
-                    };
+                    resizer.resize(tmpImage, destCanvas)
+                        .then( (result) => {
+                            console.log('resize resulted!', result)
+                            return resizer.toBlob(result, 'image/jpeg', 0.90)
+                        })
+                        .then(blob => {
+                            console.log('Blob created', blob)
+                            if (compressCallback) {
+                                compressCallback(blob);
+                            }
+                        });
+                };
 
-                    //destCanvas = resizer.createCanvas(Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height), MAX_PIXEL_SIZE);
-                    destCanvas.height = MAX_PIXEL_SIZE;
-                    destCanvas.width = Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height);
-                } else if (callback) {
-                    //Nothing to do
-                    callback(file);
-                    return;
-                }
+                tmpImage.src = rawImage;
+            }
 
-                resizer.resize(tmpImage, destCanvas)
-                    .then( (result) => {
-                        console.log('resize resulted!', result)
-                        return resizer.toBlob(result, 'image/jpeg', 0.90)
+            if (isGif) {
+                console.debug('Detected gif');
+                file.arrayBuffer()
+                    .then(fileBuffer => {
+                        gifFrames({
+                            url: fileBuffer,
+                            frames: 'all',
+                            quality: 100
+                        }).then(frameData => {
+                            console.debug('Getted gif frames', frameData);
+                            let compressedFrames = [];
+                            for (let frame of frameData) {
+                                compressImage(frame.getImage(), compressedFrame => {
+                                    console.debug('Frame resized', compressedFrame);
+                                    compressedFrames.push(compressedFrame);
+                                });
+                            }
+
+                            console.debug('Building new gif with compressed frames');
+                            gifShot.createGIF({
+                                images: compressedFrames
+                            }, obj => {
+                                if (!obj.error) {
+                                    console.debug('New GIF created', obj.image);
+                                    if (callback) {
+                                        callback(obj.image);
+                                    }
+                                } else {
+                                    console.error('Error loading GIF', obj.error);
+                                }
+                            })
+                        })
                     })
-                    .then(blob => {
-                        console.log('Blob created', blob)
-                        if (callback) {
-                            callback(blob);
-                        }
-                    });
 
-                /*if (options) {
-                    options.quality = 0.8;
-                    options.success = function (result) {
-                        console.log(result);
-                        if (callback) {
-                            callback(result);
-                        }
-                    };
+            } else {
+                compressImage(event.target.result, callback)
+            }
 
-                    new Compressor(file, options);
-                } else if (callback) {
-                    //Nothing to do
-                    callback(file);
-                }*/
-            };
-
-            tmpImage.src = event.target.result;
         };
 
         reader.readAsDataURL(file);
