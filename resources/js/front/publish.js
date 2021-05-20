@@ -638,6 +638,9 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
             case 'dailymotion':
                 url = 'https://www.dailymotion.com/embed/video/' + id;
                 break;
+            default:
+                catchError(lang.ERROR.UNSUPPORTED_VIDEO_PLATFORM);
+                return;
         }
 
         publishContainer.editorEmbedVideo(url, { reproductor, id_video: id });

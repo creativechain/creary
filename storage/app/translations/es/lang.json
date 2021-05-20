@@ -60,7 +60,11 @@
         "DUPLICATE_PHONE": "Este número de teléfono ya está en uso.",
         "INVALID_PHONE": "Número de teléfono inválido. Por favor, asegúrate de que el número de teléfono incluye el prefijo del país.",
         "SMS_REQUEST_LIMIT": "Espera al menos 30 min desde la última petición de código para poder realizar una nueva con este número de teléfono.",
-        "INVALID_PHONE_VERIFICATION": "El código de verificación es incorrecto."
+        "INVALID_PHONE_VERIFICATION": "El código de verificación es incorrecto.",
+        "UNSUPPORTED_VIDEO_PLATFORM": {
+            "TITLE": "Plataforma de video no soportada",
+            "BODY": "Solo se pueden incrustar videos de Youtube, Vimeo y Dailymotion."
+        }
 
     },
     "BANNER": {

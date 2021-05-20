@@ -60,7 +60,11 @@
         "DUPLICATE_PHONE": "Phone already in use.",
         "INVALID_PHONE": "Phone is invalid. Please check and sure that phone number includes the country prefix",
         "SMS_REQUEST_LIMIT": "Wait at least 30 min from the last code request to be able to make a new one with this phone number.",
-        "INVALID_PHONE_VERIFICATION": "Verification Code is invalid"
+        "INVALID_PHONE_VERIFICATION": "Verification Code is invalid",
+        "UNSUPPORTED_VIDEO_PLATFORM": {
+            "TITLE": "Video platform not supported",
+            "BODY": "Only can embed videos from Youtube, Vimeo and Dailymotion."
+        }
 
     },
     "BANNER": {
