@@ -445,7 +445,7 @@ import { CommentsApi } from '../lib/creary-api';
                         console.log('on follow-nav', err, result);
                         let that = this;
                         if (!catchError(err)) {
-                            updateUserSession();
+                            //updateUserSession();
                             //showPostData(that.state.post, that.state, that.state.discuss, that.state.category, null, true);
                         }
                     },

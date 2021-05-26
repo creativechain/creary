@@ -4,7 +4,7 @@
 
 <script>
 
-import {leadZeros} from "../lib/util";
+import {leadChar} from "../lib/util";
 
 export default {
     props: {
@@ -29,9 +29,9 @@ export default {
                 this.timer = duration.months() + 'm · ';
             }
             this.timer += duration.days() + 'd · ' +
-                leadZeros(duration.hours(), 2) + ':' +
-                leadZeros(duration.minutes(), 2) + ':' +
-                leadZeros(duration.seconds(), 2);
+                leadChar(duration.hours(), 2) + ':' +
+                leadChar(duration.minutes(), 2) + ':' +
+                leadChar(duration.seconds(), 2);
             //console.log('Countdown', diff, this.timer, moment(currentTime + diff).format(), duration);
         }, interval)
     }

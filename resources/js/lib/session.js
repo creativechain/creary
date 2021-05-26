@@ -5,7 +5,7 @@
 import { parseAccount } from "../common/common";
 import { Account, DEFAULT_ROLES} from "./account";
 import Errors from "./error";
-import { jsonify, jsonstring, clone } from "./util";
+import {jsonify, jsonstring, clone, pack, unpack} from "./util";
 import * as CREARY from '../common/ls';
 
 class Session {
@@ -100,7 +100,7 @@ class Session {
     }
 
     save() {
-        let session = jsonstring(this);
+        let session = pack(jsonstring(this));
         if (this.keepAlive) {
             localStorage.setItem(CREARY.SESSION, session);
             sessionStorage.setItem(CREARY.SESSION, false);
@@ -132,15 +132,16 @@ class Session {
      * @returns {Session}
      */
     static getAlive() {
-        let session = jsonify(localStorage.getItem(CREARY.SESSION));
 
-        if (session.account) {
+        let session = jsonify(unpack(localStorage.getItem(CREARY.SESSION)));
+
+        if (session && session.account) {
             return new Session(session.account, session.keepAlive);
         }
 
-        session = jsonify(sessionStorage.getItem(CREARY.SESSION));
+        session = jsonify(unpack(sessionStorage.getItem(CREARY.SESSION)));
 
-        if (session.account) {
+        if (session && session.account) {
             return new Session(session.account, session.keepAlive);
         }
 
