@@ -402,12 +402,30 @@ function makeMentions(comment, state) {
 
 /**
  *
- * @param number
- * @param leadingZeros
+ * @param {number|string} number
+ * @param {number} leadingChars
+ * @param {string} char
  * @returns {string}
  */
-function leadZeros(number, leadingZeros) {
-    return ('0'.repeat(leadingZeros) + number).slice(-leadingZeros);
+function leadChar(number, leadingChars, char = '0') {
+    return (char.repeat(leadingChars) + number).slice(-leadingChars);
+}
+
+function pack(data) {
+    try {
+        return Buffer.from(data, 'utf8').toString('hex')
+    } catch (e) {
+        return null;
+    }
+}
+
+
+function unpack(data) {
+    try {
+        return Buffer.from(data, 'hex').toString('utf8');
+    } catch (e) {
+        return null;
+    }
 }
 
 export {
@@ -440,5 +458,7 @@ export {
     uniqueId,
     makeMentions,
     domain,
-    leadZeros,
+    leadChar,
+    pack,
+    unpack
 };
