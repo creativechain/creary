@@ -36,6 +36,7 @@ import HttpClient from '../lib/http';
 
                         if (count === 0) {
                             //console.log('Emitting session')
+                            session.save();
                             creaEvents.emit('crea.session.login', session, account);
                         }
                     };

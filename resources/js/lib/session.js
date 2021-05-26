@@ -7,6 +7,7 @@ import { Account, DEFAULT_ROLES} from "./account";
 import Errors from "./error";
 import {jsonify, jsonstring, clone, pack, unpack} from "./util";
 import * as CREARY from '../common/ls';
+import {OBFUSCATED_SESSION} from "../common/ls";
 
 class Session {
 
@@ -28,6 +29,10 @@ class Session {
         return new Account(this.account.username, this.account.keys);
     }
 
+    /**
+     *
+     * @param {function} callback
+     */
     login(callback) {
         let that = this;
         crea.api.getState('@' + this.account.username, function (err, result) {
@@ -99,8 +104,12 @@ class Session {
         })
     }
 
+
     save() {
         let session = pack(jsonstring(this));
+        localStorage.setItem(CREARY.OBFUSCATED_SESSION, true);
+        sessionStorage.setItem(CREARY.OBFUSCATED_SESSION, true);
+
         if (this.keepAlive) {
             localStorage.setItem(CREARY.SESSION, session);
             sessionStorage.setItem(CREARY.SESSION, false);
@@ -132,17 +141,31 @@ class Session {
      * @returns {Session}
      */
     static getAlive() {
+        const obfuscatedSession = localStorage.getItem(CREARY.OBFUSCATED_SESSION);
+        if (obfuscatedSession === 'true') {
+            let session = jsonify(unpack(localStorage.getItem(CREARY.SESSION)));
 
-        let session = jsonify(unpack(localStorage.getItem(CREARY.SESSION)));
+            if (session && session.account) {
+                return new Session(session.account, session.keepAlive);
+            }
 
-        if (session && session.account) {
-            return new Session(session.account, session.keepAlive);
-        }
+            session = jsonify(unpack(sessionStorage.getItem(CREARY.SESSION)));
 
-        session = jsonify(unpack(sessionStorage.getItem(CREARY.SESSION)));
+            if (session && session.account) {
+                return new Session(session.account, session.keepAlive);
+            }
+        } else {
+            let session = jsonify(localStorage.getItem(CREARY.SESSION));
 
-        if (session && session.account) {
-            return new Session(session.account, session.keepAlive);
+            if (session && session.account) {
+                return new Session(session.account, session.keepAlive);
+            }
+
+            session = jsonify(sessionStorage.getItem(CREARY.SESSION));
+
+            if (session && session.account) {
+                return new Session(session.account, session.keepAlive);
+            }
         }
 
         return false;
