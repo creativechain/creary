@@ -651,8 +651,10 @@ function makeDownload(event, session, user, post, callback) {
                                     post.download.type = 'application/octet-stream';
                                 }
 
+                                //Delete diacritics in filename
+                                let normalizedName = post.download.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
                                 let _url =
-                                    apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + post.download.name;
+                                    apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + normalizedName;
 
                                 _url += '?stream=false';
 
