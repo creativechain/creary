@@ -470,7 +470,8 @@
         "PASSWORDS": "Passwords",
         "PENDING_REWARDS": "Pending rewards",
         "BALANCE": "Balance",
-        "NEXT_DE_ENERGIZE": "The next De-Energize will happen %s"
+        "NEXT_DE_ENERGIZE": "The next De-Energize will happen %s",
+        "UNTRUSTED_EXCHANGE": "This address belongs to an exchange that is not working properly. We do not recommend sending your balance to this address."
     },
     "PROFILE_SETTINGS": {
         "ADULT_WARN": "Warn",

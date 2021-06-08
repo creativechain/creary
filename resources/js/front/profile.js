@@ -204,6 +204,7 @@ import { CommentsApi } from '../lib/creary-api';
                     config: clone(defaultModalConfig),
                     toError: false,
                     toExchange: false,
+                    untrustedExchange: false,
                 },
                 mounted: function mounted() {
                     let that = this;
@@ -236,7 +237,7 @@ import { CommentsApi } from '../lib/creary-api';
                         this.amount = this.config.total_amount.toPlainString();
                     },
                     sendCrea: function sendCrea() {
-                        if (this.toError || this.toExchange || !this.amount) {
+                        if (this.toError || this.toExchange || this.untrustedExchange || !this.amount) {
                             //TODO: SHOW ERRORS
                         } else if (this.config.confirmed) {
                             let that = this;
@@ -287,14 +288,21 @@ import { CommentsApi } from '../lib/creary-api';
                                 } else {
                                     that.toError = result[0] == null;
                                 }
+
                                 switch (that.config.op) {
                                     case 'transfer_from_savings_crea':
                                     case 'transfer_from_savings_cbd':
                                     case 'transfer_cbd':
                                         that.toExchange = SAVINGS_BLACK_LIST.includes(username);
+                                        that.untrustedExchange = UNTRUSTED_EXCHANGE.includes(username);
+                                        break;
+                                    case 'transfer_crea':
+                                        that.untrustedExchange = UNTRUSTED_EXCHANGE.includes(username);
+                                        that.toExchange = false;
                                         break;
                                     default:
                                         that.toExchange = false;
+                                        that.untrustedExchange = false;
                                 }
                             });
                         } else {
@@ -443,6 +451,7 @@ import { CommentsApi } from '../lib/creary-api';
                                 config = {
                                     title: this.lang.WALLET.TRANSFER_CREA_TITLE,
                                     text: this.lang.WALLET.TRANSFER_CREA_TEXT,
+                                    untrusted_exchange_text: lang.WALLET.UNTRUSTED_EXCHANGE,
                                     button: this.lang.BUTTON.CONFIRM,
                                     nai: apiOptions.symbol.CREA,
                                     total_amount: Asset.parseString(this.state.user.balance),
@@ -478,6 +487,7 @@ import { CommentsApi } from '../lib/creary-api';
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CBD,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
                                     exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
+                                    untrusted_exchange_text: lang.WALLET.UNTRUSTED_EXCHANGE,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CBD,
                                     to: this.session.account.username,
@@ -490,6 +500,7 @@ import { CommentsApi } from '../lib/creary-api';
                                     title: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TITLE_CREA,
                                     text: this.lang.WALLET.TRANSFER_FROM_SAVINGS_TEXT,
                                     exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
+                                    untrusted_exchange_text: lang.WALLET.UNTRUSTED_EXCHANGE,
                                     button: this.lang.BUTTON.TRANSFER,
                                     nai: apiOptions.symbol.CREA,
                                     to: this.session.account.username,
@@ -514,6 +525,7 @@ import { CommentsApi } from '../lib/creary-api';
                                     title: this.lang.WALLET.TRANSFER_CBD_TITLE,
                                     text: this.lang.WALLET.TRANSFER_CBD_TEXT,
                                     exchange_text: lang.WALLET.WARNING_TRANSFER_TO_EXCHANGE_TEXT,
+                                    untrusted_exchange_text: lang.WALLET.UNTRUSTED_EXCHANGE,
                                     button: this.lang.BUTTON.SEND,
                                     nai: apiOptions.symbol.CBD,
                                     total_amount: Asset.parseString(this.state.user.cbd_balance),

@@ -105,6 +105,7 @@
                                                                                                             <h3>@{{ config.title }}</h3>
                                                                                                             <p>@{{ config.text }}</p>
                                                                                                             <p v-if="toExchange" class="error-color-form">@{{ config.exchange_text }}</p>
+                                                                                                            <p v-if="untrustedExchange" class="error-color-form">@{{ config.untrusted_exchange_text }}</p>
                                                                                                         </div>
                                                                                                         <form>
                                                                                                             <div class="row">
@@ -165,7 +166,8 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                                 <div class="col-6 col-sm-4 col-md-4 text-right">
-                                                                                                                    <div class="btn btn--sm btn--primary" v-bind:class="{disabled: !config.confirmed && toExchange}" v-on:click="sendCrea" v-bind:disabled="!config.confirmed && toExchange">
+                                                                                                                    <div class="btn btn--sm btn--primary" v-bind:class="{disabled: !config.confirmed && (toExchange || untrustedExchange)}"
+                                                                                                                         v-on:click="sendCrea" v-bind:disabled="!config.confirmed && (toExchange || untrustedExchange)">
                                                                                                                         <span class="btn__text">@{{ config.confirmed ? config.button : lang.BUTTON.CONFIRM }}</span>
                                                                                                                     </div>
                                                                                                                 </div>

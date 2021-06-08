@@ -168,7 +168,7 @@ window.CreaCookies = createCookieInstance({
 });
 
 window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-test-2', 'exratesfull', 'skytali7', 'atomars', 'atomarscoin'];
-
+window.UNTRUSTED_EXCHANGE= ['atomarscoin']
 window.currentPage = null;
 
 creaEvents.on('crea.content.prepare', function () {

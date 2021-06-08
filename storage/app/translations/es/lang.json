@@ -470,7 +470,8 @@
         "PASSWORDS": "Contraseñas",
         "PENDING_REWARDS": "Recompensas pendientes",
         "BALANCE": "Saldo",
-        "NEXT_DE_ENERGIZE": "El próximo De-Energize ocurrirá "
+        "NEXT_DE_ENERGIZE": "El próximo De-Energize ocurrirá ",
+        "UNTRUSTED_EXCHANGE": "Esta dirección pertenece aun exchange que no está funcionando correctamente. No recomendamos enviar tu saldo a esta dirección."
     },
     "PROFILE_SETTINGS": {
         "ADULT_WARN": "Advertir",
