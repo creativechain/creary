@@ -36,7 +36,9 @@ class HttpClient extends EventEmitter {
         if (this.params) {
             if (this.method === 'GET') {
                 let query = new URLSearchParams(this.params).toString();
-                settings.url += `?${query}`;
+                if (!query.isEmpty()) {
+                    settings.url += `?${query}`;
+                }
             } else {
                 settings.data = this.params;
             }
