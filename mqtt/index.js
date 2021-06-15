@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 //Load .env file
 dotenv.config();
 let apiOptions = {
-    nodes: ['https://nodes.creary.net'],
+    nodes: ['https://supportnodes.creary.net'],
     addressPrefix: 'CREA',
     symbol: {
         CREA: 'CREA',

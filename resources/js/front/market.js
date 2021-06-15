@@ -13,7 +13,7 @@ import { requireRoleKey, updateUserSession, catchError } from '../common/common'
     let session = null;
     let account = null;
 
-    let socket = new RpcWsClient('wss://nodes.creary.net');
+    let socket = new RpcWsClient('wss://supportnodes.creary.net');
     socket.connect();
 
     socket.on('ws.message', function (data, id) {
