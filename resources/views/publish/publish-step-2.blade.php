@@ -50,18 +50,18 @@
 
         <form action="" class="row">
             <div class="col-md-12">
-                <label>{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
+                <label class="font-weight-bold">{{ __('lang.PUBLISH.INFO_POST_TITLE') }}</label>
                 <input v-model="title" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.TITLE" v-on:input="removeTitleEmojis"
                        class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TITLE') }}" />
             </div>
             <div class="col-md-12">
-                <label>{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
+                <label class="font-weight-bold mt-3">{{ __('lang.PUBLISH.INFO_DESCRIPTION') }}</label>
                 <input v-model="description" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.DESCRIPTION" v-on:input="removeDescriptionEmojis"
                        class="validate-required" type="text" name="My Input" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_DESCRIPTION') }}" />
             </div>
 
             <div class="col-md-12">
-                <label>{{ __('lang.PUBLISH.MAIN_CATEGORY') }}</label>
+                <label class="font-weight-bold mt-3">{{ __('lang.PUBLISH.MAIN_CATEGORY') }}</label>
                 <div class="input-select">
                     <select v-model="mainCategory">
                         <option value="">{{ __('lang.PUBLISH.SELECT_A_CATEGORY') }}</option>
@@ -74,13 +74,13 @@
             </div>
 
             <div class="col-md-12">
-                <label>{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
+                <label class="font-weight-bold mt-3">{{ __('lang.PUBLISH.INFO_TAGS') }}</label>
                 <input id="publish-tags" class="validate-required"
                        type="text" value="" placeholder="{{ __('lang.PUBLISH.INFO_INPUT_TAGS') }}" />
             </div>
 
             <div class="col-md-12">
-                <label for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
+                <label class="font-weight-bold mt-3" for="">{{ __('lang.PUBLISH.BENEFICIARIES') }}</label>
                 <div class="d-flex mb-3">
                     <div class="mr-5" style="display: inline-flex; align-items: center;width: 15%;">
                         <input type="number" v-model="mainBeneficiary.weight" name="account" placeholder="0" disabled class="disabled text-center"/> <span style="margin-left: 5px;font-size: 16px;"> %</span>
@@ -124,11 +124,15 @@
             </div>
 
 
-
+            <div class="col-md-12">
+                <label class="font-weight-bold mt-3">ENLAZAR NFT</label>
+                <input id="" class="validate-required"
+                       type="text" value="" placeholder="Añade el link del NFT del prooyecto: https://" />
+            </div>
 
 
             <div class="col-md-12">
-                <label>{{ __('lang.PUBLISH.QUESTION') }}</label>
+                <label class="font-weight-bold mt-3">{{ __('lang.PUBLISH.QUESTION') }}</label>
                 <div class="input-radio-step-2">
                     <div class="input-radio">
                         <span class="input__label">{{ __('lang.COMMON.YES') }}</span>
