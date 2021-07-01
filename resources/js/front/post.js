@@ -166,6 +166,13 @@ import { CommentsApi } from '../lib/creary-api';
                         let amount = Asset.parseString(post.promoted);
                         return amount.amount > 0;
                     },
+                    getNFTLink: function () {
+                        if (this.state.post.metadata.other) {
+                            return this.state.post.metadata.other.nftLink;
+                        }
+
+                        return null;
+                    },
                     getPromotion: function getPromotion() {
                         let post = this.state.post;
                         let amount = Asset.parseString(post.promoted);

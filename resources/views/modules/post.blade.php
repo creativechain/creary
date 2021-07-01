@@ -493,15 +493,15 @@
                         </div>
                     </div>
 
-                    <div class="boxed boxed--border box-comment  mt--2">
+                    <div v-if="getNFTLink()" class="boxed boxed--border box-comment  mt--2">
                         <div class="row row-publish-tags">
                             <div class="col-md-12">
-                                <p class="title mb-0">DIGITAL COLLECTABLE</p>
+                                <p class="title mb-0">{{ __('lang.PUBLICATION.DIGITAL_COLLECTABLE') }}</p>
                             </div>
                             <div class="borderHr"></div>
 
                             <div class="col-md-12 text-center mt-3">
-                                <a href="#" class="btn btn--sm btn--secondary color-secondary font-weight-bold btn-nft">GET NFT</a>
+                                <a v-bind:href="getNFTLink()" class="btn btn--sm btn--secondary color-secondary font-weight-bold btn-nft" target="_blank">{{ __('lang.PUBLICATION.GET_NFT') }}</a>
                             </div>
                         </div>
                     </div>
