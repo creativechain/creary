@@ -498,8 +498,11 @@
                             <div class="col-md-12">
                                 <p class="title mb-0">{{ __('lang.PUBLICATION.DIGITAL_COLLECTABLE') }}</p>
                             </div>
+                        </div>
+                        <div class="title-line">
                             <div class="borderHr"></div>
-
+                        </div>
+                        <div class="row row-publish-tags">
                             <div class="col-md-12 text-center mt-3">
                                 <a v-bind:href="getNFTLink()" class="btn btn--sm btn--secondary color-secondary font-weight-bold btn-nft" target="_blank">{{ __('lang.PUBLICATION.GET_NFT') }}</a>
                             </div>

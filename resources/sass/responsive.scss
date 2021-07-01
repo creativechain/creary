@@ -254,6 +254,14 @@
 }
 
 @media (max-width: 767px) {
+  .post-view .row-comment-options .row-download {
+    margin-left: -16px;
+    margin-right: -16px;
+  } 
+  .title-line {
+    margin-left: -16px;
+    margin-right: -16px;
+  } 
   .ul-navbar-invitado {
     li:last-child {
       margin-right: 0!important;
