@@ -22,7 +22,10 @@
 @import 'imported/filter-category.scss';
 @import 'imported/navbar-publi.scss';
 
-
+.title-line {
+    margin-left: -22px;
+    margin-right: -22px;
+}
 
 .square-card {
     position: relative;

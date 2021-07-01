@@ -498,8 +498,11 @@
                             <div class="col-md-12">
                                 <p class="title mb-0">DIGITAL COLLECTABLE</p>
                             </div>
+                        </div>
+                        <div class="title-line">
                             <div class="borderHr"></div>
-
+                        </div>
+                        <div class="row row-publish-tags">
                             <div class="col-md-12 text-center mt-3">
                                 <a href="#" class="btn btn--sm btn--secondary color-secondary font-weight-bold btn-nft">GET NFT</a>
                             </div>
