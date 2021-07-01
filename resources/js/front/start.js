@@ -15,7 +15,7 @@ import { Buffer } from 'buffer';
 Vue.use(VueLazyload);
 moment.locale($('html').attr('lang'));
 window.apiOptions = {
-    nodes: ['https://supportnodes.creary.net'],
+    nodes: ['https://nodes.creary.net'],
     apiUrl: 'https://api.creary.net',
     apiCrea: (window.search_api.length > 0 ? window.search_api : `${location.protocol}//${location.host}`) + '/~api',
     ipfs: 'https://ipfs.creary.net/ipfs/',
