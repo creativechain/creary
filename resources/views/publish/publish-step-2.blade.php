@@ -125,9 +125,9 @@
 
 
             <div class="col-md-12">
-                <label class="font-weight-bold mt-3">ENLAZAR NFT</label>
-                <input id="" class="validate-required"
-                       type="text" value="" placeholder="Añade el link del NFT del prooyecto: https://" />
+                <label class="font-weight-bold mt-3">{{ __('lang.PUBLISH.NFT_LINK') }}</label>
+                <input v-model="nftLink" class="validate-required"
+                       type="text" value="" placeholder="{{ __('lang.PUBLISH.NFT_LINK_PLACEHOLDER') }}" />
             </div>
 
 

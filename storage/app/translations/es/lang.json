@@ -360,7 +360,10 @@
         "ADD_BENEFICIARY": "Añadir beneficiario",
         "NO_BENEFICIARY_FILLED": "Por favor, rellena correctamente todos los beneficiarios añadidos",
         "MAX_BENEFICIARIES_REACHED": "Solo se pueden añadir hasta %s como máximo",
-        "BENEFICIARY_WEIGHT_OVERFLOW": "La suma del porcentaje de todos los beneficiarios no puede exceder de 100."
+        "BENEFICIARY_WEIGHT_OVERFLOW": "La suma del porcentaje de todos los beneficiarios no puede exceder de 100.",
+        "NFT_LINK":  "ENLAZAR NFT",
+        "NFT_LINK_PLACEHOLDER":  "Añade el link NFT del proyecto",
+        "INVALID_NFT_LINK":  "Enlace NFT incorrecto"
     },
     "WITNESS": {
         "WITNESSES": "TESTIGOS",

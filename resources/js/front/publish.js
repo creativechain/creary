@@ -26,6 +26,8 @@ import {
     requireRoleKey,
 } from '../common/common';
 
+import validations from '../common/validation';
+
 //Import components
 import CKEditor from '../components/CKEditor';
 import { SELECTABLE_CATEGORIES } from '../lib/categories';
@@ -86,6 +88,7 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                     title: editablePost ? editablePost.title : null,
                     description: editablePost ? editablePost.metadata.description : '',
                     adult: editablePost ? editablePost.metadata.adult : false,
+                    nftLink: editablePost && editablePost.metadata.other ? editablePost.metadata.other.nftLink : null,
                     downloadFile: downloadFile,
                     publicDomain: license.has(LICENSE.FREE_CONTENT.flag)
                         ? LICENSE.FREE_CONTENT.flag
@@ -222,6 +225,8 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                                         this.error = this.lang.PUBLISH.NO_TITLE_TAG_OR_IMAGE;
                                     } else if (!this.hasGoodBeneficiaries()) {
                                         this.error = this.lang.PUBLISH.NO_BENEFICIARY_FILLED;
+                                    } else if (!validateLink(this.nftLink)) {
+                                        this.error = this.lang.PUBLISH.INVALID_NFT_LINK;
                                     } else {
                                         this.error = null;
                                     }
@@ -489,6 +494,14 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
         }
     }
 
+    function validateLink(value) {
+        if (value) {
+            return validations.url(value);
+        }
+
+        return true;
+    }
+
     function removeTitleEmojis(event) {
         let target = event.target;
         publishContainer.title = removeEmojis(target.value);
@@ -678,6 +691,9 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                 license: publishContainer.getLicense().getFlag(),
                 app: 'creary',
                 version: '1.0.0',
+                other: {
+                    nftLink: publishContainer.nftLink
+                }
             };
             let download = publishContainer.downloadFile;
 
