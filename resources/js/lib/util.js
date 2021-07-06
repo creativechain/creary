@@ -428,6 +428,21 @@ function unpack(data) {
     }
 }
 
+/**
+ *
+ * @param {ArrayBuffer} ab
+ * @returns {Buffer}
+ */
+function arrayBufferToBuffer(ab) {
+    let buffer = Buffer.alloc(ab.byteLength);
+    let view = new Uint8Array(ab);
+    for (let x = 0; x < buffer.length; x++){
+        buffer[x] = view[x];
+    }
+
+    return buffer;
+}
+
 export {
     cancelEventPropagation,
     isJSON,
@@ -460,5 +475,6 @@ export {
     domain,
     leadChar,
     pack,
-    unpack
+    unpack,
+    arrayBufferToBuffer
 };

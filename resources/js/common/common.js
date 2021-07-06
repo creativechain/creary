@@ -15,13 +15,14 @@ import {
     getNavigatorLanguage,
     uniqueId,
     cancelEventPropagation,
-    getPathPart,
+    getPathPart, arrayBufferToBuffer,
 } from '../lib/util';
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
 import Pica from 'pica';
 import gifFrames from 'gif-frames';
 import gifShot from 'gifshot';
+import { parseGIF, decompressFrames } from "gifuct-js";
 
 /**
  * Created by ander on 25/09/18.
@@ -786,7 +787,7 @@ function resizeImage(file, callback) {
         reader.onload = function (event) {
             console.info('Image loaded');
             let compressImage = function (rawImage, compressCallback) {
-                console.log('Compressing image')
+                console.log('Compressing image raw:', rawImage)
                 let resizer = new Pica();
                 let tmpImage = new Image();
 
@@ -826,13 +827,26 @@ function resizeImage(file, callback) {
                 console.debug('Detected gif');
                 file.arrayBuffer()
                     .then(fileBuffer => {
+                        fileBuffer = arrayBufferToBuffer(fileBuffer);
+                        console.log('fileBuffer', Buffer.isBuffer(fileBuffer))
+                        let gif = parseGIF(fileBuffer);
+
+                        console.log('GIF', decompressFrames(gif, false));
+                        console.log('FRAME', gif.frames[0]);
+                        let compressedFrames = [];
+                        for (let frame of gif.frames) {
+                            compressImage(frame.getImage(), compressedFrame => {
+                                console.debug('Frame resized', compressedFrame);
+                                compressedFrames.push(compressedFrame);
+                            });
+                        }
                         gifFrames({
                             url: fileBuffer,
                             frames: 'all',
                             quality: 100
                         }).then(frameData => {
                             console.debug('Getted gif frames', frameData);
-                            let compressedFrames = [];
+
                             for (let frame of frameData) {
                                 compressImage(frame.getImage(), compressedFrame => {
                                     console.debug('Frame resized', compressedFrame);
