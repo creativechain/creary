@@ -2,12 +2,12 @@
     <div class="row">
         <div class="col-12 text-center">
             <p class="text-white ">
-                <img src="{{ asset('img/onecommet_banner.svg') }}" class="inline" style="height: 20px; margin-bottom: 5px"> - 100€ + 30k CGY -
-                <a href="/specialoffer/@onecomet/bonus-of-30k-crea-energy" class="text-white">
+                <img src="{{ asset('img/onecommet_banner.svg') }}" class="inline" style="height: 20px; margin-bottom: 5px"> - 50€ + 20k CGY -
+                <a href="/crea/@onecomet/20k-cgy-get-crea-special-offer" class="text-white">
                     {{ __('lang.NAVBAR.JOIN_NOW') }}
                 </a>
                 -
-                <countdown v-bind:eventtime="{{ 1622498399000 }}"></countdown>
+                <countdown v-bind:eventtime="{{ 1628459999000 }}"></countdown>
             </p>
         </div>
     </div>
