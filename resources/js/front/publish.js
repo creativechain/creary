@@ -406,9 +406,13 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                             );
 
                             let maximumSize =
-                                CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[0]];
+                                CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW[loadedFile.type.toUpperCase().split('/')[1]];
+                            if (!maximumSize) {
+                                maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW.IMAGE;
+                            }
+
                             resizeImage(loadedFile, function (resizedFile) {
-                                console.log(resizedFile)
+                                console.log('ResizedFile', resizedFile)
                                 uploadToIpfs(resizedFile, maximumSize, function (err, file) {
                                     globalLoading.show = false;
 

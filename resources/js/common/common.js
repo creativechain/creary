@@ -15,12 +15,11 @@ import {
     getNavigatorLanguage,
     uniqueId,
     cancelEventPropagation,
-    getPathPart, arrayBufferToBuffer,
+    getPathPart, arrayBufferToBuffer, dataURLtoBlob,
 } from '../lib/util';
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
 import Pica from 'pica';
-import gifFrames from 'gif-frames';
 import gifShot from 'gifshot';
 import { parseGIF, decompressFrames } from "gifuct-js";
 
@@ -65,7 +64,9 @@ const CONSTANTS = {
             DOWNLOAD: 200 * 1024 * 1024, //200 MB
         },
         POST_PREVIEW: {
-            IMAGE: 1024 * 500,
+            IMAGE: 500 * 1024,
+            GIF: 1024 * 1024,
+            WEBP: 1024 * 1024,
         },
     },
     TEXT_MAX_SIZE: {
@@ -787,7 +788,7 @@ function resizeImage(file, callback) {
         reader.onload = function (event) {
             console.info('Image loaded');
             let compressImage = function (rawImage, compressCallback) {
-                console.log('Compressing image raw:', rawImage)
+                //console.log('Compressing image raw:', rawImage)
                 let resizer = new Pica();
                 let tmpImage = new Image();
 
@@ -803,19 +804,21 @@ function resizeImage(file, callback) {
                         destCanvas.width = Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height);
                     } else if (compressCallback) {
                         //Nothing to do
-                        compressCallback(file);
+                        console.log('Nothing to do');
+                        compressCallback(false, file);
                         return;
                     }
 
                     resizer.resize(tmpImage, destCanvas)
                         .then( (result) => {
-                            console.log('resize resulted!', result)
-                            return resizer.toBlob(result, 'image/jpeg', 0.90)
+                            //console.log('resize resulted!', result)
+                            return result.toDataURL('image/jpeg', 1);
+                            //return resizer.toBlob(result, 'image/jpeg', 0.90)
                         })
-                        .then(blob => {
-                            console.log('Blob created', blob)
+                        .then(dataUrl => {
+                            //console.log('Blob created', blob)
                             if (compressCallback) {
-                                compressCallback(blob);
+                                compressCallback(true, dataUrl);
                             }
                         });
                 };
@@ -831,47 +834,85 @@ function resizeImage(file, callback) {
                         console.log('fileBuffer', Buffer.isBuffer(fileBuffer))
                         let gif = parseGIF(fileBuffer);
 
-                        console.log('GIF', decompressFrames(gif, false));
-                        console.log('FRAME', gif.frames[0]);
-                        let compressedFrames = [];
-                        for (let frame of gif.frames) {
-                            compressImage(frame.getImage(), compressedFrame => {
-                                console.debug('Frame resized', compressedFrame);
-                                compressedFrames.push(compressedFrame);
-                            });
-                        }
-                        gifFrames({
-                            url: fileBuffer,
-                            frames: 'all',
-                            quality: 100
-                        }).then(frameData => {
-                            console.debug('Getted gif frames', frameData);
+                        let dFrames = decompressFrames(gif, true);
+                        console.log('DFRAMES', dFrames);
 
-                            for (let frame of frameData) {
-                                compressImage(frame.getImage(), compressedFrame => {
-                                    console.debug('Frame resized', compressedFrame);
-                                    compressedFrames.push(compressedFrame);
-                                });
+                        let count = 0;
+                        let buildGIF = function () {
+                            count++;
+                            if (count === dFrames.length) {
+                                console.debug('Building new gif with compressed frames', Object.keys(compressedFrames), compressedFrames);
+                                if (Object.keys(compressedFrames).length > 0) {
+                                    let frameValues = [];
+                                    for (let x = 0; x < count; x++) {
+                                        frameValues.push(compressedFrames[x]);
+                                    }
+
+                                    gifShot.createGIF({
+                                        images: frameValues
+                                    }, obj => {
+                                        console.log('Gif created', obj);
+                                        if (!obj.error) {
+                                            console.debug('New GIF created', obj.image);
+                                            if (callback) {
+                                                callback(dataURLtoBlob(obj.image));
+                                            }
+                                        } else {
+                                            console.error('Error loading GIF', obj.error);
+                                        }
+                                    });
+                                } else if (callback) {
+                                    callback(file);
+                                }
+
+                            }
+                        }
+
+                        let compressedFrames = {};
+                        let tempCanvas = document.createElement('canvas');
+                        let tempCtx = tempCanvas.getContext('2d');
+
+                        let fullCanvas = document.createElement('canvas');
+                        let fullCtx = fullCanvas.getContext('2d');
+                        let frameImageData;
+
+                        for (let x = 0; x < dFrames.length; x++) {
+                            let frame = dFrames[x];
+
+                            if (!frameImageData) {
+                                tempCanvas.width = frame.dims.width;
+                                fullCanvas.width = frame.dims.width;
+                                tempCanvas.height = frame.dims.height;
+                                fullCanvas.height = frame.dims.height;
+                                frameImageData = tempCtx.createImageData(frame.dims.width, frame.dims.height);
                             }
 
-                            console.debug('Building new gif with compressed frames');
-                            gifShot.createGIF({
-                                images: compressedFrames
-                            }, obj => {
-                                if (!obj.error) {
-                                    console.debug('New GIF created', obj.image);
-                                    if (callback) {
-                                        callback(obj.image);
-                                    }
-                                } else {
-                                    console.error('Error loading GIF', obj.error);
+                            frameImageData.data.set(frame.patch);
+                            tempCtx.putImageData(frameImageData, 0, 0);
+                            fullCtx.drawImage(tempCanvas, frame.dims.left, frame.dims.top);
+
+                            let dataUrl = fullCanvas.toDataURL('image/jpeg', 1);
+                            compressImage(dataUrl, (compressed, compressedFrame) => {
+                                //console.debug('Frame resized', compressed, compressedFrame);
+                                if (compressed) {
+                                    compressedFrames[x] = compressedFrame;
                                 }
-                            })
-                        })
+
+                                buildGIF();
+                            });
+                        }
+
+
                     })
 
             } else {
-                compressImage(event.target.result, callback)
+                console.log('Non-GIF image');
+                compressImage(event.target.result, (compressed, compressedImage) => {
+                    //console.log('nGIF', compressed, compressedImage);
+                    if (callback) {
+                        callback(dataURLtoBlob(compressedImage));
+                    }
+                })
             }
 
         };

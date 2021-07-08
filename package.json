@@ -36,7 +36,6 @@
         "event-emitter": "^0.3.5",
         "flickity": "^2.2.1",
         "gif-extract-frames": "^1.0.2",
-        "gif-frames": "^1.0.1",
         "gifshot": "^0.4.5",
         "gifuct-js": "^2.1.1",
         "granim": "^1.1.1",
