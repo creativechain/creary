@@ -4,6 +4,8 @@
 namespace App\Utils;
 
 
+use App\Http\Crea\CrearyClient;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class CreaOperationsUtils
@@ -21,7 +23,14 @@ class CreaOperationsUtils
 
         //Notify only likes
         if ($weight > 0) {
-            $data->vote_value = CreaUtils::calculateVoteValue($data->voter, $data->weight);
+            $content = (new CrearyClient())
+                ->getPost($data->author, $data->permlink);
+            $cashoutTime = Carbon::parse($content->cashout_time);
+            if ($cashoutTime->isAfter(Carbon::now())) {
+                $data->vote_value = CreaUtils::calculateVoteValue($data->voter, $data->weight);
+            } else {
+                $data->vote_value = 0;
+            }
 
         }
 
