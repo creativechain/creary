@@ -39,6 +39,7 @@ class IpfsFile {
 const CONSTANTS = {
     ACCOUNT: {
         UPDATE_THRESHOLD: 1000 * 60 * 60,
+        BLOCKED: ['volf', 'mercury', 'onecommett', 'onecomme', 'kwentyyy7', 'felixxx', 'olanin', 'djon', 'roxona']
     },
     TRANSFER: {
         TRANSFER_CREA: 'transfer_crea',

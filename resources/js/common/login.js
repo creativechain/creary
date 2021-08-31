@@ -3,7 +3,8 @@
  */
 
 import Session from '../lib/session';
-import { catchError } from "./common";
+import { catchError, CONSTANTS } from "./common";
+import errors from '../lib/error';
 
 function startLogin() {
     let username = $('#login-username').val();
@@ -31,6 +32,11 @@ function login(username, password, callback) {
     }
 
     session.login(function (err, account) {
+        if (CONSTANTS.ACCOUNT.BLOCKED.includes(username.toLowerCase())) {
+            err = errors.USER_LOGIN_ERROR;
+            session.logout();
+        }
+
         if (err) {
             if (callback) {
                 callback(err);
