@@ -411,9 +411,8 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                                 maximumSize = CONSTANTS.FILE_MAX_SIZE.POST_PREVIEW.IMAGE;
                             }
 
-                            resizeImage(loadedFile, function (resizedFile) {
-                                console.log('ResizedFile', resizedFile)
-                                uploadToIpfs(resizedFile, maximumSize, function (err, file) {
+                            if (loadedFile.size <= maximumSize) {
+                                uploadToIpfs(loadedFile, maximumSize, function (err, file) {
                                     globalLoading.show = false;
 
                                     if (!catchError(err)) {
@@ -422,7 +421,21 @@ import { SELECTABLE_CATEGORIES } from '../lib/categories';
                                         that.error = null;
                                     }
                                 });
-                            });
+                            } else {
+                                resizeImage(loadedFile, function (resizedFile) {
+                                    console.log('ResizedFile', resizedFile)
+                                    uploadToIpfs(resizedFile, maximumSize, function (err, file) {
+                                        globalLoading.show = false;
+
+                                        if (!catchError(err)) {
+                                            that.featuredImage = file;
+                                            postUploads[file.hash] = loadedFile;
+                                            that.error = null;
+                                        }
+                                    });
+                                });
+                            }
+
                         }
                     },
                     toggleEditor: function toggleEditor(event) {
