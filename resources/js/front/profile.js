@@ -17,7 +17,7 @@ import {
     cancelEventPropagation,
     toUrl,
     NaNOr,
-    createAuth,
+    createAuth, getRouteUser,
 } from '../lib/util';
 import { vestingCrea, delegatedCrea, vestsToCgy, cgyToVests, receivedDelegatedCGY } from '../common/creautil';
 import {
@@ -1629,7 +1629,8 @@ import { CommentsApi } from '../lib/creary-api';
         }
 
         let commentsApi = new CommentsApi();
-        let author = getPathPart();
+        let author = getRouteUser()
+        console.log('Route user', author)
         commentsApi.portfolio(author, lastPage, 20, function (err, response) {
             if (!catchError(err)) {
                 let data = response.data;

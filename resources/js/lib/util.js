@@ -207,6 +207,24 @@ function getPathPart(path = null, index = 0) {
     return (parts[index] || '').replace(/\?.*/g, '');
 }
 
+/**
+ *
+ * @returns {null|any}
+ */
+function getRouteUser() {
+    let path = (currentPage ? currentPage.pathname : null) || window.location.pathname;
+    let parts = path.split('/');
+    parts.splice(0, 1);
+    console.log("Parts", parts)
+    for (const part of parts) {
+        if (part.startsWith('@')) {
+            return part;
+        }
+    }
+
+    return null;
+}
+
 function getNavigatorLanguage() {
     return navigator.language.split('-')[0];
 }
@@ -476,6 +494,7 @@ export {
     isUserFeed,
     toUrl,
     getPathPart,
+    getRouteUser,
     getNavigatorLanguage,
     cleanArray,
     isSmallScreen,
