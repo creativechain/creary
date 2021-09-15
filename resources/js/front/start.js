@@ -167,7 +167,7 @@ window.CreaCookies = createCookieInstance({
     domain: window.location.hostname
 });
 
-window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-test-2', 'exratesfull', 'skytali7', 'atomars', 'atomarscoin'];
+window.SAVINGS_BLACK_LIST = ['exrates', 'exrates1', 'exrates-test', 'exrates-test-2', 'exratesfull', 'skytali7', 'atomars', 'atomarscoin', 'exratesme'];
 window.UNTRUSTED_EXCHANGE= ['atomarscoin']
 window.currentPage = null;
 
