@@ -1,4 +1,4 @@
-<section v-cloak v-if="showBanner" class="imagebg image--dark cover cover-blocks" id="slide-home" style="background-color: #F3604C;">
+<section v-cloak v-if="showBanner" class="imagebg image--dark cover cover-blocks" id="slide-home" style="background-color: #F95860;">
     <div class="row-close" v-on:click="showBanner = false">
         <a class="cursor"><i class="fas fa-times"></i></a>
     </div>
