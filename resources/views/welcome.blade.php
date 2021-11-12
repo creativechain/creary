@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lch-SodAAAAAOe-mD562Y8-sbcT56byW7XsC0cy"></script>
+
     <div v-cloak id="welcome" class="main-container view-welcome">
 
         {{--<!-- Slide 1-->--}}

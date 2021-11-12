@@ -212,30 +212,36 @@ import Autocomplete from '../components/Autocomplete';
             let phone = welcomeVue.country_code + welcomeVue.phone;
             phone = phone.replace(' ', '').replace('+', '');
             globalLoading.show = true;
-            refreshAccessToken(function (accessToken) {
-                let url = apiOptions.apiUrl + `/validation-phone/${token}`;
-                let http = new HttpClient(url);
-                http.withCredentials(false)
-                    .setHeaders({
-                        Authorization: 'Bearer ' + accessToken,
-                    })
-                    .when('done', function (data) {
-                        globalLoading.show = false;
 
-                        console.log('Phone validation', data);
-                        welcomeVue.validPhone = true;
-                        welcomeVue.sentSMS = true;
-                        welcomeVue.error.phone = '';
-                    })
-                    .when('fail', function (response, textStatus, request) {
-                        console.error(response, textStatus, request);
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6Lch-SodAAAAAOe-mD562Y8-sbcT56byW7XsC0cy', {action: 'phone_validation'}).then(function(recaptchaToken) {
+                    refreshAccessToken(function (accessToken) {
+                        let url = apiOptions.apiUrl + `/validation-phone/${token}`;
+                        let http = new HttpClient(url);
+                        http.withCredentials(false)
+                            .setHeaders({
+                                Authorization: 'Bearer ' + accessToken,
+                            })
+                            .when('done', function (data) {
+                                globalLoading.show = false;
 
-                        welcomeVue.error.phone = lang.ERROR[response.error];
-                        globalLoading.show = false;
-                    })
-                    .post({
-                        phone: phone,
+                                console.log('Phone validation', data);
+                                welcomeVue.validPhone = true;
+                                welcomeVue.sentSMS = true;
+                                welcomeVue.error.phone = '';
+                            })
+                            .when('fail', function (response, textStatus, request) {
+                                console.error(response, textStatus, request);
+
+                                welcomeVue.error.phone = lang.ERROR[response.error];
+                                globalLoading.show = false;
+                            })
+                            .post({
+                                phone: phone,
+                                recaptcha_token: recaptchaToken
+                            });
                     });
+                });
             });
         } else {
             welcomeVue.slide = 1;
