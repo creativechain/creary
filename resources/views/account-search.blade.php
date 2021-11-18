@@ -2,6 +2,7 @@
 
 @section('content')
 
+
     <div class="main-container view-profile">
         <section class="bg--secondary p-top-15">
             <div id="accounts-list" class="container">
