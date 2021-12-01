@@ -1,4 +1,211 @@
 @import "color";
+div.new-profile {
+  padding-top: 50px;
+  background-color: white;
+  .banner-user {
+    max-width: 1920px;
+    height: 250px;
+    background-image: url("https://ipfs.creary.net/ipfs/QmRBkCqbxUf6NEBn8SpW2Jo4Bdft9G2ZpMM5U8bAsGGY14");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 100%;
+  }
+  .box-banner {
+    position: relative;
+    .edit-icon-banner {
+      background-image: url("/img/edit_profile/camera.svg");
+      height: 25px;
+      width: 25px;
+      position: absolute;
+      top: 100px;
+      left: 47%;
+      transform: translate(-50%, -50%);
+      width: 25px;
+      cursor: pointer;
+    }
+    .delete-icon-banner {
+      background-image: url("/img/edit_profile/x.svg");
+      height: 25px;
+      width: 25px;
+      position: absolute;
+      top: 100px;
+      left: 53%;
+      transform: translate(-50%, -50%);
+      width: 25px;
+      cursor: pointer;
+    }
+  }
+  .title-progress {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    span {
+      margin-right: 5px;
+    }
+    .sat {
+      color: #D0D0D0;
+    }
+  }
+  .box-user-avatar {
+    border: solid 5px white;
+    height: 140px;
+    width: 140px;
+    overflow: hidden;
+    border-radius: 80px;
+    margin: -10px 20px 20px 0;
+    .img-user-avatar-profile {
+      background-size: cover;
+      width: 130px;
+      height: 130px;
+      background-position: 50% 50%;
+    }
+    .box-change-img-profile {
+      position: relative;
+      background-color: white;
+      .change-img-profile {
+        background-image: url("/img/edit_profile/camera.svg");
+        height: 25px;
+        width: 25px;
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 25px;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .background-profile {
+        background-color: #000000b0;
+        position: absolute;
+        height: 130px;
+        width: 130px;
+        z-index: 1;
+      }
+    }
+    
+  }
+  .date-profile {
+    margin-top: -100px;
+    p {
+      color: $color-menu-a-navbar;
+      margin-bottom: 10px;
+    }
+    strong {
+      font-weight: bold;
+      color: $color-menu-a-navbar;
+    }
+    .user-name {
+      font-size: 25px;
+      font-weight: bold;
+    }
+    .user {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .content {
+      font-size: 14px;
+    }
+    .energy {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .title-progress {
+        width: 200px;
+      }
+    }
+    .progress{
+      width: 100%;
+      max-width: 260px;
+      height: 6px;
+      background: #e1e4e8;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: -10px;
+      
+    } 
+    .flow {
+      .progress-bar {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg,#FFD952,#FF5766 17%,#0073FF 34%,#01FEFF 51%,#FFD952 68%,#FF5766 85%,#0073FF)      ;
+        background-size: 300% 100%;
+        animation: progress-animation 2s linear infinite;
+      }
+      .progress-bar.flow-bar {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg,#FFD952,#FF5766 17%,#FF5766 34%,#FFD952 51%,#FFD952 68%,#FF5766 85%,#FF5766);
+        background-size: 300% 100%;
+        animation: progress-animation 2s linear infinite;
+      }
+
+    }
+
+    
+    .social {
+      line-height: 36px;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      flex-direction: row;
+      
+      a {
+        font-size: 25px;
+        margin-left: 20px;
+        span {
+          color: $color-menu-a-navbar;
+        }
+      }
+    }
+    .row-follow {
+      margin-top: -30px;
+      a.bloquear:hover {
+        path {
+          fill: #686771;
+        }
+      }
+    }
+    .row-content {
+      margin-top: 30px;
+      .a-social {
+        padding: 5px;
+        position: relative;
+      }
+      .a-social:hover:before {
+        content: '';
+        background-color: #EDEDED;
+        padding: 5px;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        z-index: 0;
+        left: -3px;
+        bottom: 4px;
+        
+      }
+      .a-social:hover {
+        span {
+          z-index: 2;
+          position: relative;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 .view-profile {
   .amount-price {
@@ -126,7 +333,9 @@
     font-size: 12px;
     margin-bottom: 15px;
   }
+  
   .menu-secondary-profile {
+    
     .dropdown {
 
       span {
@@ -142,6 +351,9 @@
     }
     a.active {
       font-weight: bold;
+      background-color: #EAEAEA;
+      padding: 2px 10px;
+      border-radius: 10px;
     }
   }
   .dropdown {
@@ -176,64 +388,6 @@
       color: $grey-light;
     }
   }
-  .menu-profile-user {
-    .btn-more-info-profile, .btn-hidden-info-profile {
-      cursor: pointer;
-    }
-    a {
-      text-decoration: none;
-    }
-    hr {
-      margin: 1.85714286em -20px;
-    }
-    .nameUser {
-      color: $grey-light;
-    }
-    .user-avatar {
-      height: 70px;
-      width: 70px;
-      overflow: hidden;
-      min-height: 70px;
-      min-width: 70px;
-      border-radius: 50px;
-      margin: 20px auto;
-
-    }
-    .img-user-avatar {
-      background-image: url("/img/crea-web/publish/demo-vertical.jpg");
-      background-size: cover;
-      width: 70px;
-      height: 70px;
-      background-position: 50% 50%;
-    }
-    .h5 {
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .ranking-user-info {
-
-      .title-buzz-info-profile {
-        font-size: 12px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-      }
-      .ul-buzz-profile {
-        margin-top: 0;
-        margin-bottom: -7px;
-        .li-buzz {
-          margin-right: 7px;
-          .img-buzz {
-            height: 20px;
-            width: 18px;
-            background-repeat: no-repeat;
-            background-position: left;
-            background-size: contain;
-          }
-        }
-      }
-    }
-  }
 }
 
 
@@ -263,6 +417,10 @@
      font-size: 14px;
      font-weight: bold;
      margin-bottom: 0;
+   }
+   .select-social {
+    display: flex;
+    align-items: center;
    }
    .nameUser {
      font-size: 14px;
@@ -304,4 +462,44 @@
      }
    }
  }
+}
+
+
+
+
+
+
+#profile-container {
+  .menu-secondary-profile {
+    a, .dropdown__trigger {
+      border-radius: 25px;
+      color: #686771;
+      font-size: 14px;
+      padding: 3px 15px;
+      text-decoration: none;
+    }
+    a.active {
+      background-color: #eaeaea;
+      color: #333;
+      font-weight: 600;
+    }
+  }
+}
+
+
+
+@keyframes progress-animation {
+  0% { background-position: 100%;}
+    
+  100% {
+    background-position: 0;
+  }
+}
+.delete-btn {
+  font-size: 14px;
+  color: #222222;
+  font-weight: 300;
+}
+.dropdown-delete {
+    border: 0px solid #505050 !important;
 }

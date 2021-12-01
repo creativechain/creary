@@ -1,4 +1,4 @@
-<div class="col-md-12 text-center menu-secondary-profile">
+<div class="col-md-12 text-left menu-secondary-profile">
     <ul class="list-inline">
         <li class="list-inline-item">
             <a v-bind:href="'/@' + state.user.name + '/projects'" v-on:click="navigateTo($event, 'projects')" v-bind:class="{ active: navbar.section === 'projects' }">

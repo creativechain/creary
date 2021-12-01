@@ -78,11 +78,30 @@
                                 </div><!--end dropdown container-->
                             </div>
                         </li>
+                        <li class="list-inline-item">
+                            <div class="dropdown dropdown-price dropdown-delete">
+                                <span class="dropdown__trigger">
+                                    <i class="fa fa-ellipsis-v ml-3" aria-hidden="true"></i>
+                                </span>
+                                <div class="dropdown__container price">
+                                    <div class="">
+                                        <div class="row">
+                                            <div  v-if="state.post.refused_payouts" class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
+                                                <p class="error-color-form">{{ __('lang.HOME.DROPDOWN_REFUSED_PAYOUT') }} <span class="refused-payout">@{{ getPayout() }}</span></p>
+                                            </div>
+                                            <div v-else class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
+                                                <a class="delete-btn">Delete project</p>
+                                            </div>
+                                        </div><!--end row-->
+                                    </div><!--end container-->
+                                </div><!--end dropdown container-->
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-
+        
         <div class="container"  style="background-color: white">
             <div class="row background-content-post row-content-post">
                 <div class="col-md-12 img-post-view content-post" >

@@ -43,6 +43,7 @@
   #slide-home {
     padding: 90px 0 0 !important;
   }
+  
 }
 
 @media (max-width: 360px) {
@@ -60,6 +61,14 @@
 }
 
 @media (max-width: 575.98px) {
+  div.new-profile .box-user-avatar {
+    border: solid 10px white;
+    height: 150px;
+    width: 150px;
+    overflow: hidden;
+    border-radius: 80px;
+    margin: 20px auto;
+}
   .post-view {
     #post-view {
       .flickity-viewport {
@@ -416,6 +425,7 @@
   #navbar-container {
     position: fixed;
     width: 100%;
+    z-index: 10000;
     .bar.bar--sm {
       margin: 0 10px;
     }
@@ -677,7 +687,23 @@
     }
   }
 }
-
+@media (min-width: 320px) and (max-width: 414px) {
+  div.new-profile .title-progress {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  div.new-profile .date-profile strong {
+    font-weight: bold;
+    color: #686771;
+    margin-left: 10px;
+  }
+  div.new-profile .date-profile .row-follow {
+    margin-top: -60px;
+    position: relative;
+    top: 50px;
+  }
+}
 @media (min-width: 576px) and (max-width: 767.98px) {
   .card-home {
     .card__top {
@@ -979,7 +1005,7 @@
       }
     }
   }
-  #profile-container {
+  #profile-container, .new-profile {
     .container {
       width: 991px;
     }
@@ -989,6 +1015,13 @@
 @media (min-width: 320px) and (max-width: 1024px) {
   .box-next-post {
     display: none;
+  }
+  div.new-profile .date-profile .social {
+    line-height: 36px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
   }
 }
 
@@ -1043,6 +1076,15 @@
         left: 70px !important;
       }
     }
+  }
+}
+
+@media (max-width: 1366px) {
+  #modal-post #post-navigation-view .modal-content {
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    max-height: 100%;
   }
 }
 
