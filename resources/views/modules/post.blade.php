@@ -90,7 +90,7 @@
                                                 <p class="error-color-form">{{ __('lang.HOME.DROPDOWN_REFUSED_PAYOUT') }} <span class="refused-payout">@{{ getPayout() }}</span></p>
                                             </div>
                                             <div v-else class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
-                                                <a class="delete-btn">Delete project</p>
+                                                <a class="delete-btn">Delete project</a>
                                             </div>
                                         </div><!--end row-->
                                     </div><!--end container-->
