@@ -41,23 +41,26 @@
                     <h4 class="mt-2">Add Links</h4>
                 </div>
                 <div class="col-6">
-                    <select class="custom-select">
-                        <option selected>Select website</option>
-                        <option value="1">Website</option>
-                        <option value="2">Twitter</option>
-                        <option value="3">Instagram</option>
-                        <option value="4">Youtube</option>
-                        <option value="5">Vimeo</option>
-                        <option value="6">Linkt</option>
-                        <option value="7">Opensea</option>
-                        <option value="8">KnownOrigin</option>
-                        <option value="9">SuperRare</option>
-                        <option value="10">Raribe</option>
-                        <option value="11">Makersplace</option>
-                        <option value="12">Foundation</option>
-                        <option value="13">Async Art</option>
-                        <option value="14">Hice et nunc</option>
-                    </select>
+                    <div class="input-select">
+                        <select>
+                            <option selected>Select website</option>
+                            <option value="1">Website</option>
+                            <option value="2">Twitter</option>
+                            <option value="3">Instagram</option>
+                            <option value="4">Youtube</option>
+                            <option value="5">Vimeo</option>
+                            <option value="6">Linkt</option>
+                            <option value="7">Opensea</option>
+                            <option value="8">KnownOrigin</option>
+                            <option value="9">SuperRare</option>
+                            <option value="10">Raribe</option>
+                            <option value="11">Makersplace</option>
+                            <option value="12">Foundation</option>
+                            <option value="13">Async Art</option>
+                            <option value="14">Hice et nunc</option>
+                        </select>
+                    </div>
+
                 </div>
                 <div class="col-6">
                     <!-- repeat -->
