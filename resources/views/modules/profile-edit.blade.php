@@ -67,6 +67,18 @@
                             <input type="text" class="form-control" placeholder="user">
                         </div>
                     </div>
+                    <div class="form-group row select-social">
+                        <label class="col-sm-2 col-form-label">https://www.</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="user">
+                        </div>
+                    </div>
+                    <div class="form-group row select-social">
+                        <label class="col-sm-2 col-form-label">https://www.</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="user">
+                        </div>
+                    </div>
                 </div>
             </div>
 
