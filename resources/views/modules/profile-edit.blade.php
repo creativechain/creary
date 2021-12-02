@@ -40,7 +40,7 @@
                 <div class="col-12">
                     <h4 class="mt-2">Add Links</h4>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-lg-6">
                     <div class="input-select">
                         <select>
                             <option selected>Select website</option>
@@ -62,23 +62,28 @@
                     </div>
 
                 </div>
-                <div class="col-6">
+                
+                <div class="col-12 col-lg-6">
                     <!-- repeat -->
                     <div class="form-group row select-social">
                         <label class="col-sm-2 col-form-label">https://www.</label>
                         <div class="col-sm-10">
+                            
+                            <input type="text" class="form-control" placeholder="user">
+                        </div>
+                        
+                    </div>
+                    <div class="form-group row select-social">
+                        <label class="col-sm-2 col-form-label">https://www.</label>
+                        <div class="col-sm-10 text-right">
+                        <a href="">delete</a>
                             <input type="text" class="form-control" placeholder="user">
                         </div>
                     </div>
                     <div class="form-group row select-social">
                         <label class="col-sm-2 col-form-label">https://www.</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="user">
-                        </div>
-                    </div>
-                    <div class="form-group row select-social">
-                        <label class="col-sm-2 col-form-label">https://www.</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-10 text-right">
+                            <a href="">delete</a>
                             <input type="text" class="form-control" placeholder="user">
                         </div>
                     </div>

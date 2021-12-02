@@ -240,6 +240,12 @@
 }
 
 @media (max-width: 640px) {
+  div.new-profile .box-banner .edit-icon-banner { 
+    left: 43%;
+  }
+  div.new-profile .box-banner .delete-icon-banner {
+    left: 57%;
+  }
   #modal-post #post-navigation-view .modal-content .box-comment hr {
     margin: 1.85714286em -17px;
   }

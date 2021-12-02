@@ -420,7 +420,10 @@ div.new-profile {
    }
    .select-social {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    a {
+      color: #222222;
+    }
    }
    .nameUser {
      font-size: 14px;
