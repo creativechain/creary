@@ -204,7 +204,12 @@ div.new-profile {
 
 
 
-
+.title-section-profile {
+  font-size: 12px;
+  font-weight: 700;
+  margin: 10px;
+  text-transform: uppercase;
+}
 
 
 .view-profile {
@@ -217,6 +222,7 @@ div.new-profile {
       min-width: 100%;
     }
   }
+  
   .masonry__item:not(:empty) {
     margin-bottom: 5px;
     transform-style: flat;
@@ -413,6 +419,57 @@ div.new-profile {
 }
 .view-edit-profile {
  #profile-edit {
+   .header-web-link {
+    display: flex;
+    justify-content: space-between;
+   }
+   .social-input {
+     .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      -webkit-clip-path: inset(50%);
+      clip-path: inset(50%);
+      border: 0;
+     }
+     .input-group {
+      position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    flex-direction: row;
+      .input-group-prepend {
+        margin-right: -1px;
+        display: flex;
+        .input-group-text {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
+          align-items: center;
+          padding: 0.375rem 0.75rem;
+          margin-bottom: 0;
+          font-size: 1rem;
+          font-weight: 400;
+          line-height: 1.5;
+          color: #495057;
+          text-align: center;
+          white-space: nowrap;
+          background-color: #e9ecef;
+          border: 1px solid #ced4da;
+          border-radius: 0.25rem;
+          }
+        }
+      }
+   }
    .h5 {
      font-size: 14px;
      font-weight: bold;
@@ -486,6 +543,12 @@ div.new-profile {
       color: #333;
       font-weight: 600;
     }
+  }
+  .add-link-title {
+    margin: 5px 5px -5px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
   }
 }
 
