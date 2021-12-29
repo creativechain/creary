@@ -1,8 +1,8 @@
 <template>
     <div class='amount-price'>
-        <span>{{ assetPart(value, 'int') + '.' }}</span>
-        <span>{{ assetPart(value, 'dec') }}</span>
-        <span>{{ assetPart(value, 'sym') }}</span>
+        <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'int') + '.' }}</span>
+        <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'dec') }}</span>
+        <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'sym') }}</span>
     </div>
 </template>
 
@@ -11,7 +11,11 @@
 
     export default {
         props: {
-            value: [Number, String, Object]
+            value: [Number, String, Object],
+            srmargin: {
+                type: Number,
+                default: 0
+            }
         },
         methods : {
             assetPart: function assetPart(asset, part) {

@@ -5,7 +5,7 @@ div.new-profile {
   .banner-user {
     max-width: 1920px;
     height: 250px;
-    background-image: url("https://ipfs.creary.net/ipfs/QmRBkCqbxUf6NEBn8SpW2Jo4Bdft9G2ZpMM5U8bAsGGY14");
+    /*background-image: url("https://ipfs.creary.net/ipfs/QmRBkCqbxUf6NEBn8SpW2Jo4Bdft9G2ZpMM5U8bAsGGY14");*/
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -84,7 +84,7 @@ div.new-profile {
         z-index: 1;
       }
     }
-    
+
   }
   .date-profile {
     margin-top: -100px;
@@ -123,8 +123,8 @@ div.new-profile {
       border-radius: 3px;
       overflow: hidden;
       margin-top: -10px;
-      
-    } 
+
+    }
     .flow {
       .progress-bar {
         display: block;
@@ -143,14 +143,14 @@ div.new-profile {
 
     }
 
-    
+
     .social {
       line-height: 36px;
       display: flex;
       justify-content: flex-end;
       flex-wrap: wrap;
       flex-direction: row;
-      
+
       a {
         font-size: 25px;
         margin-left: 20px;
@@ -184,7 +184,7 @@ div.new-profile {
         z-index: 0;
         left: -3px;
         bottom: 4px;
-        
+
       }
       .a-social:hover {
         span {
@@ -222,7 +222,7 @@ div.new-profile {
       min-width: 100%;
     }
   }
-  
+
   .masonry__item:not(:empty) {
     margin-bottom: 5px;
     transform-style: flat;
@@ -339,9 +339,9 @@ div.new-profile {
     font-size: 12px;
     margin-bottom: 15px;
   }
-  
+
   .menu-secondary-profile {
-    
+
     .dropdown {
 
       span {
@@ -556,7 +556,7 @@ div.new-profile {
 
 @keyframes progress-animation {
   0% { background-position: 100%;}
-    
+
   100% {
     background-position: 0;
   }

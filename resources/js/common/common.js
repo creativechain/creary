@@ -22,24 +22,18 @@ import { DEFAULT_ROLES } from '../lib/account';
 import Pica from 'pica';
 import gifShot from 'gifshot';
 import { parseGIF, decompressFrames } from "gifuct-js";
-
-/**
- * Created by ander on 25/09/18.
- */
-class IpfsFile {
-    constructor(hash, name, type, size) {
-        this.hash = hash;
-        this.name = name;
-        this.type = type;
-        this.size = size;
-        this.url = 'https://ipfs.creary.net/ipfs/' + hash;
-    }
-}
+import {IpfsFile} from "../lib/ipfs-utils";
+import {SocialLink} from "../lib/dips";
 
 const CONSTANTS = {
     ACCOUNT: {
         UPDATE_THRESHOLD: 1000 * 60 * 60,
-        BLOCKED: ['volf', 'mercury', 'onecommett', 'onecomme', 'kwentyyy7', 'felixxx', 'olanin', 'djon', 'roxona', 'exrates1', 'exrates']
+        BLOCKED: ['volf', 'mercury', 'onecommett', 'onecomme', 'kwentyyy7', 'felixxx', 'olanin', 'djon', 'roxona', 'exrates1', 'exrates'],
+        AVAILABLE_SOCIALS: [
+            SocialLink.PERSONAL, SocialLink.TWITTER, SocialLink.INSTAGRAM, SocialLink.YOUTUBE, SocialLink.VIMEO,
+            SocialLink.LINKT, SocialLink.OPENSEA, SocialLink.KNOWN_ORIGIN, SocialLink.SUPER_RARE, SocialLink.RARIBLE,
+            SocialLink.MAKERSPLACE, SocialLink.FOUNDATION, SocialLink.ASYNC_ART, SocialLink.HIC_ET_NUNC
+        ]
     },
     TRANSFER: {
         TRANSFER_CREA: 'transfer_crea',
@@ -52,7 +46,8 @@ const CONSTANTS = {
     },
     FILE_MAX_SIZE: {
         PROFILE: {
-            IMAGE: 1024 * 500,
+            AVATAR: 1024 * 500,
+            BANNER: 1024 * 1024 * 10, //10 MB
         },
         POST_BODY: {
             AUDIO: 100 * 1024 * 1024,
@@ -292,7 +287,7 @@ function removeBlockedContents(state, accountState, discussion_idx) {
     return null;
 }
 
-function parseAccount(account) {
+function parseAccount(account, rc = null) {
     if (account) {
         account = clone(account);
         account.buzz = crea.formatter.reputation(
@@ -327,6 +322,42 @@ function parseAccount(account) {
             account.metadata.web = account.metadata.web.replace('https://', '').replace('http://', '');
         }
 
+        if (!account.metadata.other) {
+            account.metadata.other = {
+                socials: [
+                    new SocialLink('Personal', 'https://', account.metadata.web)
+                ]
+            }
+        } else if (account.metadata.other.socials) {
+
+            let socials = [];
+            for (let soc of account.metadata.other.socials) {
+                socials.push(SocialLink.parse(soc))
+            }
+
+            account.metadata.other.socials = socials
+        } else {
+            account.metadata.other.socials = [
+                new SocialLink('Personal', 'https://', account.metadata.web)
+            ]
+        }
+
+        // Calculate actual voting energy
+        let currentTime = moment();
+        let lastVoteEnergy  = account.voting_energy;
+        let lastVoteTime = moment(account.last_vote_time);
+        let secondsAgo = currentTime.unix() - lastVoteTime.unix();
+        let calculatedEnergy = lastVoteEnergy + (10000 * secondsAgo / 432000);
+        account.voting_energy_percent = Math.min(Math.round(calculatedEnergy / 100), 100);
+
+        account.voting_flowbar.max_flow = 0;
+        account.voting_flowbar.flow_percent = 0;
+        account.voting_flowbar.current_flow = parseInt(account.voting_flowbar.current_flow);
+        if (rc) {
+            console.log("RC", rc)
+            account.voting_flowbar.max_flow = parseInt(rc.max_rc);
+            account.voting_flowbar.flow_percent = Math.round(account.voting_flowbar.current_flow * 100 / account.voting_flowbar.max_flow);
+        }
         //console.log(jsonify(jsonstring(account)));
         return account;
     }
@@ -789,7 +820,7 @@ function resizeImage(file, callback) {
         reader.onload = function (event) {
             console.info('Image loaded');
             let compressImage = function (rawImage, compressCallback) {
-                //console.log('Compressing image raw:', rawImage)
+                console.log('Compressing image raw:', rawImage)
                 let resizer = new Pica();
                 let tmpImage = new Image();
 
@@ -806,7 +837,7 @@ function resizeImage(file, callback) {
                     } else if (compressCallback) {
                         //Nothing to do
                         console.log('Nothing to do');
-                        compressCallback(false, file);
+                        compressCallback(false, rawImage);
                         return;
                     }
 
@@ -909,7 +940,7 @@ function resizeImage(file, callback) {
             } else {
                 console.log('Non-GIF image');
                 compressImage(event.target.result, (compressed, compressedImage) => {
-                    //console.log('nGIF', compressed, compressedImage);
+                    console.log('nGIF', compressed, compressedImage);
                     if (callback) {
                         callback(dataURLtoBlob(compressedImage));
                     }

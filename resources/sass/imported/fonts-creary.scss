@@ -1,71 +1,73 @@
 @font-face {
     font-family: 'CrearyRS';
     src:
-      url('/fonts/CrearyRS.ttf?w1dvz8') format('truetype'),
-      url('/fonts/CrearyRS.woff?w1dvz8') format('woff'),
-      url('/public/fonts/CrearyRS.svg?w1dvz8#CrearyRS') format('svg');
+        url('/fonts/CrearyRS.ttf?w1dvz8') format('truetype'),
+        url('/fonts/CrearyRS.woff?w1dvz8') format('woff'),
+        url('/public/fonts/CrearyRS.svg?w1dvz8#CrearyRS') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-  }
-  .new-profile, #profile-container {
+}
+.new-profile, #profile-container {
     [class^="icon-"], [class*=" icon-"] {
-      /* use !important to prevent issues with browser extensions that change fonts */
-      font-family: 'CrearyRS' !important;
-      speak: never;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      line-height: 1;
-    
-      /* Better Font Rendering =========== */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'CrearyRS' !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
-  }
-  
-  
-  .icon-hiceetnunc:before {
+}
+
+
+.icon-hiceetnunc:before {
     content: "\e900";
-  }
-  .icon-opensea:before {
+}
+.icon-opensea:before {
     content: "\e901";
-  }
-  .icon-asyncart:before {
+}
+.icon-asyncart:before {
     content: "\e902";
-  }
-  .icon-Foundation:before {
+}
+.icon-foundation:before {
     content: "\e903";
-  }
-  .icon-knownorigin:before {
+}
+.icon-knownorigin:before {
     content: "\e904";
-  }
-  .icon-makersplace:before {
+}
+.icon-makersplace:before {
     content: "\e905";
-  }
-  .icon-rarible:before {
+}
+.icon-rarible:before {
     content: "\e906";
-  }
-  .icon-superrare:before {
+}
+.icon-superrare:before {
     content: "\e907";
-  }
-  .icon-twitter:before {
+}
+.icon-twitter:before {
     content: "\e908";
-  }
-  .icon-instagram:before {
+}
+.icon-instagram:before {
     content: "\e909";
-  }
-  .icon-youtube:before {
+}
+.icon-youtube:before {
     content: "\e90a";
-  }
-  .icon-vimeo:before {
+}
+.icon-vimeo:before {
     content: "\e90b";
-  }
-  .icon-linkt:before {
+}
+.icon-linkt:before {
     content: "\e90c";
-  }
-  .icon-web:before {
+}
+.icon-web:before {
     content: "\e90d";
-  }
-  
+}
+.icon-personal:before {
+    content: "\e90d";
+}

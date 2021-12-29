@@ -56,10 +56,15 @@ import RecommendPostNotification from '../components/notifications/RecommendPost
 import DownloadNotification from '../components/notifications/DownloadNotification';
 import MentionNotification from '../components/notifications/MentionNotification';
 import { CommentsApi } from '../lib/creary-api';
+import EditAvatar from "../components/EditAvatar";
+import UserBanner from "../components/UserBanner";
+import {SocialLink} from "../lib/dips";
 
 (function () {
     //Load Vue components
     Vue.component('avatar', Avatar);
+    Vue.component('edit-avatar', EditAvatar)
+    Vue.component('user-banner', UserBanner)
     Vue.component('recommend', Recommend);
     Vue.component('new-like', NewLike);
     Vue.component('linkname', LinkName);
@@ -370,7 +375,8 @@ import { CommentsApi } from '../lib/creary-api';
                     navbar: {
                         section: navSection,
                     },
-                    profile: state.user.metadata,
+                    profile: clone(state.user.metadata),
+                    editableSocials: getEditableSocials(state.user.metadata),
                     walletTab: walletSection,
                     hideProfileInfoClass: hideProfileInfoClass,
                     history: {
@@ -397,6 +403,7 @@ import { CommentsApi } from '../lib/creary-api';
                     nextDeEnergize: nextDeEnergize,
                     savingsWithdrawNote: savingsWithdrawNote,
                     simpleView: false, //No used, but is needed
+                    editMode: false,
                 },
                 updated: function updated() {
                     let t = $('#wallet-tabs').prev();
@@ -601,6 +608,26 @@ import { CommentsApi } from '../lib/creary-api';
                         });
                         return linkedTags.join(', ');
                     },
+                    addSocial: function (index) {
+                        let soc = this.editableSocials[index];
+                        this.editableSocials.slice(index, 1);
+                        this.profile.other.socials[index] = soc;
+                        //this.editableSocials = this.getEditableSocials(this.profile);
+                        let es = this.getEditableSocials(this.profile);
+                        console.log('ES', clone(es), clone(this.profile))
+                        Vue.set(this, 'editableSocials', this.getEditableSocials(this.profile));
+                        this.$forceUpdate();
+                    },
+                    deleteSocial: function (event, index) {
+                        cancelEventPropagation(event)
+                        this.profile.other.socials[index] = null;
+                        //this.editableSocials = this.getEditableSocials(this.profile)
+                        let es = this.getEditableSocials(this.profile);
+                        console.log('ES', es)
+                        Vue.set(this, 'editableSocials', this.getEditableSocials(this.profile));
+                        this.$forceUpdate();
+                    },
+                    getEditableSocials: getEditableSocials,
                     getLinkedTags: function getLinkedTags(tags, asString) {
                         //<a v-bind:href="'/popular/' + x">{{ x }}</a>
                         let linkedTags = [];
@@ -781,9 +808,15 @@ import { CommentsApi } from '../lib/creary-api';
                             case 'notifications':
                             case 'wallet':
                                 this.hideProfileInfoClass = 'hidden-xs';
+                                this.editMode = false;
+                                break;
+                            case 'settings':
+                                this.editMode = true;
+                                this.hideProfileInfoClass = '';
                                 break;
                             default:
                                 this.hideProfileInfoClass = '';
+                                this.editMode = false;
                         }
 
                         this.navbar.section = tab;
@@ -805,21 +838,56 @@ import { CommentsApi } from '../lib/creary-api';
                             globalLoading.show = true;
                             let that = this;
                             let file = files[0];
-                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.PROFILE[file.type.toUpperCase().split('/')[0]];
+                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.PROFILE.AVATAR;
                             resizeImage(file, function (resizedImage) {
                                 uploadToIpfs(resizedImage, maximumSize, function (err, uploadedFile) {
                                     globalLoading.show = false;
 
                                     if (!catchError(err)) {
                                         Vue.set(that.profile, 'avatar', uploadedFile);
+                                        that.$forceUpdate()
                                     }
                                 });
                             });
                         }
                     },
+                    onLoadBanner: function onLoadBanner(event) {
+                        let files = event.target.files;
+
+                        if (files.length > 0) {
+                            globalLoading.show = true;
+                            let that = this;
+                            let file = files[0];
+                            let maximumSize = CONSTANTS.FILE_MAX_SIZE.PROFILE.BANNER;
+                            resizeImage(file, function (resizedImage) {
+                                uploadToIpfs(resizedImage, maximumSize, function (err, uploadedFile) {
+                                    globalLoading.show = false;
+
+                                    if (!catchError(err)) {
+                                        Vue.set(that.profile.other, 'banner', uploadedFile);
+                                        that.$forceUpdate()
+
+                                    }
+                                });
+                            });
+                        }
+                    },
+                    deleteBanner: function () {
+                        if (this.state.user.metadata.other.banner) {
+                            Vue.set(this.profile.other, 'banner', this.state.user.metadata.other.banner);
+                        } else {
+                            Vue.set(this.profile.other, 'banner', null);
+                        }
+
+                        this.$forceUpdate()
+                    },
                     loadAvatar: function loadAvatar(event) {
                         cancelEventPropagation(event);
                         $('#profile-edit-input-avatar').click();
+                    },
+                    loadBanner: function loadBanner(event) {
+                        cancelEventPropagation(event);
+                        $('#profile-edit-input-banner').click();
                     },
                     suggestPassword: function suggestPassword() {
                         this.changePass.newPass = 'P' + crea.formatter.createSuggestedPassword();
@@ -903,6 +971,31 @@ import { CommentsApi } from '../lib/creary-api';
 
         profileContainer.$forceUpdate();
         creaEvents.emit('crea.dom.ready');
+    }
+
+    function getEditableSocials(metadata) {
+        let editableSocials = [];
+        if (metadata && metadata.other && metadata.other.socials) {
+            for (let x = 0; x < CONSTANTS.ACCOUNT.AVAILABLE_SOCIALS.length; x++) {
+                let cSoc = CONSTANTS.ACCOUNT.AVAILABLE_SOCIALS[x];
+                let isAdded = false;
+                for (let soc of metadata.other.socials) {
+                    //If soc element is not present, is editable
+                    if (soc && soc.name === cSoc.name) {
+                        //console.log('comparing socs', clone(soc), 'VS', clone(cSoc), soc.name === cSoc.name)
+                        isAdded = true;
+                        break;
+                    } else {
+                        //console.log('SOC NOT ADDED', clone(cSoc))
+
+                    }
+                }
+
+                editableSocials[x] = isAdded ? null : cSoc
+            }
+        }
+
+        return editableSocials;
     }
 
     /**
@@ -1278,7 +1371,7 @@ import { CommentsApi } from '../lib/creary-api';
 
             if (session) {
                 let metadata = profileContainer.profile;
-                metadata.tags = $('#profile-edit-tags').val().split(' ');
+                metadata.tags = metadata.tags || [];
                 metadata = jsonstring(metadata);
 
                 if (!keys) {
@@ -1301,6 +1394,7 @@ import { CommentsApi } from '../lib/creary-api';
 
                 console.log(keys);
                 requireRoleKey(session.account.username, 'owner', function (ownerKey) {
+                    console.log("OWNER KEY FETCHED")
                     globalLoading.show = true;
                     crea.broadcast.accountUpdate(
                         ownerKey,
@@ -1469,38 +1563,48 @@ import { CommentsApi } from '../lib/creary-api';
         if (profileName) {
             let onState = function onState(err, state) {
                 if (!catchError(err)) {
-                    console.log(clone(state));
+                    crea.api.findRcAccounts([profileName], (err, rcResult) => {
+                        console.debug("findRcAccounts", err, rcResult)
+                        if (!catchError(err)) {
+                            console.log("state", clone(state));
 
-                    getProfileDiscussions(function (err, discussions) {
-                        let accounts = Object.keys(state.accounts);
-                        accounts.forEach(function (k) {
-                            state.accounts[k] = parseAccount(state.accounts[k]);
-                        });
+                            let accounts = Object.keys(state.accounts);
+                            accounts.forEach(function (k) {
+                                state.accounts[k] = parseAccount(state.accounts[k]);
+                            });
 
-                        if (state.accounts[profileName]) {
-                            state.user = state.accounts[profileName];
-                            crea.formatter.estimateAccountValue(state.user).then(function (value) {
-                                state.user.estimate_account_value = value;
+                            if (state.accounts[profileName]) {
+                                state.user = parseAccount(state.accounts[profileName], rcResult.rc_accounts[0]);
+                                crea.formatter.estimateAccountValue(state.user).then(function (value) {
+                                    state.user.estimate_account_value = value;
+                                });
+                            }
+
+                            getProfileDiscussions(function (err, discussions) {
+                                //Sort discussions
+                                //Nodes return discussion ordered by last update
+                                console.log('getProfileDiscussions', err, discussions)
+                                discussions.sort(function (k1, k2) {
+                                    let d1 = toLocaleDate(k1.created);
+                                    let d2 = toLocaleDate(k2.created);
+                                    return d2.valueOf() - d1.valueOf();
+                                });
+
+                                for (let x = 0; x < discussions.length; x++) {
+                                    let d = discussions[x];
+                                    let permlink = d.author + '/' + d.permlink;
+                                    state.content[permlink] = d;
+                                    state.discussion_idx[''].profile.push(permlink);
+                                }
+
+                                state.discussions = discussions
+
+                                detectNav(state, session, account, profileName);
                             });
                         }
-
-                        //Sort discussions
-                        //Nodes return discussion ordered by last update
-                        discussions.sort(function (k1, k2) {
-                            let d1 = toLocaleDate(k1.created);
-                            let d2 = toLocaleDate(k2.created);
-                            return d2.valueOf() - d1.valueOf();
-                        });
-
-                        for (let x = 0; x < discussions.length; x++) {
-                            let d = discussions[x];
-                            let permlink = d.author + '/' + d.permlink;
-                            state.content[permlink] = d;
-                            state.discussion_idx[''].profile.push(permlink);
-                        }
-
-                        detectNav(state, session, account, profileName);
                     });
+
+
                 }
             };
 

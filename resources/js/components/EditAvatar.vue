@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="{ 'img-user-avatar': !profile, 'img-user-avatar-profile': profile}" v-bind:style="{ 'background-image': 'url(' + ( getDefaultAvatar(account)) + ')' }"></div>
+    <div class="img-user-avatar-profile" v-bind:style="{ 'background-image': 'url(' + ( getDefaultAvatar(account, metadata)) + ')' }"></div>
 </template>
 
 <script>
@@ -10,9 +10,8 @@
             account: {
                 type: Object
             },
-            profile: {
-                type: Boolean,
-                default: false
+            metadata: {
+                type: Object
             }
         },
         methods: {

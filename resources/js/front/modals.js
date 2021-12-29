@@ -145,6 +145,7 @@ import { catchError } from "../common/common";
     });
     creaEvents.on('crea.auth.role', function (username, role, login, id) {
         //Executed in timeout for modals visibility conflict
+        console.log("requiring role", role)
         setTimeout(function () {
             roleModal.id = id;
             roleModal.inputs.username.value = username;

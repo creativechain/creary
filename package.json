@@ -27,7 +27,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "@creativechain-fdn/crea-js": "^0.5.0",
+        "@creativechain-fdn/crea-js": "^0.6.0",
         "aedes": "^0.42.1",
         "browserify-zlib": "^0.2.0",
         "compressorjs": "^1.0.6",

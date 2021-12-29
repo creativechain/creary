@@ -44,14 +44,17 @@ let R = {
 /**
  *
  * @param account
+ * @param accountMetadata
  * @returns {string}
  */
-R.getAvatar = function (account) {
-    if (account.metadata && account.metadata.avatar) {
-        if (account.metadata.avatar.hash) {
-            return 'https://ipfs.creary.net/ipfs/' + account.metadata.avatar.hash;
-        } else if (account.metadata.avatar.url) {
-            return account.metadata.avatar.url;
+R.getAvatar = function (account, accountMetadata = null) {
+    let metadata = accountMetadata || account.metadata;
+
+    if (metadata && metadata.avatar) {
+        if (metadata.avatar.hash) {
+            return 'https://ipfs.creary.net/ipfs/' + metadata.avatar.hash;
+        } else if (metadata.avatar.url) {
+            return metadata.avatar.url;
         }
     }
 

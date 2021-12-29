@@ -29,8 +29,13 @@
                     <div class="col-12 col-lg-6">
                         <div class="input-select">
                             <select>
-                                <option selected>Select website</option>
-                                <option value="1">Website</option>
+                                <option value="-1" selected>Select website</option>
+                                <template v-for="(s, i) in editableSocials">
+                                    <template v-if="s">
+                                        <option v-bind:value="i" v-on:click="addSocial(i)">@{{ s.name }}</option>
+                                    </template>
+                                </template>
+<!--                                <option value="0">Website</option>
                                 <option value="2">Twitter</option>
                                 <option value="3">Instagram</option>
                                 <option value="4">Youtube</option>
@@ -43,7 +48,7 @@
                                 <option value="11">Makersplace</option>
                                 <option value="12">Foundation</option>
                                 <option value="13">Async Art</option>
-                                <option value="14">Hice et nunc</option>
+                                <option value="14">Hice et nunc</option>-->
                             </select>
                         </div>
                     </div>
@@ -51,17 +56,23 @@
                     <div class="col-12 col-lg-6">
                         <!-- repeat -->
                         <div class="row pr-2">
-                            <div class="col-12 social-input mb-3">
-                                <span class="mb-3"><i></i> Web site</span>
-                                <label class="sr-only" for="inlineFormInputGroup"></label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">www.</div>
+                            <template v-for="(s, i) in profile.other.socials">
+                                <div v-if="s" class="col-12 social-input mb-3">
+                                    <div class="header-web-link">
+                                        <span><i v-bind:class="'icon-' + s.name.toLowerCase().replaceAll(' ', '')"></i> @{{ s.name }}</span>
+                                        <a href="#" v-on:click="deleteSocial($event, i)">{{ __('lang.COMMON.DELETE') }}</a>
                                     </div>
-                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="">
+                                    <label class="sr-only" for="inlineFormInputGroup"></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">@{{ s.baseUrl }}</div>
+                                        </div>
+                                        <input v-model="profile.other.socials[i].profile" type="text" class="form-control" id="inlineFormInputGroup" placeholder="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12 social-input mb-3">
+                            </template>
+
+<!--                            <div class="col-12 social-input mb-3">
                                 <div class="header-web-link">
                                     <span><i class="icon-twitter"></i> Twitter</span>
                                     <a href="#">delete</a>
@@ -86,7 +97,7 @@
                                     </div>
                                     <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="">
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
 

@@ -462,6 +462,7 @@ function arrayBufferToBuffer(ab) {
 }
 
 function dataURLtoBlob(dataURL) {
+    console.log('dataURL', dataURL)
     let arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--){

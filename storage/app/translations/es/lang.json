@@ -6,7 +6,8 @@
         "NO": "No",
         "AND": "y",
         "FOR": "por",
-        "MORE": "Más"
+        "MORE": "Más",
+        "DELETE": "Eliminar"
     },
     "ERROR": {
         "1": {
@@ -384,9 +385,9 @@
         "SECONDARY_MENU_NOTIFICATIONS": "Notificaciones",
         "COMMENTS": "COMMENTS",
         "SECONDARY_MENU_REWARDS": "Recompensas",
-        "FOLLOWERS": "SEGUIDORES",
+        "FOLLOWERS": "Seguidores",
         "LIKES": "LIKES",
-        "FOLLOWING": "SIGUIENDO",
+        "FOLLOWING": "Siguiendo",
         "TITLE_CURATION": "RECOMPENSAS DE CURACIÓN",
         "TITLE_AUTHOR_HISTORY": "HISTORIAL RECOMPENSAS DE AUTOR",
         "TITLE_FOLLOWERS": "Seguidores",
@@ -406,7 +407,9 @@
         "NO_POSTS_PUBLISH": "Publica tu trabajo",
         "NO_POSTS_EXPLORE": "Explora los trabajos que son tendencia",
         "NO_POSTS_FAQ": "Preguntas Frecuentes",
-        "NO_POSTS_PROFILE": "No existen proyectos relacionados con este usuario."
+        "NO_POSTS_PROFILE": "No existen proyectos relacionados con este usuario.",
+        "REPUTATION": "Reputación",
+        "VOTING_ENERGY": "Energía de voto"
     },
     "COIN_MARKETS": {"TITLE": "Mercados de moneda"},
     "WALLET": {
