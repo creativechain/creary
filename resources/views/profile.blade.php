@@ -3,12 +3,14 @@
 @section('content')
 <div id="profile-container">
     <div  v-cloak class="new-profile">
+        <div v-if="editMode" class="background-banner"></div>
         <div class="box-banner">
             <div v-if="editMode" class="edit-icon-banner" v-on:click="loadBanner"></div>
             <div v-if="editMode" class="delete-icon-banner" v-on:click="deleteBanner"></div>
             <input id="profile-edit-input-banner" class="hidden" type="file" accept="image/*" v-on:change="onLoadBanner">
         </div>
-<!--        <div class="banner-user" style="background-color: #EAEAEA"></div>-->
+
+        <!--        <div class="banner-user" style="background-color: #EAEAEA"></div>-->
         <template v-if="editMode">
             <user-banner  v-bind:metadata="profile" ></user-banner>
         </template>

@@ -873,11 +873,7 @@ import {SocialLink} from "../lib/dips";
                         }
                     },
                     deleteBanner: function () {
-                        if (this.state.user.metadata.other.banner) {
-                            Vue.set(this.profile.other, 'banner', this.state.user.metadata.other.banner);
-                        } else {
-                            Vue.set(this.profile.other, 'banner', null);
-                        }
+                        Vue.set(this.profile.other, 'banner', null);
 
                         this.$forceUpdate()
                     },
