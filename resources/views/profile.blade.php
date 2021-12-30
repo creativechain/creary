@@ -94,8 +94,8 @@
                     <p>@{{ state.user.metadata.about }}</p>
                 </div>
                 <div class="col-12 col-md-6 col-xl-2 offset-xl-1">
-                    <p>{{ __('lang.PROFILE.FOLLOWERS') }}: <strong>@{{ state.user.follower_count }}</strong></p>
-                    <p>{{ __('lang.PROFILE.FOLLOWING') }}: <strong>@{{ state.user.following_count }}</strong></p>
+                    <p class="cursor-link" v-on:click="navigateTo($event, 'followers')">{{ __('lang.PROFILE.FOLLOWERS') }}: <strong>@{{ state.user.follower_count }}</strong></p>
+                    <p class="cursor-link" v-on:click="navigateTo($event, 'following')">{{ __('lang.PROFILE.FOLLOWING') }}: <strong>@{{ state.user.following_count }}</strong></p>
                     <p>{{ __('lang.PROFILE.REPUTATION') }}: <strong>@{{ state.user.buzz.level_title }} <span>(@{{ state.user.buzz.formatted }})</span></strong></p>
                 </div>
                 <div class="col-12 col-md-6 col-xl-3">
