@@ -110,7 +110,11 @@ class SocialLink {
      * @returns {SocialLink}
      */
     static parse(socObj) {
-        return new SocialLink(socObj.name, socObj.baseUrl, socObj.profile)
+        if (socObj) {
+            return new SocialLink(socObj.name, socObj.baseUrl, socObj.profile)
+        }
+
+        return null
     }
 }
 
