@@ -122,7 +122,7 @@
                     <div class="social">
 
                         <template v-for="social in profile.other.socials">
-                            <a v-if="social" v-bind:href="social.link" class="'a-social" data-toggle="tooltip" data-placement="top" v-bind:title="social.name" target="_blank">
+                            <a v-if="social" v-bind:href="social.link" class="a-social" data-toggle="tooltip" data-placement="top" v-bind:title="social.name" target="_blank">
                                 <span v-bind:class="'icon-' + social.name.toLowerCase().replaceAll(' ', '')"></span>
                             </a>
                         </template>
