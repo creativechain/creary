@@ -1224,7 +1224,11 @@
     }
   }
 }
-
+@media (min-width: 1921px) {
+  div.new-profile .banner-user {
+    max-width: 100%;
+  }
+}
 @media (min-width: 1200px) and (max-width: 2500px){
   .li-avatar-navbar {
     .dropdown__container {

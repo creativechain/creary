@@ -18,6 +18,16 @@
     .wallet-password-tab {
       display: none;
     }
+    .amount-price {
+      width: 300px;
+    }
+    .dropdown > .dropdown__trigger:after {
+      font-family: "stack-interface";
+      display: inline-block;
+      font-size: 9px;
+      position: relative;
+      bottom: 22px;
+    }
   }
   .td-right-balance {
     text-align: right; padding-right: 20px;
