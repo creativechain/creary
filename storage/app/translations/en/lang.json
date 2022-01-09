@@ -250,7 +250,8 @@
         "UNLOCK": "Unlock",
         "PAY": "Pay",
         "VERIFY_PHONE": "Verify phone",
-        "SEND_CODE_AGAIN": "Send new code"
+        "SEND_CODE_AGAIN": "Send new code",
+        "DELETE_PROJECT": "Delete project"
     },
     "WELCOME": {
         "SLIDE1_TITLE": "Discover the Crea community!",

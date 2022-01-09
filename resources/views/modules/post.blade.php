@@ -90,7 +90,7 @@
                                                 <p class="error-color-form">{{ __('lang.HOME.DROPDOWN_REFUSED_PAYOUT') }} <span class="refused-payout">@{{ getPayout() }}</span></p>
                                             </div>
                                             <div v-else class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
-                                                <a class="delete-btn">Delete project</a>
+                                                <a href="/" class="delete-btn" v-on:click="removeComment(state.post, $event)">{{ __('lang.BUTTON.DELETE_PROJECT') }}</a>
                                             </div>
                                         </div><!--end row-->
                                     </div><!--end container-->
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container"  style="background-color: white">
             <div class="row background-content-post row-content-post">
                 <div class="col-md-12 img-post-view content-post" >
@@ -124,7 +124,7 @@
 
                     </div>
                     <div v-else>
-                        <template v-for="el in state.post.body">
+                        <div v-for="el in state.post.body">
                             <div v-if="el != null">
                                 <div v-if="el.type.indexOf('text/html') > -1" v-html="linkfy(el.value)" style="word-break: break-word;">
 
@@ -156,7 +156,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,7 +255,7 @@
                             </div>
                         </div>
 
-                        <template v-for="c in state.post.comments">
+                        <div v-for="(c, i) in state.post.comments">
                             <div v-if="isCommentResponse(state.post[c], state.post)" class="row">
                                 <div class="col-md-12">
                                     <div class="row-post-comments">
@@ -329,17 +329,17 @@
                                         <div v-if="mustShowCommentField(state.post[c])">
                                             <textarea cols="30" rows="3" v-model="response_comment" v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.COMMENT"></textarea>
 
-                                            <div class="btn btn--primary mt-3 mb-3 mt-md-3 mb-md-5" v-on:click="addComment(state.post[c], true, active_response_edit)">
+                                            <div class="btn btn&#45;&#45;primary mt-3 mb-3 mt-md-3 mb-md-5" v-on:click="addComment(state.post[c], true, active_response_edit)">
                                                 <span class="btn__text">
                                                     {{ __('lang.BUTTON.POST_COMMENT') }}
                                                 </span>
                                             </div>
-                                            <div class="btn btn--sm mt-0 mb-3 mt-md-3 mb-md-5" v-on:click="cleanMakeResponse()">
+                                            <div class="btn btn&#45;&#45;sm mt-0 mb-3 mt-md-3 mb-md-5" v-on:click="cleanMakeResponse()">
                                                 <span class="btn__text text__dark">{{ __('lang.BUTTON.CANCEL') }}</span>
                                             </div>
                                         </div>
 
-                                        <template v-for="cc in state.post.comments">
+                                        <div v-for="cc in state.post.comments">
                                             <div class="row-post-comments" v-if="isCommentResponse(state.post[cc], state.post[c])">
                                                 <div class="user-avatar">
                                                     <a v-bind:href="'/@' + state.post[cc].author">
@@ -347,19 +347,12 @@
                                                     </a>
                                                 </div>
                                                 <div class="user-comments">
-{{--                                                    <p>
-                                                    <div>
-                                                        <username v-bind:inline="1" v-bind:user="state.post[cc].author" v-bind:name="state.accounts[state.post[cc].author].metadata.publicName"></username>
-                                                    </div>
-                                                    <span>@{{ dateFromNow(state.post[cc].created) }}</span>
-                                                    </p>--}}
                                                     <div>
                                                         <p>
                                                             <username v-bind:inline="1" v-bind:user="state.post[cc].author" v-bind:name="state.accounts[state.post[cc].author].metadata.publicName"></username>
                                                             <span>@{{ dateFromNow(state.post[cc].created) }}</span>
                                                         </p>
                                                     </div>
-
 
                                                     <p class="comment-user" v-html="linkfy(state.post[cc])"></p>
                                                     <div class="row">
@@ -407,7 +400,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row-flag">
-                                                    <!-- dos estados que acompañan a la clase a-flag o inactive o active -->
+                                                    &lt;!&ndash; dos estados que acompañan a la clase a-flag o inactive o active &ndash;&gt;
 
                                                     <a href="#modal-report-comment" data-modal-id="modal-report-comment"v-if="!state.post[cc].reported" class="modal-trigger link-report" v-on:click="setActiveComment(state.post[cc])">
                                                         <div class="a-flag" v-bind:class="{ active: state.post[cc].reported, inactive: !state.post[cc].reported }"></div>
@@ -417,11 +410,11 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                        </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </template>
+                        </div>
 
 
                         <hr v-if="state.post.replies.length > 10 && comments_shown < state.post.replies.length" />

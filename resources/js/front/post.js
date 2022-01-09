@@ -361,11 +361,16 @@ import { CommentsApi } from '../lib/creary-api';
                         this.$forceUpdate();
                     },
                     makeDownload: makeDownload,
-                    removeComment: function (comment) {
+                    removeComment: function (comment, event) {
+                        if (event) {
+                            cancelEventPropagation(event);
+                        }
+
+                        console.log('deleting publication', clone(comment))
                         let that = this;
                         deleteComment(comment, this.session, function (err, result) {
+                            globalLoading.show = false;
                             if (!catchError(err)) {
-                                globalLoading.show = false;
                                 fetchContent();
                             }
                         });

@@ -73,7 +73,7 @@ import { CommentsApi } from '../lib/creary-api';
 
     function setUp(state) {
         updateUrl(state.post.url, 'Creary - ' + state.post.title, state, true);
-        console.log(clone(state));
+        //console.log('postNavigation', clone(state));
 
         if (!postContainer) {
             postContainer = new Vue({
@@ -888,16 +888,18 @@ import { CommentsApi } from '../lib/creary-api';
                             let d2 = toLocaleDate(postState.content[k2].created);
                             return d2.valueOf() - d1.valueOf();
                         });
-                        cKeys.forEach(function (c) {
+                        for (let c of cKeys) {
                             postState.post[c] = parsePost(postState.content[c]);
-                        });
+                        }
+
+                        //console.log('CKeys', cKeys, clone(postState))
                         postState.post.comments = cKeys;
 
                         setUp(postState);
 
-                        setTimeout(function () {
+                        /*setTimeout(function () {
                             fetchOtherProjects(post.author, post.permlink, postState);
-                        }, 300);
+                        }, 300);*/
                     }
                 };
 
