@@ -70,11 +70,11 @@
                     <p>{{ __('lang.PROFILE.REPUTATION') }}: <strong>@{{ state.user.buzz.level_title }} <span>(@{{ state.user.buzz.formatted }})</span></strong></p>
                 </div>
                 <div class="col-12 col-md-6 col-xl-3">
-                    <p class="title-progress">CREA Energy:
+                    <div class="title-progress">CREA Energy:
                         <amount v-bind:value="getCGYBalance()" style="color: #222222; font-weight: bold; margin-left: 5px"></amount>
 
                         <img class="ml-2" style="width: 15px;" src="{{ asset('img/wallet/creary-cgy-logo.svg') }}" alt="">
-                    </p>
+                    </div>
                     <div class="energy">
                         <p class="title-progress">
                             {{ __('lang.PROFILE.VOTING_ENERGY') }}
