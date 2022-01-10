@@ -296,7 +296,15 @@ class CommentsController extends Controller
             $permlink = explode('/', $cl)[1];
             $cc = new CrearyClient();
             $content = $cc->getPost($author, $permlink);
-            $c = new Comments();
+            $c = Comments::query()
+                ->where('permlink', $this->data->permlink)
+                ->where('author', $this->data->author)
+                ->first();
+
+            if (!$c) {
+                $c = new Comments();
+            }
+
             $c->applyData($content);
 
             $commentsData->add($c);
