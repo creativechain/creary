@@ -148,6 +148,9 @@
         "FREE_DOWNLOAD": "Descarga Gratuita",
         "PROMOTE_TITLE": "Promocionar Publicación",
         "PROMOTE_TEXT": "Usa tu CREA DOLLAR para promocionar tu contenido en la sección de promocionados",
+        "MODAL_DELETE_TITLE": "Eliminar proyecto",
+        "MODAL_DELETE_BODY1": "El proyecto dejará de ser visible en Creary.net.",
+        "MODAL_DELETE_BODY2": "Los datos de esta publicación seguirán existiendo en la blockchain de CREA.",
         "MODAL_DOWNLOAD_TITLE": "Contenido de pago",
         "MODAL_DOWNLOAD_TEXT": "Para realizar la descarga debes pagar la siguiente cantidad al autor",
         "MODAL_DOWNLOAD_TEXT_PAYED": "Ya has descargado este contenido anteriormente, puedes descargarlo nuevamente sin coste",
@@ -694,7 +697,7 @@
             "TITLE": "Creary - Términos del Servicio",
             "DESCRIPTION": "Términos y Condiciones de Creativechain FDN para el servicio de Creary.net"
         },
-        "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+        "IMAGE": "img/creary-social-media.jpg"
     },
     "NAVBAR": {
         "SEE_ALL_RESULTS": "Mostrar todos los miembros",

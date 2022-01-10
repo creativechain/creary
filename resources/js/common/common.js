@@ -643,6 +643,39 @@ function deleteComment(post, session, callback) {
     }
 }
 
+function hidePublication(post, session, callback) {
+    if (session && post) {
+        let postToDelete = clone(post);
+        postToDelete.metadata.visible = false;
+        postToDelete.body = jsonstring(postToDelete.body)
+        postToDelete.download = jsonstring(postToDelete.download);
+        postToDelete.json_metadata = jsonstring(postToDelete.metadata);
+        console.log('postToDelete', postToDelete)
+
+
+        let operations = [];
+        operations.push(
+            crea.broadcast.commentBuilder(
+                '',
+                postToDelete.parent_permlink,
+                postToDelete.author,
+                postToDelete.permlink,
+                postToDelete.title,
+                postToDelete.body,
+                '',
+                postToDelete.json_metadata
+            )
+        );
+
+        console.log('operations', operations)
+
+        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+            globalLoading.show = true;
+            crea.broadcast.sendOperations([postingKey], ...operations, callback);
+        });
+    }
+}
+
 function editComment(comment, post, session, callback) {
     if (session && post) {
         requireRoleKey(session.account.username, 'posting', function (postingKey) {
@@ -1191,6 +1224,7 @@ export {
     ignoreUser,
     makeComment,
     deleteComment,
+    hidePublication,
     editComment,
     makeDownload,
     updateUserSession,
