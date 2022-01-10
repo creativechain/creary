@@ -297,8 +297,8 @@ class CommentsController extends Controller
             $cc = new CrearyClient();
             $content = $cc->getPost($author, $permlink);
             $c = Comments::query()
-                ->where('permlink', $this->data->permlink)
-                ->where('author', $this->data->author)
+                ->where('permlink', $permlink)
+                ->where('author', $author)
                 ->first();
 
             if (!$c) {
