@@ -206,7 +206,9 @@
         "TAGS": "ETIQUETAS",
         "CONTACT_INFO": "INFORMACIÓN DE CONTACTO",
         "INPUT_CONTACT_INFO": "Añade información para que otros usuarios puedan contactarte",
-        "SELECT_OPTION": "Selecciona una opción"
+        "SELECT_OPTION": "Selecciona una opción",
+        "ADD_LINKS": "Añadir enlaces",
+        "SELECT_WEBSITE": "Seleccciona una web"
     },
     "BUTTON": {
         "FOLLOW": "Seguir",

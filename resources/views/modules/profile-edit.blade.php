@@ -15,40 +15,26 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label>{{ __('lang.EDIT_PROFILE.ABOUT') }}</label>
-                        <input class="validate-required" type="textarea"
+                        <input class="validate-required" type="text"
                             v-bind:maxlength="CONSTANTS.TEXT_MAX_SIZE.PROFILE.ABOUT" v-model="profile.about"
                             placeholder="{{ __('lang.EDIT_PROFILE.INPUT_ABOUT') }}" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <h4 class="mt-2 add-link-title">Add Links</h4>
+                        <h4 class="mt-2 add-link-title">{{ __('lang.EDIT_PROFILE.ADD_LINKS') }}</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="input-select">
-                            <select>
-                                <option value="-1" selected>Select website</option>
+                            <select v-on:change="addSocial($event)">
+                                <option value="-1">{{ __('lang.EDIT_PROFILE.SELECT_WEBSITE') }}</option>
                                 <template v-for="(s, i) in editableSocials">
                                     <template v-if="s">
-                                        <option v-bind:value="i" v-on:click="addSocial(i)">@{{ s.name }}</option>
+                                        <option v-bind:value="i">@{{ s.name }}</option>
                                     </template>
                                 </template>
-<!--                                <option value="0">Website</option>
-                                <option value="2">Twitter</option>
-                                <option value="3">Instagram</option>
-                                <option value="4">Youtube</option>
-                                <option value="5">Vimeo</option>
-                                <option value="6">Linkt</option>
-                                <option value="7">Opensea</option>
-                                <option value="8">KnownOrigin</option>
-                                <option value="9">SuperRare</option>
-                                <option value="10">Raribe</option>
-                                <option value="11">Makersplace</option>
-                                <option value="12">Foundation</option>
-                                <option value="13">Async Art</option>
-                                <option value="14">Hice et nunc</option>-->
                             </select>
                         </div>
                     </div>
@@ -71,33 +57,6 @@
                                     </div>
                                 </div>
                             </template>
-
-<!--                            <div class="col-12 social-input mb-3">
-                                <div class="header-web-link">
-                                    <span><i class="icon-twitter"></i> Twitter</span>
-                                    <a href="#">delete</a>
-                                </div>
-                                <label class="sr-only" for="inlineFormInputGroup"></label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">twitter.com/</div>
-                                    </div>
-                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-12 social-input mb-3">
-                                <div class="header-web-link">
-                                    <span><i class="icon-twitter"></i> Instaglam</span>
-                                    <a href="#">delete</a>
-                                </div>
-                                <label class="sr-only" for="inlineFormInputGroup"></label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">instagram.com/</div>
-                                    </div>
-                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="">
-                                </div>
-                            </div>-->
                         </div>
                     </div>
 

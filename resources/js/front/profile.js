@@ -609,15 +609,20 @@ import {SocialLink} from "../lib/dips";
                         });
                         return linkedTags.join(', ');
                     },
-                    addSocial: function (index) {
-                        let soc = this.editableSocials[index];
-                        this.editableSocials.slice(index, 1);
-                        this.profile.other.socials[index] = soc;
-                        //this.editableSocials = this.getEditableSocials(this.profile);
-                        let es = this.getEditableSocials(this.profile);
-                        console.log('ES', clone(es), clone(this.profile))
-                        Vue.set(this, 'editableSocials', this.getEditableSocials(this.profile));
-                        this.$forceUpdate();
+                    addSocial: function (event) {
+                        console.log('addSocial', event.target);
+                        let index = event.target.value;
+                        if (index >= 0) {
+                            let soc = this.editableSocials[index];
+                            this.editableSocials.slice(index, 1);
+                            this.profile.other.socials[index] = soc;
+                            //this.editableSocials = this.getEditableSocials(this.profile);
+                            let es = this.getEditableSocials(this.profile);
+                            console.log('ES', clone(es), clone(this.profile))
+                            Vue.set(this, 'editableSocials', this.getEditableSocials(this.profile));
+                            this.$forceUpdate();
+                        }
+
                     },
                     deleteSocial: function (event, index) {
                         cancelEventPropagation(event)
