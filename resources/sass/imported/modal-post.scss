@@ -7,7 +7,19 @@
   z-index: 10;
 
 }
+#post-view {
+  .amount-post-view-home {
+    a {
+      pointer-events: all;
+    }
+  }
+}
 #modal-post {
+  .amount-post-view-home {
+    a {
+      pointer-events: all;
+    }
+  }
   #post-navigation-view {
     padding: 0;
     height: 100vh;
