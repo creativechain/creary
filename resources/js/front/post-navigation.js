@@ -15,7 +15,7 @@ import {
     CONSTANTS,
     deleteComment,
     goTo,
-    hideModal,
+    hideModal, hidePublication,
     ignoreUser,
     makeComment,
     makeDownload,
@@ -60,7 +60,7 @@ import { CommentsApi } from '../lib/creary-api';
 
     let lastPage;
     let postContainer, otherProjectsContainer;
-    let promoteModal, downloadModal, reportModal, reportCommentModal;
+    let promoteModal, downloadModal, reportModal, reportCommentModal, deletePublicationModal;
     let session, userAccount;
 
     function onVueReady() {
@@ -73,7 +73,7 @@ import { CommentsApi } from '../lib/creary-api';
 
     function setUp(state) {
         updateUrl(state.post.url, 'Creary - ' + state.post.title, state, true);
-        console.log(clone(state));
+        //console.log('postNavigation', clone(state));
 
         if (!postContainer) {
             postContainer = new Vue({
@@ -681,6 +681,35 @@ import { CommentsApi } from '../lib/creary-api';
                 reportCommentModal.user = userAccount ? userAccount.user : null;
                 reportCommentModal.state = state;
             }
+
+            if (!deletePublicationModal) {
+                deletePublicationModal = new Vue({
+                    el: '#modal-delete',
+                    data: {
+                        lang: lang,
+                        session: session,
+                        user: userAccount ? userAccount.user : null,
+                        state: state,
+                    },
+                    mounted: function mounted() {
+                        onVueReady();
+                    },
+                    methods: {
+                        deletePublication: function () {
+                            hidePublication(this.state.post, this.session, function (err, result) {
+                                if (!catchError(err)) {
+                                    goTo("/")
+                                    //globalLoading.show = false;
+                                }
+                            })
+                        },
+                    },
+                });
+            } else {
+                deletePublicationModal.session = session;
+                deletePublicationModal.user = userAccount ? userAccount.user : null;
+                deletePublicationModal.state = state;
+            }
         }
     }
 
@@ -863,7 +892,7 @@ import { CommentsApi } from '../lib/creary-api';
                     postState.postIndex = postIndex;
                 }
 
-                console.log(postState.postIndex, postState.discussions.length);
+                console.log(postState.postIndex, clone(postState.discussions), post.author + "/" + post.permlink);
                 if (postState.postIndex >= postState.discussions.length - 5) {
                     creaEvents.emit('crea.scroll.bottom');
                 }
@@ -888,9 +917,11 @@ import { CommentsApi } from '../lib/creary-api';
                             let d2 = toLocaleDate(postState.content[k2].created);
                             return d2.valueOf() - d1.valueOf();
                         });
-                        cKeys.forEach(function (c) {
+                        for (let c of cKeys) {
                             postState.post[c] = parsePost(postState.content[c]);
-                        });
+                        }
+
+                        //console.log('CKeys', cKeys, clone(postState))
                         postState.post.comments = cKeys;
 
                         setUp(postState);

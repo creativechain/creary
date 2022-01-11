@@ -568,9 +568,10 @@ import {SocialLink} from "../lib/dips";
                     openPost: function (post, event) {
                         cancelEventPropagation(event);
                         creaEvents.emit('crea.content.prepare');
-                        let state = this.state;
+                        let state = clone(this.state);
+                        state.discussions = state.discussion_idx['']['profile'];
                         state.postsData = state.content;
-                        creaEvents.emit('navigation.post.data', post, this.state, '', 'profile');
+                        creaEvents.emit('navigation.post.data', post, state, '', 'profile');
                         showModal('#modal-post');
                     },
                     showProfile: showProfile,

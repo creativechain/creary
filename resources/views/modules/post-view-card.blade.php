@@ -20,9 +20,6 @@
         </div>
 
 
-
-
-
         <div class="card__body">
             <h4 v-on:click="openPost(state.content[p])">@{{ state.content[p].title }}</h4>
             <!--<p class="description-post-box text-truncate" v-html="getTags(state.content[p])"></p>-->

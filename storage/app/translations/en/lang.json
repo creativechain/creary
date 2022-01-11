@@ -148,6 +148,9 @@
         "FREE_DOWNLOAD": "Free Download",
         "PROMOTE_TITLE": "Promote the Post",
         "PROMOTE_TEXT": "Spend your CREA DOLLAR to promote your content in the promotion section.",
+        "MODAL_DELETE_TITLE": "Delete project",
+        "MODAL_DELETE_BODY1": "The project will no longer be visible on Creary.net.",
+        "MODAL_DELETE_BODY2": "The data in this post will continue to exist on the CREA blockchain.",
         "MODAL_DOWNLOAD_TITLE": "Payment content",
         "MODAL_DOWNLOAD_TEXT": "To make the download you must pay the following amount to the author.",
         "MODAL_DOWNLOAD_TEXT_PAYED": "You have already downloaded this content before, you can download it again at no cost.",
@@ -250,7 +253,8 @@
         "UNLOCK": "Unlock",
         "PAY": "Pay",
         "VERIFY_PHONE": "Verify phone",
-        "SEND_CODE_AGAIN": "Send new code"
+        "SEND_CODE_AGAIN": "Send new code",
+        "DELETE_PROJECT": "Delete project"
     },
     "WELCOME": {
         "SLIDE1_TITLE": "Discover the Crea community!",
@@ -693,7 +697,7 @@
             "TITLE": "Creary - Terms of service",
             "DESCRIPTION": "Creativechain FDN Terms and Conditions for Creary.net services"
         },
-        "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+        "IMAGE": "img/creary-social-media.jpg"
     },
     "NAVBAR": {
         "SEE_ALL_RESULTS": "See all members",

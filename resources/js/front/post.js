@@ -32,7 +32,7 @@ import {
     showModal,
     refreshAccessToken,
     parseAccount,
-    parsePost,
+    parsePost, hidePublication,
 } from '../common/common';
 
 //Components import
@@ -66,7 +66,7 @@ import { CommentsApi } from '../lib/creary-api';
     Vue.component('btn-follow', ButtonFollow);
 
     let postContainer, otherProjects;
-    let promoteModal, downloadModal, reportModal, reportCommentModal;
+    let promoteModal, downloadModal, reportModal, reportCommentModal, deletePublicationModal;
     let url = window.location.pathname;
     let session, userAccount;
     let vueInstances = 5;
@@ -361,11 +361,30 @@ import { CommentsApi } from '../lib/creary-api';
                         this.$forceUpdate();
                     },
                     makeDownload: makeDownload,
-                    removeComment: function (comment) {
+                    removePublication: function (comment, event) {
+                        if (event) {
+                            cancelEventPropagation(event);
+                        }
+
+                        console.log('deleting publication', clone(comment))
+                        let that = this;
+                        hidePublication(comment, this.session, function (err, result) {
+                            globalLoading.show = false;
+                            if (!catchError(err)) {
+                                fetchContent();
+                            }
+                        });
+                    },
+                    removeComment: function (comment, event) {
+                        if (event) {
+                            cancelEventPropagation(event);
+                        }
+
+                        console.log('deleting publication', clone(comment))
                         let that = this;
                         deleteComment(comment, this.session, function (err, result) {
+                            globalLoading.show = false;
                             if (!catchError(err)) {
-                                globalLoading.show = false;
                                 fetchContent();
                             }
                         });
@@ -625,6 +644,35 @@ import { CommentsApi } from '../lib/creary-api';
                 reportCommentModal.session = session;
                 reportCommentModal.user = userAccount ? userAccount.user : null;
                 reportCommentModal.state = state;
+            }
+
+            if (!deletePublicationModal) {
+                deletePublicationModal = new Vue({
+                    el: '#modal-delete',
+                    data: {
+                        lang: lang,
+                        session: session,
+                        user: userAccount ? userAccount.user : null,
+                        state: state,
+                    },
+                    mounted: function mounted() {
+                        onVueReady();
+                    },
+                    methods: {
+                        deletePublication: function () {
+                            hidePublication(this.state.post, this.session, function (err, result) {
+                                if (!catchError(err)) {
+                                    goTo("/")
+                                    //globalLoading.show = false;
+                                }
+                            })
+                        },
+                    },
+                });
+            } else {
+                deletePublicationModal.session = session;
+                deletePublicationModal.user = userAccount ? userAccount.user : null;
+                deletePublicationModal.state = state;
             }
         } else {
             //No session, so downloadModal and modalPromoted can not be mounted

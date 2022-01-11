@@ -56,6 +56,12 @@ class CommentsController extends Controller
                 $query->where('download', $download);
             }
 
+            //Filter removed posts
+            $query->where(function (Builder $query) {
+                return $query->where('is_visible', 'exists', false)
+                    ->orWhere('is_visible', true);
+            });
+
             if ($license) {
                 if ($license === 1) {
                     //Select all Creative Commons license flags
@@ -131,6 +137,13 @@ class CommentsController extends Controller
         $limit = intval($request->get('limit', 20));
 
         $query = Comments::query();
+
+        //Filter removed posts
+        $query->where(function (Builder $query) {
+            return $query->where('is_visible', 'exists', false)
+                ->orWhere('is_visible', true);
+        });
+
         if ($download) {
             $query->where('download', $download);
         }
@@ -171,6 +184,10 @@ class CommentsController extends Controller
         $comment = Comments::query()
             ->where('author', $author)
             ->where('permlink', $permlink)
+            ->where(function (Builder $query) {
+                return $query->where('is_visible', 'exists', false)
+                    ->orWhere('is_visible', true);
+            })
             ->first();
 
         if (!$comment) {
@@ -203,6 +220,10 @@ class CommentsController extends Controller
         $author = str_replace('@', '', $author);
         return Comments::query()
             ->where('author', $author)
+            ->where(function (Builder $query) {
+                return $query->where('is_visible', 'exists', false)
+                    ->orWhere('is_visible', true);
+            })
             ->orderByDesc('created_at')
             ->paginate($limit)
             ->appends($request->except('page'));
@@ -250,6 +271,12 @@ class CommentsController extends Controller
                 });
             }
 
+            //Filter removed posts
+            $commentsQuery->where(function (Builder $query) {
+                return $query->where('is_visible', 'exists', false)
+                    ->orWhere('is_visible', true);
+            });
+
         }
 
         $commentsData = $commentsQuery->get();
@@ -269,7 +296,15 @@ class CommentsController extends Controller
             $permlink = explode('/', $cl)[1];
             $cc = new CrearyClient();
             $content = $cc->getPost($author, $permlink);
-            $c = new Comments();
+            $c = Comments::query()
+                ->where('permlink', $permlink)
+                ->where('author', $author)
+                ->first();
+
+            if (!$c) {
+                $c = new Comments();
+            }
+
             $c->applyData($content);
 
             $commentsData->add($c);

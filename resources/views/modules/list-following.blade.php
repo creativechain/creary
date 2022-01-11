@@ -33,6 +33,7 @@
                     <btn-follow v-on:follow="onFollow" v-bind:session="session"
                                 v-bind:account="account.user"
                                 v-bind:followuser="f.name" >
+                    </btn-follow>
                 </div>
             </div>
         </div>

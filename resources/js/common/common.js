@@ -324,10 +324,14 @@ function parseAccount(account, rc = null) {
 
         if (!account.metadata.other) {
             account.metadata.other = {
-                socials: [
-                    new SocialLink('Personal', 'https://', account.metadata.web)
-                ]
+                socials: []
             }
+
+            //Add personal web only if exists
+            if (account.metadata.web) {
+                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web))
+            }
+
         } else if (account.metadata.other.socials) {
 
             let socials = [];
@@ -337,9 +341,12 @@ function parseAccount(account, rc = null) {
 
             account.metadata.other.socials = socials
         } else {
-            account.metadata.other.socials = [
-                new SocialLink('Personal', 'https://', account.metadata.web)
-            ]
+            account.metadata.other.socials = [ ]
+
+            //Add personal web only if exists
+            if (account.metadata.web) {
+                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web))
+            }
         }
 
         // Calculate actual voting energy
@@ -352,9 +359,10 @@ function parseAccount(account, rc = null) {
 
         account.voting_flowbar.max_flow = 0;
         account.voting_flowbar.flow_percent = 0;
-        account.voting_flowbar.current_flow = parseInt(account.voting_flowbar.current_flow);
+        account.voting_flowbar.current_flow = 0;
         if (rc) {
             console.log("RC", rc)
+            account.voting_flowbar.current_flow = parseInt(rc.rc_flowbar.current_flow);
             account.voting_flowbar.max_flow = parseInt(rc.max_rc);
             account.voting_flowbar.flow_percent = Math.round(account.voting_flowbar.current_flow * 100 / account.voting_flowbar.max_flow);
         }
@@ -631,6 +639,39 @@ function deleteComment(post, session, callback) {
         requireRoleKey(session.account.username, 'posting', function (postingKey) {
             globalLoading.show = true;
             crea.broadcast.deleteComment(postingKey, post.author, post.permlink, callback);
+        });
+    }
+}
+
+function hidePublication(post, session, callback) {
+    if (session && post) {
+        let postToDelete = clone(post);
+        postToDelete.metadata.visible = false;
+        postToDelete.body = jsonstring(postToDelete.body)
+        postToDelete.download = jsonstring(postToDelete.download);
+        postToDelete.json_metadata = jsonstring(postToDelete.metadata);
+        console.log('postToDelete', postToDelete)
+
+
+        let operations = [];
+        operations.push(
+            crea.broadcast.commentBuilder(
+                '',
+                postToDelete.parent_permlink,
+                postToDelete.author,
+                postToDelete.permlink,
+                postToDelete.title,
+                postToDelete.body,
+                '',
+                postToDelete.json_metadata
+            )
+        );
+
+        console.log('operations', operations)
+
+        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+            globalLoading.show = true;
+            crea.broadcast.sendOperations([postingKey], ...operations, callback);
         });
     }
 }
@@ -1183,6 +1224,7 @@ export {
     ignoreUser,
     makeComment,
     deleteComment,
+    hidePublication,
     editComment,
     makeDownload,
     updateUserSession,

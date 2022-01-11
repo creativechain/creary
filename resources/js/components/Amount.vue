@@ -1,5 +1,5 @@
 <template>
-    <div class='amount-price'>
+    <div class="amount-price">
         <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'int') + '.' }}</span>
         <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'dec') }}</span>
         <span v-bind:style="{ 'margin-right': srmargin + 'px'}">{{ assetPart(value, 'sym') }}</span>

@@ -172,3 +172,36 @@
         </div>
     </div>
 </div>
+
+<div v-pre class="modal-instance">
+    <div id="modal-delete" data-modal-id="modal-delete" class="modal-container modal-report">
+        <div class="modal-content">
+            <section class="unpad ">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="boxed boxed--lg bg--white feature">
+                                <div class="modal-close modal-close-cross"></div>
+                                <h3>{{ __('lang.PUBLICATION.MODAL_DELETE_TITLE') }}</h3>
+                                <div class="feature__body">
+                                    <p class="mb-0">{{ __('lang.PUBLICATION.MODAL_DELETE_BODY1') }}</p>
+                                    <p class="mb-0">{{ __('lang.PUBLICATION.MODAL_DELETE_BODY2') }}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12 text-right">
+                                        <div class="btn btn--sm modal-close">
+                                            <span class="btn__text text__dark">{{ __('lang.BUTTON.CANCEL') }}</span>
+                                        </div>
+                                        <div v-on:click="deletePublication" class="btn btn--sm btn--primary" >
+                                            <span class="btn__text">{{ __('lang.BUTTON.CONFIRM') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

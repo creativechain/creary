@@ -66,6 +66,13 @@ class Comments extends Model
 
         try {
             $data->metadata = json_decode($data->json_metadata, true);
+
+            $visible = true;
+            if (isset($data->metadata['visible'])) {
+                $visible = $data->metadata['visible'];
+            }
+
+            $this->is_visible = $visible;
             $this->description = $data->metadata['description'];
             $this->license = $data->metadata['license'];
             $this->adult = $data->metadata['adult'];

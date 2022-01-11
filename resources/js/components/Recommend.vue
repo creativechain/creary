@@ -86,7 +86,13 @@
                 return false;
             },
             isRecommendedByUser: function() {
-                return this.post.reblogged_by.includes(this.user.name);
+                if (this.post.reblogged_by) {
+                    return this.post.reblogged_by.includes(this.user.name);
+
+                }
+
+                console.log("Recommed-isRecommendedByUser", this.post.title)
+                return false;
             },
             recommendedBy: function () {
                 let that = this;

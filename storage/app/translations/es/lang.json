@@ -148,6 +148,9 @@
         "FREE_DOWNLOAD": "Descarga Gratuita",
         "PROMOTE_TITLE": "Promocionar Publicación",
         "PROMOTE_TEXT": "Usa tu CREA DOLLAR para promocionar tu contenido en la sección de promocionados",
+        "MODAL_DELETE_TITLE": "Eliminar proyecto",
+        "MODAL_DELETE_BODY1": "El proyecto dejará de ser visible en Creary.net.",
+        "MODAL_DELETE_BODY2": "Los datos de esta publicación seguirán existiendo en la blockchain de CREA.",
         "MODAL_DOWNLOAD_TITLE": "Contenido de pago",
         "MODAL_DOWNLOAD_TEXT": "Para realizar la descarga debes pagar la siguiente cantidad al autor",
         "MODAL_DOWNLOAD_TEXT_PAYED": "Ya has descargado este contenido anteriormente, puedes descargarlo nuevamente sin coste",
@@ -250,7 +253,8 @@
         "UNLOCK": "Desbloquear",
         "PAY": "Pagar",
         "VERIFY_PHONE": "Verificar número",
-        "SEND_CODE_AGAIN": "Enviar nuevo código"
+        "SEND_CODE_AGAIN": "Enviar nuevo código",
+        "DELETE_PROJECT": "Eliminar proyecto"
     },
     "WELCOME": {
         "SLIDE1_TITLE": "¡Descubre la comunidad de Crea!",
@@ -375,7 +379,7 @@
         "ACTIVE": "ACTIVO",
         "DISABLED": "DESHABILITADO",
         "VOTE_TITLE": "Votar a Testigos",
-        "HOW_TO": "<a href=\"https://creaproject.io/configurar-nodo-testigo-crea/\" target=\"_blank\">Cómo configurar un nodo testigo</a>"
+        "HOW_TO": "<a href='https://creaproject.io/configurar-nodo-testigo-crea/' target='_blank'>Cómo configurar un nodo testigo</a>"
     },
     "PROFILE": {
         "MORE_INFO":"Más info",
@@ -693,7 +697,7 @@
             "TITLE": "Creary - Términos del Servicio",
             "DESCRIPTION": "Términos y Condiciones de Creativechain FDN para el servicio de Creary.net"
         },
-        "IMAGE": "https://creary.net/img/creary-social-media.jpg"
+        "IMAGE": "img/creary-social-media.jpg"
     },
     "NAVBAR": {
         "SEE_ALL_RESULTS": "Mostrar todos los miembros",
