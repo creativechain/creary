@@ -668,10 +668,17 @@ function hidePublication(post, session, callback) {
         );
 
         console.log('operations', operations)
+        hideModal('#modal-delete')
 
         requireRoleKey(session.account.username, 'posting', function (postingKey) {
-            globalLoading.show = true;
-            crea.broadcast.sendOperations([postingKey], ...operations, callback);
+            setTimeout(_ => {
+                console.log('requireKey', postingKey);
+                globalLoading.show = true;
+                globalLoading.$forceUpdate();
+
+                crea.broadcast.sendOperations([postingKey], ...operations, callback);
+            }, 500);
+
         });
     }
 }

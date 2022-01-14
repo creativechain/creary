@@ -178,6 +178,7 @@ creaEvents.on('crea.content.prepare', function () {
     try {
         window.globalLoading = new Vue({
             el: '#global-loading',
+            name: 'global-loading',
             data: {
                 show: true
             }

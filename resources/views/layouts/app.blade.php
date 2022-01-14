@@ -697,14 +697,17 @@
 @yield('content')
 
 {{--</div>--}}
-<div id="global-loading" class="loading" v-bind:class="{ hidden: !show }">
-    <div v-cloak  class="center-loading">
-        <svg viewBox="0 0 50 50" class="spinner">
-            <circle class="ring" cx="25" cy="25" r="22.5" />
-            <circle class="line" cx="25" cy="25" r="22.5" />
-        </svg>
+<div id="global-loading">
+    <div  class="loading" v-bind:class="{ hidden: !show }">
+        <div v-cloak  class="center-loading">
+            <svg viewBox="0 0 50 50" class="spinner">
+                <circle class="ring" cx="25" cy="25" r="22.5" />
+                <circle class="line" cx="25" cy="25" r="22.5" />
+            </svg>
+        </div>
     </div>
 </div>
+
 
 <script src="{{ asset('js/ui/flickity.js') }}"></script>
 <script src="{{ asset('js/ui/parallax.js') }}"></script>

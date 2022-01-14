@@ -1874,7 +1874,7 @@ import {SocialLink} from "../lib/dips";
         let permlink = `${post.author}/${post.permlink}`;
 
         let postIndex = discussions.indexOf(permlink);
-        discussions = discussions.splice(postIndex, 1);
+        discussions.splice(postIndex, 1);
         profileContainer.state.discussion_idx[''].profile = discussions;
         profileContainer.$forceUpdate();
     });

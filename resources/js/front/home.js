@@ -914,7 +914,7 @@ import { CommentsApi } from '../lib/creary-api';
         let permlink = `${post.author}/${post.permlink}`;
 
         let postIndex = discussions.indexOf(permlink);
-        discussions = discussions.splice(postIndex, 1);
+        discussions.splice(postIndex, 1);
         homePosts.state.discussion_idx[discuss][category] = discussions;
         homePosts.$forceUpdate();
     });
