@@ -1160,15 +1160,6 @@
   }
 }
 
-@media (max-width: 1366px) {
-  #modal-post #post-navigation-view .modal-content {
-    overflow: scroll;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    max-height: 100%;
-  }
-}
-
 @media (min-width: 1500px) {
   .view-wallet .table-amount tbody tr .dropdown__container .dropdown__content {
     left: 120px !important;
