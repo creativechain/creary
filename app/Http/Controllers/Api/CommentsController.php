@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Crea\CrearyClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CommentsController extends Controller
@@ -270,28 +271,33 @@ class CommentsController extends Controller
                         ->where('permlink', $permlink);
                 });
             }
-
-            //Filter removed posts
-            $commentsQuery->where(function (Builder $query) {
-                return $query->where('is_visible', 'exists', false)
-                    ->orWhere('is_visible', true);
-            });
-
         }
 
+        //Filter removed posts
+        $commentsQuery->where(function (Builder $query) {
+            return $query->where('is_visible', 'exists', false)
+                ->orWhere('is_visible', true);
+        });
+
+
         $commentsData = $commentsQuery->get();
+        Log::debug("Retrieved comments", $commentsData->toArray());
+
+        $nonExistentComments = [];
 
         //Check if any comment not exists;
         foreach ($commentsData as $c) {
             /** @var Comments $c */
             $permlink = $c->author . '/' . $c->permlink;
             $index = array_search($permlink, $comments);
-            if ($index !== false) {
-                array_splice($comments, $index, 1);
+            if (!$index) {
+                $nonExistentComments[] = $permlink;
             }
         }
 
-        foreach ($comments as $cl) {
+        Log::debug("NonExistentComments", $nonExistentComments);
+
+        foreach ($nonExistentComments as $cl) {
             $author = explode('/', $cl)[0];
             $permlink = explode('/', $cl)[1];
             $cc = new CrearyClient();
