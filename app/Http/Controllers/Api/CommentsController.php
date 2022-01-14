@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Crea\CrearyClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -254,7 +253,6 @@ class CommentsController extends Controller
         $comments = $request->get('comments');
         $comments = explode(',', $comments);
 
-        DB::enableQueryLogs();
         $commentsQuery = Comments::query();
 
         $first = true;
@@ -316,9 +314,7 @@ class CommentsController extends Controller
 
             $commentsData->add($c);
         }
-        $queries = DB::getQueryLog();
 
-        Log::debug($queries);
 
         return response($commentsData);
     }
