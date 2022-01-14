@@ -289,12 +289,13 @@ class CommentsController extends Controller
 
 
         $commentsData = $commentsQuery->get();
-        Log::debug("Retrieved comments", $commentsData->toArray());
 
         $existentComments = [];
         foreach ($commentsData as $c) {
             $existentComments[] = $c->author . '/' . $c->permlink;
         }
+
+        Log::debug("Retrieved comments", $existentComments);
 
         $nonExistentComments = [];
 
