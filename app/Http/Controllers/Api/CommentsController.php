@@ -303,7 +303,7 @@ class CommentsController extends Controller
         foreach ($comments as $permlink) {
             /** @var Comments $c */
             $containsComment = in_array($permlink, $existentComments);
-            if ($containsComment) {
+            if (!$containsComment) {
                 $nonExistentComments[] = $permlink;
             }
         }
