@@ -262,23 +262,26 @@ class CommentsController extends Controller
                     ->orWhere('is_visible', true);
             });
 
-            $first = true;
-            foreach ($comments as $cl) {
-                $author = explode('/', $cl)[0];
-                $permlink = explode('/', $cl)[1];
-                if ($first) {
-                    $query->where(function ($q) use ($author, $permlink) {
-                        return $q->where('author', $author)
-                            ->where('permlink', $permlink);
-                    });
-                    $first = false;
-                } else {
-                    $query->orWhere(function ($q) use ($author, $permlink) {
-                        return $q->where('author', $author)
-                            ->where('permlink', $permlink);
-                    });
+            $query->where(function(Builder $q) use ($comments){
+                $first = true;
+                foreach ($comments as $cl) {
+                    $author = explode('/', $cl)[0];
+                    $permlink = explode('/', $cl)[1];
+                    if ($first) {
+                        $q->where(function ($q) use ($author, $permlink) {
+                            return $q->where('author', $author)
+                                ->where('permlink', $permlink);
+                        });
+                        $first = false;
+                    } else {
+                        $q->orWhere(function ($q) use ($author, $permlink) {
+                            return $q->where('author', $author)
+                                ->where('permlink', $permlink);
+                        });
+                    }
                 }
-            }
+            });
+
 
             return $query;
 
