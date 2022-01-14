@@ -291,13 +291,17 @@ class CommentsController extends Controller
         $commentsData = $commentsQuery->get();
         Log::debug("Retrieved comments", $commentsData->toArray());
 
+        $existentComments = [];
+        foreach ($commentsData as $c) {
+            $existentComments[] = $c->author . '/' . $c->permlink;
+        }
+
         $nonExistentComments = [];
 
         //Check if any comment not exists;
-        foreach ($commentsData as $c) {
+        foreach ($comments as $permlink) {
             /** @var Comments $c */
-            $permlink = $c->author . '/' . $c->permlink;
-            $index = array_search($permlink, $comments);
+            $index = array_search($permlink, $existentComments);
             if (!$index) {
                 $nonExistentComments[] = $permlink;
             }
