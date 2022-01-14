@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Crea\CrearyClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -253,6 +254,7 @@ class CommentsController extends Controller
         $comments = $request->get('comments');
         $comments = explode(',', $comments);
 
+        DB::enableQueryLogs();
         $commentsQuery = Comments::query();
 
         $first = true;
@@ -275,8 +277,7 @@ class CommentsController extends Controller
 
         //Filter removed posts
         $commentsQuery->where(function (Builder $query) {
-            return $query->where('is_visible', 'exists', false)
-                ->orWhere('is_visible', true);
+            return $query->where('is_visible', true);
         });
 
 
