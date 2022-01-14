@@ -255,28 +255,33 @@ class CommentsController extends Controller
 
         $commentsQuery = Comments::query();
 
-        $first = true;
-        foreach ($comments as $cl) {
-            $author = explode('/', $cl)[0];
-            $permlink = explode('/', $cl)[1];
-            if ($first) {
-                $commentsQuery->where(function ($q) use ($author, $permlink) {
-                    return $q->where('author', $author)
-                        ->where('permlink', $permlink);
-                });
-                $first = false;
-            } else {
-                $commentsQuery->orWhere(function ($q) use ($author, $permlink) {
-                    return $q->where('author', $author)
-                        ->where('permlink', $permlink);
-                });
-            }
-        }
-
         //Filter removed posts
-        $commentsQuery->where(function (Builder $query) {
-            return $query->where('is_visible', 'exists', false)
-                ->orWhere('is_visible', true);
+        $commentsQuery->where(function (Builder $query) use ($comments) {
+            $query->where(function (Builder $q) {
+                return $q->where('is_visible', 'exists', false)
+                    ->orWhere('is_visible', true);
+            });
+
+            $first = true;
+            foreach ($comments as $cl) {
+                $author = explode('/', $cl)[0];
+                $permlink = explode('/', $cl)[1];
+                if ($first) {
+                    $query->where(function ($q) use ($author, $permlink) {
+                        return $q->where('author', $author)
+                            ->where('permlink', $permlink);
+                    });
+                    $first = false;
+                } else {
+                    $query->orWhere(function ($q) use ($author, $permlink) {
+                        return $q->where('author', $author)
+                            ->where('permlink', $permlink);
+                    });
+                }
+            }
+
+            return $query;
+
         });
 
 
