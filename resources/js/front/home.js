@@ -904,4 +904,18 @@ import { CommentsApi } from '../lib/creary-api';
             homePosts.toggleSimpleView();
         });
     });
+
+    creaEvents.on('crea.post.delete', function (post) {
+        console.log('Home Post deleted');
+
+        let discuss = homePosts.discuss;
+        let category = homePosts.category;
+        let discussions = homePosts.state.discussion_idx[discuss][category];
+        let permlink = `${post.author}/${post.permlink}`;
+
+        let postIndex = discussions.indexOf(permlink);
+        discussions = discussions.splice(postIndex, 1);
+        homePosts.state.discussion_idx[discuss][category] = discussions;
+        homePosts.$forceUpdate();
+    });
 })();

@@ -696,10 +696,13 @@ import { CommentsApi } from '../lib/creary-api';
                     },
                     methods: {
                         deletePublication: function () {
+                            let that = this;
                             hidePublication(this.state.post, this.session, function (err, result) {
+                                globalLoading.show = false;
+
                                 if (!catchError(err)) {
-                                    goTo("/")
-                                    //globalLoading.show = false;
+                                    creaEvents.emit('crea.post.delete', that.state.post);
+
                                 }
                             })
                         },
@@ -979,6 +982,15 @@ import { CommentsApi } from '../lib/creary-api';
             postContainer.state.postsData = state.content;
             postContainer.$forceUpdate();
         }
+    });
+
+    creaEvents.on('crea.post.delete', function (post) {
+        console.log('Post deleted', clone(post));
+
+        hideModal('#modal-post');
+        setTimeout(_ => {
+            postContainer = null;
+        }, 300)
     });
 
     creaEvents.on('navigation.post.data', showPostData);

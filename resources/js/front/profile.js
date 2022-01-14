@@ -364,6 +364,7 @@ import {SocialLink} from "../lib/dips";
         if (!profileContainer) {
             profileContainer = new Vue({
                 el: '#profile-container',
+                name: 'profile-container',
                 data: {
                     CONSTANTS: CONSTANTS,
                     lang: lang,
@@ -1865,4 +1866,17 @@ import {SocialLink} from "../lib/dips";
             }
         }
     });
+
+    creaEvents.on('crea.post.delete', function (post) {
+        console.log('Profile Post deleted');
+
+        let discussions = profileContainer.state.discussion_idx[''].profile;
+        let permlink = `${post.author}/${post.permlink}`;
+
+        let postIndex = discussions.indexOf(permlink);
+        discussions = discussions.splice(postIndex, 1);
+        profileContainer.state.discussion_idx[''].profile = discussions;
+        profileContainer.$forceUpdate();
+    });
+
 })();

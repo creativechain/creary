@@ -660,10 +660,11 @@ import { CommentsApi } from '../lib/creary-api';
                     },
                     methods: {
                         deletePublication: function () {
+                            let that = this;
                             hidePublication(this.state.post, this.session, function (err, result) {
                                 if (!catchError(err)) {
-                                    goTo("/")
-                                    //globalLoading.show = false;
+                                    creaEvents.emit('crea.post.delete', that.state.post);
+
                                 }
                             })
                         },
@@ -890,4 +891,10 @@ import { CommentsApi } from '../lib/creary-api';
 
         fetchContent();
     });
+
+    creaEvents.on('crea.post.delete', function (post) {
+        console.log('Post deleted', clone(post));
+        goTo("/")
+    });
+
 })();
