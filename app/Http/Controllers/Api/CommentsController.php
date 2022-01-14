@@ -295,7 +295,7 @@ class CommentsController extends Controller
             $existentComments[] = $c->author . '/' . $c->permlink;
         }
 
-        Log::debug("Retrieved comments", $existentComments);
+        //Log::debug("Retrieved comments", $existentComments);
 
         $nonExistentComments = [];
 
@@ -308,7 +308,7 @@ class CommentsController extends Controller
             }
         }
 
-        Log::debug("NonExistentComments", $nonExistentComments);
+        //Log::debug("NonExistentComments", $nonExistentComments);
 
         foreach ($nonExistentComments as $cl) {
             $author = explode('/', $cl)[0];
