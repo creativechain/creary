@@ -302,8 +302,8 @@ class CommentsController extends Controller
         //Check if any comment not exists;
         foreach ($comments as $permlink) {
             /** @var Comments $c */
-            $index = in_array($permlink, $existentComments);
-            if ($index) {
+            $containsComment = in_array($permlink, $existentComments);
+            if ($containsComment) {
                 $nonExistentComments[] = $permlink;
             }
         }
