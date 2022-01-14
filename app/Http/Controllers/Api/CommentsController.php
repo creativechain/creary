@@ -275,7 +275,8 @@ class CommentsController extends Controller
 
         //Filter removed posts
         $commentsQuery->where(function (Builder $query) {
-            return $query->where('is_visible', true);
+            return $query->where('is_visible', 'exists', false)
+                ->orWhere('is_visible', true);
         });
 
 
