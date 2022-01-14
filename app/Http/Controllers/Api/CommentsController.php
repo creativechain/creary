@@ -316,7 +316,9 @@ class CommentsController extends Controller
 
             $commentsData->add($c);
         }
+        $queries = DB::getQueryLog();
 
+        Log::debug($queries);
 
         return response($commentsData);
     }
