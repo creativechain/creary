@@ -400,7 +400,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row-flag">
-                                                    &lt;!&ndash; dos estados que acompañan a la clase a-flag o inactive o active &ndash;&gt;
+                                                    {{--dos estados que acompañan a la clase a-flag o inactive o active--}}
 
                                                     <a href="#modal-report-comment" data-modal-id="modal-report-comment"v-if="!state.post[cc].reported" class="modal-trigger link-report" v-on:click="setActiveComment(state.post[cc])">
                                                         <div class="a-flag" v-bind:class="{ active: state.post[cc].reported, inactive: !state.post[cc].reported }"></div>
