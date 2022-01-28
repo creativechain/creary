@@ -287,10 +287,10 @@
                                                                 <div class="dropdown__container price" style="left: -756.312px;">
                                                                     <div>
                                                                         <div class="row">
-                                                                            <div  v-if="state.post[c].refused_payouts"  class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
+                                                                            <div  v-if="state.post[c].refused_payouts"  class="dropdown__content amount-post-view-home">
                                                                                 <p class="error-color-form">{{ __('lang.HOME.DROPDOWN_REFUSED_PAYOUT') }} <span class="refused-payout">@{{ getPayout(state.post[c]) }}</span></p>
                                                                             </div>
-                                                                            <div v-else class="col-12 col-sm-12 col-md-12 dropdown__content amount-post-view-home">
+                                                                            <div v-else class="dropdown__content amount-post-view-home">
                                                                                 <p class="title">@{{ hasPaid(state.post[c]) ? lang.HOME.DROPDOWN_PAST_PAYOUT : lang.HOME.DROPDOWN_PENDING_PAYOUT }} @{{ getPayout(state.post[c]) }}</p>
                                                                                 <p v-if="!hasPaid()">
                                                                                     @{{ getPendingPayouts(state.post[c]) }}
