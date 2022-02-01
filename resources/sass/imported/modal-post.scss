@@ -16,7 +16,7 @@
 }
 #modal-post {
   .dropdown__container.price {
-    pointer-events: all;
+    pointer-events: none;
     z-index: 2;
   }
   .amount-post-view-home {
@@ -72,6 +72,7 @@
         .dropdown--active {
           .price {
             left: -135px !important;
+            pointer-events: all;
           }
         }
       }
