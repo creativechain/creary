@@ -61,6 +61,11 @@
 }
 
 @media (max-width: 575.98px) {
+  #navbar-search-mobile {
+    .row-input {
+      padding: 80px 22px 0px;
+    }
+  }
   div.new-profile .box-user-avatar {
     border: solid 5px white;
     height: 140px;
