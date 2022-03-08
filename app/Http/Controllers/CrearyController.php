@@ -33,17 +33,19 @@ class CrearyController extends Controller
             $pageMeta = $language->METADATA->{ '/' };
         }
 
+        $appUrl = config('app.url');
+
         $metas = array(
             $this->buildMeta('property', 'og:url', $request->fullUrl()),
             $this->buildMeta('property', 'og:title', $pageMeta->TITLE),
-            $this->buildMeta('property', 'og:image', env('APP_URL') . $language->METADATA->IMAGE),
+            $this->buildMeta('property', 'og:image', "$appUrl/" . $language->METADATA->IMAGE),
             $this->buildMeta('property', 'og:description', $pageMeta->DESCRIPTION),
             $this->buildMeta('property', 'og:type', 'website'),
             $this->buildMeta('name', 'twitter:card', 'summary_large_image'),
             $this->buildMeta('name', 'twitter:site', '@crearynet'),
             $this->buildMeta('name', 'twitter:title', $pageMeta->TITLE),
             $this->buildMeta('name', 'twitter:description', $pageMeta->DESCRIPTION),
-            $this->buildMeta('name', 'twitter:image', env('APP_URL') . $language->METADATA->IMAGE),
+            $this->buildMeta('name', 'twitter:image', "$appUrl/" . $language->METADATA->IMAGE),
             $this->buildMeta('name', 'description', $pageMeta->DESCRIPTION),
         );
 
