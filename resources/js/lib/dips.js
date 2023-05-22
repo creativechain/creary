@@ -21,7 +21,7 @@ class App {
 }
 
 App.UNKNOWN = new App('unknown', 'v0.0.0');
-App.CREARY = new App('creary', 'v1.1.0');
+App.CREARY = new App('creary', 'v1.1.1');
 
 class ProfileDIP {
     /**
