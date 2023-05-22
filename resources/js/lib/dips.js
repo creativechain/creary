@@ -1,5 +1,4 @@
-import {IpfsFile} from "./ipfs-utils";
-
+import { IpfsFile } from './ipfs-utils';
 
 class App {
     /**
@@ -14,16 +13,15 @@ class App {
 
     static parse(app) {
         if (app && app.name && app.version) {
-            return new App(app.name, app.version)
+            return new App(app.name, app.version);
         }
 
         return App.UNKNOWN;
     }
-
 }
 
-App.UNKNOWN = new App('unknown', 'v0.0.0')
-App.CREARY = new App('creary', 'v1.1.0')
+App.UNKNOWN = new App('unknown', 'v0.0.0');
+App.CREARY = new App('creary', 'v1.1.0');
 
 class ProfileDIP {
     /**
@@ -37,7 +35,7 @@ class ProfileDIP {
      * @param {object} other
      * @param {App} app
      */
-    constructor(avatar, publicName= '', about = '', contact = '', web = '', lang= '', other= '', app) {
+    constructor(avatar, publicName = '', about = '', contact = '', web = '', lang = '', other = '', app) {
         this.avatar = avatar || new IpfsFile();
         this.public_name = publicName || '';
         this.about = about || '';
@@ -53,32 +51,41 @@ class ProfileDIP {
      * @returns {string}
      */
     getVersion() {
-        return this.app.version
+        return this.app.version;
     }
 
     /**
      *
      * @returns {string}
      */
-    getAppName () {
+    getAppName() {
         return this.app.name;
     }
 
     static parse(metadata) {
         if (metadata) {
-            return new ProfileDIP(metadata.avatar, metadata.public_name, metadata.about, metadata.contact, metadata.web, metadata.lang, metadata.other, metadata.app)
+            return new ProfileDIP(
+                metadata.avatar,
+                metadata.public_name,
+                metadata.about,
+                metadata.contact,
+                metadata.web,
+                metadata.lang,
+                metadata.other,
+                metadata.app
+            );
         }
 
         return ProfileDIP.EMPTY;
     }
 }
 
-ProfileDIP.EMPTY = new ProfileDIP()
+ProfileDIP.EMPTY = new ProfileDIP();
 
 class SocialLink {
     constructor(name, baseUrl, profile) {
         this.name = name;
-        this.baseUrl = baseUrl
+        this.baseUrl = baseUrl;
         this.profile = profile;
         this.link = this.getLink();
     }
@@ -89,11 +96,11 @@ class SocialLink {
      */
     getLink() {
         let baseUrl = this.baseUrl || '';
-        if (!baseUrl.startsWith("https://") && !baseUrl.startsWith("http://")) {
-            baseUrl = `https://${baseUrl}`
+        if (!baseUrl.startsWith('https://') && !baseUrl.startsWith('http://')) {
+            baseUrl = `https://${baseUrl}`;
         }
 
-        return `${baseUrl}${this.profile}`
+        return `${baseUrl}${this.profile}`;
     }
 
     /**
@@ -101,7 +108,7 @@ class SocialLink {
      * @returns {string}
      */
     getIconClassName() {
-        return this.name.toLowerCase().replace(" ", '')
+        return this.name.toLowerCase().replace(' ', '');
     }
 
     /**
@@ -111,10 +118,10 @@ class SocialLink {
      */
     static parse(socObj) {
         if (socObj) {
-            return new SocialLink(socObj.name, socObj.baseUrl, socObj.profile)
+            return new SocialLink(socObj.name, socObj.baseUrl, socObj.profile);
         }
 
-        return null
+        return null;
     }
 }
 
@@ -132,9 +139,6 @@ SocialLink.MAKERSPLACE = new SocialLink('Makersplace', 'markersplace.com/', '');
 SocialLink.FOUNDATION = new SocialLink('Foundation', 'foundation.app/', '');
 SocialLink.ASYNC_ART = new SocialLink('Async Art', 'async.art/u/', '');
 SocialLink.HIC_ET_NUNC = new SocialLink('Hice Et Nunc', 'hicetnunc.xyz/', '');
+SocialLink.ETHEREUM = new SocialLink('Ethereum', 'etherscan.io/address/', '');
 
-export {
-    App,
-    ProfileDIP,
-    SocialLink
-}
+export { App, ProfileDIP, SocialLink };

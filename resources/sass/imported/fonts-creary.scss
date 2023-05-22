@@ -1,15 +1,15 @@
 @font-face {
     font-family: 'CrearyRS';
-    src:
-        url('/fonts/CrearyRS.ttf?w1dvz8') format('truetype'),
-        url('/fonts/CrearyRS.woff?w1dvz8') format('woff'),
+    src: url('/fonts/CrearyRS.ttf?w1dvz8') format('truetype'), url('/fonts/CrearyRS.woff?w1dvz8') format('woff'),
         url('/public/fonts/CrearyRS.svg?w1dvz8#CrearyRS') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
 }
-.new-profile, #profile-container {
-    [class^="icon-"], [class*=" icon-"] {
+.new-profile,
+#profile-container {
+    [class^='icon-'],
+    [class*=' icon-'] {
         /* use !important to prevent issues with browser extensions that change fonts */
         font-family: 'CrearyRS' !important;
         speak: never;
@@ -25,49 +25,51 @@
     }
 }
 
-
 .icon-hiceetnunc:before {
-    content: "\e900";
+    content: '\e900';
 }
 .icon-opensea:before {
-    content: "\e901";
+    content: '\e901';
 }
 .icon-asyncart:before {
-    content: "\e902";
+    content: '\e902';
 }
 .icon-foundation:before {
-    content: "\e903";
+    content: '\e903';
 }
 .icon-knownorigin:before {
-    content: "\e904";
+    content: '\e904';
 }
 .icon-makersplace:before {
-    content: "\e905";
+    content: '\e905';
 }
 .icon-rarible:before {
-    content: "\e906";
+    content: '\e906';
 }
 .icon-superrare:before {
-    content: "\e907";
+    content: '\e907';
 }
 .icon-twitter:before {
-    content: "\e908";
+    content: '\e908';
 }
 .icon-instagram:before {
-    content: "\e909";
+    content: '\e909';
 }
 .icon-youtube:before {
-    content: "\e90a";
+    content: '\e90a';
 }
 .icon-vimeo:before {
-    content: "\e90b";
+    content: '\e90b';
 }
 .icon-linkt:before {
-    content: "\e90c";
+    content: '\e90c';
 }
 .icon-web:before {
-    content: "\e90d";
+    content: '\e90d';
 }
 .icon-personal:before {
-    content: "\e90d";
+    content: '\e90d';
+}
+.icon-ethereum:before {
+    content: '\e90e';
 }

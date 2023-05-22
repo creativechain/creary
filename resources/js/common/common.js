@@ -15,24 +15,50 @@ import {
     getNavigatorLanguage,
     uniqueId,
     cancelEventPropagation,
-    getPathPart, arrayBufferToBuffer, dataURLtoBlob,
+    getPathPart,
+    arrayBufferToBuffer,
+    dataURLtoBlob
 } from '../lib/util';
 import Errors from '../lib/error';
 import { DEFAULT_ROLES } from '../lib/account';
 import Pica from 'pica';
 import gifShot from 'gifshot';
-import { parseGIF, decompressFrames } from "gifuct-js";
-import {IpfsFile} from "../lib/ipfs-utils";
-import {SocialLink} from "../lib/dips";
+import { parseGIF, decompressFrames } from 'gifuct-js';
+import { IpfsFile } from '../lib/ipfs-utils';
+import { SocialLink } from '../lib/dips';
 
 const CONSTANTS = {
     ACCOUNT: {
         UPDATE_THRESHOLD: 1000 * 60 * 60,
-        BLOCKED: ['volf', 'mercury', 'onecommett', 'onecomme', 'kwentyyy7', 'felixxx', 'olanin', 'djon', 'roxona', 'exrates1', 'exrates'],
+        BLOCKED: [
+            'volf',
+            'mercury',
+            'onecommett',
+            'onecomme',
+            'kwentyyy7',
+            'felixxx',
+            'olanin',
+            'djon',
+            'roxona',
+            'exrates1',
+            'exrates'
+        ],
         AVAILABLE_SOCIALS: [
-            SocialLink.PERSONAL, SocialLink.TWITTER, SocialLink.INSTAGRAM, SocialLink.YOUTUBE, SocialLink.VIMEO,
-            SocialLink.LINKT, SocialLink.OPENSEA, SocialLink.KNOWN_ORIGIN, SocialLink.SUPER_RARE, SocialLink.RARIBLE,
-            SocialLink.MAKERSPLACE, SocialLink.FOUNDATION, SocialLink.ASYNC_ART, SocialLink.HIC_ET_NUNC
+            SocialLink.PERSONAL,
+            SocialLink.TWITTER,
+            SocialLink.INSTAGRAM,
+            SocialLink.YOUTUBE,
+            SocialLink.VIMEO,
+            SocialLink.LINKT,
+            SocialLink.OPENSEA,
+            SocialLink.KNOWN_ORIGIN,
+            SocialLink.SUPER_RARE,
+            SocialLink.RARIBLE,
+            SocialLink.MAKERSPLACE,
+            SocialLink.FOUNDATION,
+            SocialLink.ASYNC_ART,
+            SocialLink.HIC_ET_NUNC,
+            SocialLink.ETHEREUM
         ]
     },
     TRANSFER: {
@@ -42,12 +68,12 @@ const CONSTANTS = {
         TRANSFER_TO_SAVINGS_CBD: 'transfer_to_savings_cbd',
         TRANSFER_FROM_SAVINGS_CREA: 'transfer_from_savings_crea',
         TRANSFER_FROM_SAVINGS_CBD: 'transfer_from_savings_cbd',
-        TRANSFER_TO_VESTS: 'transfer_to_vests',
+        TRANSFER_TO_VESTS: 'transfer_to_vests'
     },
     FILE_MAX_SIZE: {
         PROFILE: {
             AVATAR: 1024 * 500,
-            BANNER: 1024 * 1024 * 10, //10 MB
+            BANNER: 1024 * 1024 * 10 //10 MB
         },
         POST_BODY: {
             AUDIO: 100 * 1024 * 1024,
@@ -57,44 +83,44 @@ const CONSTANTS = {
             IMAGE: 5 * 1024 * 1024,
             GIF: 10 * 1024 * 1024,
             WEBP: 10 * 1024 * 1024,
-            DOWNLOAD: 200 * 1024 * 1024, //200 MB
+            DOWNLOAD: 200 * 1024 * 1024 //200 MB
         },
         POST_PREVIEW: {
             IMAGE: 500 * 1024,
             GIF: 1024 * 1024,
-            WEBP: 1024 * 1024,
-        },
+            WEBP: 1024 * 1024
+        }
     },
     TEXT_MAX_SIZE: {
         PROFILE: {
             PUBLIC_NAME: 21,
             ABOUT: 144,
             CONTACT: 55,
-            WEB: 55,
+            WEB: 55
         },
         TITLE: 55,
         DESCRIPTION: 233,
         COMMENT: 233,
         TAG: 21,
-        PERMLINK: 255,
+        PERMLINK: 255
     },
     MAX_TAGS: 8,
     BUZZ: {
         USER_BLOCK_THRESHOLD: -30,
         MAX_LOG_NUM: 20,
-        LEVELS: ['novice', 'trainee', 'advanced', 'expert', 'influencer', 'master', 'guru', 'genius'],
+        LEVELS: ['novice', 'trainee', 'advanced', 'expert', 'influencer', 'master', 'guru', 'genius']
     },
     POST: {
         MAX_OTHER_PROJECTS: 12,
         MAX_COMMENT_SHOWN: 10,
-        COMMENT_SHOW_INTERVAL: 10,
+        COMMENT_SHOW_INTERVAL: 10
     },
     WITNESS: {
-        DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10,
-    },
+        DISABLED_SECONDS_THRESHOLD: 60 * 60 * 24 * 10
+    }
 };
 
-creaEvents.on('crea.session.login', function (session, account) {
+creaEvents.on('crea.session.login', function(session, account) {
     showBanner(session === false);
 });
 
@@ -197,7 +223,7 @@ function isInHome() {
         '/responses',
         '/payout',
         '/payout_comments',
-        '/search',
+        '/search'
     ]; //Check if path is user feed
 
     let s = Session.getAlive();
@@ -226,18 +252,18 @@ function hideModal(id) {
 
 function createBlockchainAccount(username, password, callback) {
     let keys = crea.auth.getPrivateKeys(username, password, DEFAULT_ROLES);
-    refreshAccessToken(function (accessToken) {
+    refreshAccessToken(function(accessToken) {
         let http = new HttpClient(apiOptions.apiUrl + '/createCrearyAccount');
         http.withCredentials(false)
             .setHeaders({
-                Authorization: 'Bearer ' + accessToken,
+                Authorization: 'Bearer ' + accessToken
             })
-            .when('done', function (data) {
+            .when('done', function(data) {
                 if (callback) {
                     callback(null, data);
                 }
             })
-            .when('fail', function (response, textStatus, request) {
+            .when('fail', function(response, textStatus, request) {
                 if (callback) {
                     callback(response.error);
                 }
@@ -247,7 +273,7 @@ function createBlockchainAccount(username, password, callback) {
                 active: keys.activePubkey,
                 owner: keys.ownerPubkey,
                 posting: keys.postingPubkey,
-                memo: keys.memoPubkey,
+                memo: keys.memoPubkey
             });
     });
 }
@@ -260,7 +286,7 @@ function removeBlockedContents(state, accountState, discussion_idx) {
 
         if (accountState) {
             let allowedContents = [];
-            cKeys.forEach(function (ck) {
+            cKeys.forEach(function(ck) {
                 let c = state.content[ck];
 
                 //If author is blocked, post must be blocked
@@ -325,46 +351,46 @@ function parseAccount(account, rc = null) {
         if (!account.metadata.other) {
             account.metadata.other = {
                 socials: []
-            }
+            };
 
             //Add personal web only if exists
             if (account.metadata.web) {
-                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web))
+                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web));
             }
-
         } else if (account.metadata.other.socials) {
-
             let socials = [];
             for (let soc of account.metadata.other.socials) {
-                socials.push(SocialLink.parse(soc))
+                socials.push(SocialLink.parse(soc));
             }
 
-            account.metadata.other.socials = socials
+            account.metadata.other.socials = socials;
         } else {
-            account.metadata.other.socials = [ ]
+            account.metadata.other.socials = [];
 
             //Add personal web only if exists
             if (account.metadata.web) {
-                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web))
+                account.metadata.other.socials.push(new SocialLink('Personal', 'https://', account.metadata.web));
             }
         }
 
         // Calculate actual voting energy
         let currentTime = moment();
-        let lastVoteEnergy  = account.voting_energy;
+        let lastVoteEnergy = account.voting_energy;
         let lastVoteTime = moment(account.last_vote_time);
         let secondsAgo = currentTime.unix() - lastVoteTime.unix();
-        let calculatedEnergy = lastVoteEnergy + (10000 * secondsAgo / 432000);
+        let calculatedEnergy = lastVoteEnergy + (10000 * secondsAgo) / 432000;
         account.voting_energy_percent = Math.min(Math.round(calculatedEnergy / 100), 100);
 
         account.voting_flowbar.max_flow = 0;
         account.voting_flowbar.flow_percent = 0;
         account.voting_flowbar.current_flow = 0;
         if (rc) {
-            console.log("RC", rc)
+            console.log('RC', rc);
             account.voting_flowbar.current_flow = parseInt(rc.rc_flowbar.current_flow);
             account.voting_flowbar.max_flow = parseInt(rc.max_rc);
-            account.voting_flowbar.flow_percent = Math.round(account.voting_flowbar.current_flow * 100 / account.voting_flowbar.max_flow);
+            account.voting_flowbar.flow_percent = Math.round(
+                (account.voting_flowbar.current_flow * 100) / account.voting_flowbar.max_flow
+            );
         }
         //console.log(jsonify(jsonstring(account)));
         return account;
@@ -391,10 +417,10 @@ function parsePost(post, reblogged_by) {
         let contributors = [];
         let bAuthor = {
             account: post.author,
-            weight: 100,
+            weight: 100
         };
 
-        post.beneficiaries.forEach((b) => {
+        post.beneficiaries.forEach(b => {
             let c = clone(b);
             c.weight /= 100;
             bAuthor.weight -= c.weight;
@@ -415,7 +441,7 @@ function parsePost(post, reblogged_by) {
 
         post.down_votes = [];
         post.up_votes = [];
-        post.active_votes.forEach(function (v) {
+        post.active_votes.forEach(function(v) {
             if (v.percent < 0) {
                 //Content reports
                 post.down_votes.push(v);
@@ -464,7 +490,7 @@ function parsePost(post, reblogged_by) {
 }
 
 function getAccounts(accounts, callback) {
-    crea.api.getAccounts(accounts, function (err, result) {
+    crea.api.getAccounts(accounts, function(err, result) {
         if (callback) {
             if (err) {
                 callback(err);
@@ -488,7 +514,7 @@ function getDiscussion(author, permlink, callback) {
         author = /[\w\.\d-]+/gm.exec(author)[0];
     }
 
-    crea.api.getDiscussion(author, permlink, function (err, discussion) {
+    crea.api.getDiscussion(author, permlink, function(err, discussion) {
         if (!err) {
             discussion = parsePost(discussion);
             callback(null, discussion);
@@ -510,19 +536,19 @@ function recommendPost(author, permlink, reblog, callback) {
         let recommendedJson = {
             account: s.account.username,
             author: author,
-            permlink: permlink,
+            permlink: permlink
         };
 
         recommendedJson = [reblog ? 'reblog' : 'unreblog', recommendedJson];
 
-        requireRoleKey(s.account.username, 'posting', function (postingKey) {
+        requireRoleKey(s.account.username, 'posting', function(postingKey) {
             crea.broadcast.customJson(
                 postingKey,
                 [],
                 [s.account.username],
                 'follow',
                 jsonstring(recommendedJson),
-                function (err, result) {
+                function(err, result) {
                     if (callback) {
                         if (err) {
                             callback(err);
@@ -543,29 +569,25 @@ function ignoreUser(following, ignore, callback) {
         let followJson = {
             follower: s.account.username,
             following: following,
-            what: ignore ? ['ignore'] : [],
+            what: ignore ? ['ignore'] : []
         };
         followJson = ['follow', followJson];
-        requireRoleKey(s.account.username, 'posting', function (postingKey) {
+        requireRoleKey(s.account.username, 'posting', function(postingKey) {
             globalLoading.show = true;
-            crea.broadcast.customJson(
-                postingKey,
-                [],
-                [s.account.username],
-                'follow',
-                jsonstring(followJson),
-                function (err, result) {
-                    globalLoading.show = false;
+            crea.broadcast.customJson(postingKey, [], [s.account.username], 'follow', jsonstring(followJson), function(
+                err,
+                result
+            ) {
+                globalLoading.show = false;
 
-                    if (callback) {
-                        if (err) {
-                            callback(err);
-                        } else {
-                            callback(null, result);
-                        }
+                if (callback) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, result);
                     }
                 }
-            );
+            });
         });
     } else if (callback) {
         callback(Errors.USER_NOT_LOGGED);
@@ -576,7 +598,7 @@ function makeComment(comment, post, parentPost, callback) {
     let session = Session.getAlive();
 
     if (session && comment.length > 0) {
-        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+        requireRoleKey(session.account.username, 'posting', function(postingKey) {
             globalLoading.show = true;
             let parentAuthor = post ? post.parent_author : parentPost.author;
             let parentPermlink = post ? post.parent_permlink : parentPost.permlink;
@@ -608,7 +630,7 @@ function makeComment(comment, post, parentPost, callback) {
             let metadata = {
                 tags: tags,
                 app: 'creary',
-                version: '1.0.0',
+                version: '1.0.0'
             };
             /*crea.broadcast.comment(postingKey, parentAuthor, parentPermlink, session.account.username, permlink, '', comment, '', jsonstring(metadata), function (err, result) {
                 globalLoading.show = false;
@@ -636,7 +658,7 @@ function makeComment(comment, post, parentPost, callback) {
 
 function deleteComment(post, session, callback) {
     if (session && post && post.author === session.account.username) {
-        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+        requireRoleKey(session.account.username, 'posting', function(postingKey) {
             globalLoading.show = true;
             crea.broadcast.deleteComment(postingKey, post.author, post.permlink, callback);
         });
@@ -647,11 +669,10 @@ function hidePublication(post, session, callback) {
     if (session && post) {
         let postToDelete = clone(post);
         postToDelete.metadata.visible = false;
-        postToDelete.body = jsonstring(postToDelete.body)
+        postToDelete.body = jsonstring(postToDelete.body);
         postToDelete.download = jsonstring(postToDelete.download);
         postToDelete.json_metadata = jsonstring(postToDelete.metadata);
-        console.log('postToDelete', postToDelete)
-
+        console.log('postToDelete', postToDelete);
 
         let operations = [];
         operations.push(
@@ -667,10 +688,10 @@ function hidePublication(post, session, callback) {
             )
         );
 
-        console.log('operations', operations)
-        hideModal('#modal-delete')
+        console.log('operations', operations);
+        hideModal('#modal-delete');
 
-        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+        requireRoleKey(session.account.username, 'posting', function(postingKey) {
             setTimeout(_ => {
                 console.log('requireKey', postingKey);
                 globalLoading.show = true;
@@ -678,14 +699,13 @@ function hidePublication(post, session, callback) {
 
                 crea.broadcast.sendOperations([postingKey], ...operations, callback);
             }, 500);
-
         });
     }
 }
 
 function editComment(comment, post, session, callback) {
     if (session && post) {
-        requireRoleKey(session.account.username, 'posting', function (postingKey) {
+        requireRoleKey(session.account.username, 'posting', function(postingKey) {
             globalLoading.show = true;
             crea.broadcast.comment(
                 postingKey,
@@ -706,52 +726,48 @@ function makeDownload(event, session, user, post, callback) {
     cancelEventPropagation(event);
 
     if (session) {
-        requireRoleKey(session.account.username, 'active', function (activeKey) {
+        requireRoleKey(session.account.username, 'active', function(activeKey) {
             globalLoading.show = true;
 
             let downloadResource = function downloadResource() {
-                setTimeout(function () {
+                setTimeout(function() {
                     let authorBuff = Buffer.from(post.author);
                     let permlinkBuff = Buffer.from(post.permlink);
                     let buff = Buffer.concat([authorBuff, permlinkBuff]);
                     let signature = crea.utils.Signature.signBuffer(buff, activeKey);
                     let s64 = signature.toBuffer().toString('base64');
-                    crea.api.getDownload(
-                        session.account.username,
-                        post.author,
-                        post.permlink,
-                        s64,
-                        function (err, result) {
-                            globalLoading.show = false;
+                    crea.api.getDownload(session.account.username, post.author, post.permlink, s64, function(
+                        err,
+                        result
+                    ) {
+                        globalLoading.show = false;
 
-                            if (!catchError(err)) {
-                                let re = /Qm[a-zA-Z0-9]+/;
-                                let hash = re.exec(result.resource)[0];
-                                console.log(hash); //For .rar, .zip or unrecognized MIME type
+                        if (!catchError(err)) {
+                            let re = /Qm[a-zA-Z0-9]+/;
+                            let hash = re.exec(result.resource)[0];
+                            console.log(hash); //For .rar, .zip or unrecognized MIME type
 
-                                if (!post.download.type) {
-                                    post.download.type = 'application/octet-stream';
-                                }
-
-                                //Delete diacritics in filename
-                                let normalizedName = post.download.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                                let _url =
-                                    apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + normalizedName;
-
-                                _url += '?stream=false';
-
-                                hideModal('#modal-download');
-                                if (callback) {
-                                    console.log('Callback is present');
-                                    callback();
-                                } else {
-                                    console.log('Callback null?', callback);
-                                }
-                                //Close modal download
-                                downloadFile(_url, post.download.name);
+                            if (!post.download.type) {
+                                post.download.type = 'application/octet-stream';
                             }
+
+                            //Delete diacritics in filename
+                            let normalizedName = post.download.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                            let _url = apiOptions.ipfsd + '/' + post.download.type + '/' + hash + '/' + normalizedName;
+
+                            _url += '?stream=false';
+
+                            hideModal('#modal-download');
+                            if (callback) {
+                                console.log('Callback is present');
+                                callback();
+                            } else {
+                                console.log('Callback null?', callback);
+                            }
+                            //Close modal download
+                            downloadFile(_url, post.download.name);
                         }
-                    );
+                    });
                 }, 3000);
             };
 
@@ -761,7 +777,7 @@ function makeDownload(event, session, user, post, callback) {
                     session.account.username,
                     post.author,
                     post.permlink,
-                    function (err, result) {
+                    function(err, result) {
                         if (!catchError(err)) {
                             downloadResource();
                             //fetchContent();
@@ -788,7 +804,7 @@ function updateUserSession() {
     let session = Session.getAlive();
 
     if (session) {
-        session.login(function (err, account) {
+        session.login(function(err, account) {
             if (!catchError(err)) {
                 let count = 2;
 
@@ -802,18 +818,18 @@ function updateUserSession() {
 
                 let followings = [];
                 let blockeds = [];
-                crea.api.getFollowing(session.account.username, '', 'blog', 1000, function (err, result) {
+                crea.api.getFollowing(session.account.username, '', 'blog', 1000, function(err, result) {
                     if (!catchError(err)) {
-                        result.following.forEach(function (f) {
+                        result.following.forEach(function(f) {
                             followings.push(f.following);
                         });
                         account.user.followings = followings;
                         onTaskEnded(session, account);
                     }
                 });
-                crea.api.getFollowing(session.account.username, '', 'ignore', 1000, function (err, result) {
+                crea.api.getFollowing(session.account.username, '', 'ignore', 1000, function(err, result) {
                     if (!catchError(err)) {
-                        result.following.forEach(function (f) {
+                        result.following.forEach(function(f) {
                             blockeds.push(f.following);
                         });
                         account.user.blockeds = blockeds;
@@ -838,10 +854,10 @@ function refreshAccessToken(callback) {
         let params = {
             grant_type: 'client_credentials',
             client_id: '1_2e5ws1sr915wk0o4kksc0swwoc8kc4wgkgcksscgkkko404g8c',
-            client_secret: '3c2x9uf9uwg0ook0kksk8koccsk44w0gg4csos04ows444ko4k',
+            client_secret: '3c2x9uf9uwg0ook0kksk8koccsk44w0gg4csos04ows444ko4k'
         };
         http.withCredentials(false)
-            .when('done', function (data) {
+            .when('done', function(data) {
                 localStorage.setItem(CREARY.ACCESS_TOKEN, data.access_token);
                 localStorage.setItem(CREARY.ACCESS_TOKEN_EXPIRATION, new Date().getTime() + data.expires_in * 1000);
 
@@ -859,29 +875,29 @@ function refreshAccessToken(callback) {
 function resizeImage(file, callback) {
     let MAX_PIXEL_SIZE = 500;
     console.log(file);
-    const FILE_TYPE_TO_COMPRESS = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif']
+    const FILE_TYPE_TO_COMPRESS = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
     if (FILE_TYPE_TO_COMPRESS.includes(file.type.toLowerCase())) {
         //Only PNG, JPG, JPEG, GIF
 
         let isGif = file.type.toLowerCase().includes('gif');
         let reader = new FileReader();
-        reader.onload = function (event) {
+        reader.onload = function(event) {
             console.info('Image loaded');
-            let compressImage = function (rawImage, compressCallback) {
-                console.log('Compressing image raw:', rawImage)
+            let compressImage = function(rawImage, compressCallback) {
+                console.log('Compressing image raw:', rawImage);
                 let resizer = new Pica();
                 let tmpImage = new Image();
 
-                tmpImage.onload = function () {
+                tmpImage.onload = function() {
                     let destCanvas = document.createElement('canvas');
                     if (tmpImage.width <= tmpImage.height && tmpImage.width > MAX_PIXEL_SIZE) {
                         //destCanvas = resizer.createCanvas(MAX_PIXEL_SIZE, Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width));
                         destCanvas.width = MAX_PIXEL_SIZE;
-                        destCanvas.height = Math.round(tmpImage.height * MAX_PIXEL_SIZE / tmpImage.width);
+                        destCanvas.height = Math.round((tmpImage.height * MAX_PIXEL_SIZE) / tmpImage.width);
                     } else if (tmpImage.height <= tmpImage.width && tmpImage.height > MAX_PIXEL_SIZE) {
                         //destCanvas = resizer.createCanvas(Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height), MAX_PIXEL_SIZE);
                         destCanvas.height = MAX_PIXEL_SIZE;
-                        destCanvas.width = Math.round(tmpImage.width * MAX_PIXEL_SIZE / tmpImage.height);
+                        destCanvas.width = Math.round((tmpImage.width * MAX_PIXEL_SIZE) / tmpImage.height);
                     } else if (compressCallback) {
                         //Nothing to do
                         console.log('Nothing to do');
@@ -889,8 +905,9 @@ function resizeImage(file, callback) {
                         return;
                     }
 
-                    resizer.resize(tmpImage, destCanvas)
-                        .then( (result) => {
+                    resizer
+                        .resize(tmpImage, destCanvas)
+                        .then(result => {
                             //console.log('resize resulted!', result)
                             return result.toDataURL('image/jpeg', 1);
                             //return resizer.toBlob(result, 'image/jpeg', 0.90)
@@ -904,33 +921,38 @@ function resizeImage(file, callback) {
                 };
 
                 tmpImage.src = rawImage;
-            }
+            };
 
             if (isGif) {
                 console.debug('Detected gif');
-                file.arrayBuffer()
-                    .then(fileBuffer => {
-                        fileBuffer = arrayBufferToBuffer(fileBuffer);
-                        console.log('fileBuffer', Buffer.isBuffer(fileBuffer))
-                        let gif = parseGIF(fileBuffer);
+                file.arrayBuffer().then(fileBuffer => {
+                    fileBuffer = arrayBufferToBuffer(fileBuffer);
+                    console.log('fileBuffer', Buffer.isBuffer(fileBuffer));
+                    let gif = parseGIF(fileBuffer);
 
-                        let dFrames = decompressFrames(gif, true);
-                        console.log('DFRAMES', dFrames);
+                    let dFrames = decompressFrames(gif, true);
+                    console.log('DFRAMES', dFrames);
 
-                        let count = 0;
-                        let buildGIF = function () {
-                            count++;
-                            if (count === dFrames.length) {
-                                console.debug('Building new gif with compressed frames', Object.keys(compressedFrames), compressedFrames);
-                                if (Object.keys(compressedFrames).length > 0) {
-                                    let frameValues = [];
-                                    for (let x = 0; x < count; x++) {
-                                        frameValues.push(compressedFrames[x]);
-                                    }
+                    let count = 0;
+                    let buildGIF = function() {
+                        count++;
+                        if (count === dFrames.length) {
+                            console.debug(
+                                'Building new gif with compressed frames',
+                                Object.keys(compressedFrames),
+                                compressedFrames
+                            );
+                            if (Object.keys(compressedFrames).length > 0) {
+                                let frameValues = [];
+                                for (let x = 0; x < count; x++) {
+                                    frameValues.push(compressedFrames[x]);
+                                }
 
-                                    gifShot.createGIF({
+                                gifShot.createGIF(
+                                    {
                                         images: frameValues
-                                    }, obj => {
+                                    },
+                                    obj => {
                                         console.log('Gif created', obj);
                                         if (!obj.error) {
                                             console.debug('New GIF created', obj.image);
@@ -940,51 +962,48 @@ function resizeImage(file, callback) {
                                         } else {
                                             console.error('Error loading GIF', obj.error);
                                         }
-                                    });
-                                } else if (callback) {
-                                    callback(file);
-                                }
-
+                                    }
+                                );
+                            } else if (callback) {
+                                callback(file);
                             }
                         }
+                    };
 
-                        let compressedFrames = {};
-                        let tempCanvas = document.createElement('canvas');
-                        let tempCtx = tempCanvas.getContext('2d');
+                    let compressedFrames = {};
+                    let tempCanvas = document.createElement('canvas');
+                    let tempCtx = tempCanvas.getContext('2d');
 
-                        let fullCanvas = document.createElement('canvas');
-                        let fullCtx = fullCanvas.getContext('2d');
-                        let frameImageData;
+                    let fullCanvas = document.createElement('canvas');
+                    let fullCtx = fullCanvas.getContext('2d');
+                    let frameImageData;
 
-                        for (let x = 0; x < dFrames.length; x++) {
-                            let frame = dFrames[x];
+                    for (let x = 0; x < dFrames.length; x++) {
+                        let frame = dFrames[x];
 
-                            if (!frameImageData) {
-                                tempCanvas.width = frame.dims.width;
-                                fullCanvas.width = frame.dims.width;
-                                tempCanvas.height = frame.dims.height;
-                                fullCanvas.height = frame.dims.height;
-                                frameImageData = tempCtx.createImageData(frame.dims.width, frame.dims.height);
-                            }
-
-                            frameImageData.data.set(frame.patch);
-                            tempCtx.putImageData(frameImageData, 0, 0);
-                            fullCtx.drawImage(tempCanvas, frame.dims.left, frame.dims.top);
-
-                            let dataUrl = fullCanvas.toDataURL('image/jpeg', 1);
-                            compressImage(dataUrl, (compressed, compressedFrame) => {
-                                //console.debug('Frame resized', compressed, compressedFrame);
-                                if (compressed) {
-                                    compressedFrames[x] = compressedFrame;
-                                }
-
-                                buildGIF();
-                            });
+                        if (!frameImageData) {
+                            tempCanvas.width = frame.dims.width;
+                            fullCanvas.width = frame.dims.width;
+                            tempCanvas.height = frame.dims.height;
+                            fullCanvas.height = frame.dims.height;
+                            frameImageData = tempCtx.createImageData(frame.dims.width, frame.dims.height);
                         }
 
+                        frameImageData.data.set(frame.patch);
+                        tempCtx.putImageData(frameImageData, 0, 0);
+                        fullCtx.drawImage(tempCanvas, frame.dims.left, frame.dims.top);
 
-                    })
+                        let dataUrl = fullCanvas.toDataURL('image/jpeg', 1);
+                        compressImage(dataUrl, (compressed, compressedFrame) => {
+                            //console.debug('Frame resized', compressed, compressedFrame);
+                            if (compressed) {
+                                compressedFrames[x] = compressedFrame;
+                            }
 
+                            buildGIF();
+                        });
+                    }
+                });
             } else {
                 console.log('Non-GIF image');
                 compressImage(event.target.result, (compressed, compressedImage) => {
@@ -992,9 +1011,8 @@ function resizeImage(file, callback) {
                     if (callback) {
                         callback(dataURLtoBlob(compressedImage));
                     }
-                })
+                });
             }
-
         };
 
         reader.readAsDataURL(file);
@@ -1013,11 +1031,11 @@ function uploadToIpfs(file, maxSize, callback) {
         } else if (file.size <= maxSize) {
             let ipfs = Ipfs('https://ipfs.creary.net:5002');
             ipfs.add(file, { pin: true, 'stream-channels': true })
-                .then((response) => {
+                .then(response => {
                     let f = new IpfsFile(response.path, file.name, file.type, response.size);
                     callback(null, f);
                 })
-                .catch((err) => {
+                .catch(err => {
                     if (!err) {
                         callback(Errors.UPLOAD_FAIL);
                     } else {
@@ -1061,12 +1079,12 @@ function performSearch(search, page = 1, inHome = false, callback) {
 
     if (inHome) {
         updateUrl(path);
-        refreshAccessToken(function (accessToken) {
+        refreshAccessToken(function(accessToken) {
             let http = new HttpClient(apiOptions.apiUrl + '/searchCreaContent');
             http.setHeaders({
-                Authorization: 'Bearer ' + accessToken,
+                Authorization: 'Bearer ' + accessToken
             })
-                .when('done', function (response) {
+                .when('done', function(response) {
                     let data = jsonify(response).data;
 
                     for (let x = 0; x < data.length; x++) {
@@ -1079,13 +1097,13 @@ function performSearch(search, page = 1, inHome = false, callback) {
                         callback();
                     }
                 })
-                .when('fail', function (response, textStatus, request) {
+                .when('fail', function(response, textStatus, request) {
                     console.error(response, textStatus, request);
                     catchError(response.error);
                 })
                 .get({
                     search: search,
-                    page: page,
+                    page: page
                 });
         });
     } else {
@@ -1168,7 +1186,7 @@ function catchError(err, show = true) {
 function showAlert(title, body) {
     let config = {
         title: title,
-        body: typeof body === 'string' ? [body] : body,
+        body: typeof body === 'string' ? [body] : body
     };
 
     console.log(config);
@@ -1196,7 +1214,7 @@ function requireRoleKey(username, role, login, callback) {
         if (session && session.account.keys[role]) {
             callback(session.account.keys[role].prv, session.account.username);
         } else {
-            let listener = function (roleKey, username) {
+            let listener = function(roleKey, username) {
                 if (callback) {
                     callback(roleKey, username);
                 }
@@ -1242,5 +1260,5 @@ export {
     performSearch,
     catchError,
     showAlert,
-    requireRoleKey,
+    requireRoleKey
 };
